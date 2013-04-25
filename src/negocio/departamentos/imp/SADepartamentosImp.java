@@ -1,0 +1,218 @@
+/**
+ * 
+ */
+package negocio.departamentos.imp;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.LockModeType;
+import javax.persistence.NoResultException;
+import javax.persistence.OptimisticLockException;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
+
+import constantes.Errores;
+
+import negocio.Retorno;
+import negocio.departamentos.Departamento;
+import negocio.departamentos.SADepartamentos;
+import negocio.empleados.Empleado;
+
+
+public class SADepartamentosImp implements SADepartamentos {
+	private EntityManagerFactory emf;
+	private EntityManager em;
+	
+	@Override
+	public Retorno crearDepartamento(Departamento dep) {
+		Retorno retorno = new Retorno();
+		try {
+			emf = Persistence.createEntityManagerFactory("Implementacion Pipamax JPA");
+			em = emf.createEntityManager();
+			em.getTransaction().begin();
+			TypedQuery<Departamento> q1 = em.createNamedQuery("negocio.departamentos.Departamento.findBynombre", Departamento.class);
+			TypedQuery<Departamento> q2 = em.createNamedQuery("negocio.departamentos.Departamento.findBycodigo", Departamento.class);
+			q1.setParameter("nombre", dep.getNombre());
+			q2.setParameter("codigo", dep.getCodigo());
+			if(q1.getResultList().size()!=0 || q2.getResultList().size() != 0){
+				if (q1.getResultList().size()!=0) retorno.addError(Errores.departamentoNombreRepetido, dep.getNombre());
+				if (q2.getResultList().size()!=0) retorno.addError(Errores.departamentoCodigoRepetido, dep.getCodigo());
+			} else {
+				em.persist(dep);
+				if (q1.getResultList().size()!=1 || q2.getResultList().size()!=1){
+					retorno.addError(Errores.errorDeAccesoConcurrente, null);
+					em.getTransaction().rollback();
+				}else{
+					em.getTransaction().commit();
+					retorno.setDatos(dep.getId());
+				}
+			}
+		} catch (PersistenceException pe) {
+			em.getTransaction().rollback();
+			retorno.addError(Errores.departamentoNoCreado, null);
+		} catch (IllegalStateException ise){
+			em.getTransaction().rollback();
+		}
+		em.close();
+		emf.close();
+		return retorno;
+	}
+
+	@Override
+	public Retorno bajaDepartamento(Departamento dep) {
+		Retorno retorno = new Retorno();
+		emf = Persistence.createEntityManagerFactory("Implementacion Pipamax JPA");
+		em = emf.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			Departamento depart = em.find(Departamento.class, dep.getId(), LockModeType.OPTIMISTIC);
+			
+			if(depart==null)
+				retorno.addError(Errores.departamentoNoEncontrado, dep.getId());
+			else{
+				if(depart.getEmpleado().size()!=0){
+					Set<Empleado> empleados = new HashSet<Empleado>();
+					for(Empleado e:depart.getEmpleado()){
+						em.detach(e); empleados.add(e);
+					}
+					retorno.addError(Errores.departamentoConEmpleados, empleados);
+				} else {
+					em.remove(depart);
+					em.getTransaction().commit();
+				}
+			}
+		} catch (OptimisticLockException ole){
+			retorno.addError(Errores.errorDeAccesoConcurrente, ole.getMessage());
+			em.getTransaction().rollback();
+		} catch (PersistenceException e1) {
+			retorno.addError(Errores.departamentoNoBorrado, dep.getId());
+			em.getTransaction().rollback();
+		} catch (IllegalStateException ise) {
+			em.getTransaction().rollback();
+		}finally{
+			em.close();
+			emf.close();
+		}
+		return retorno;
+	}
+
+	@Override
+	public Retorno consultaDepartamento(Departamento dep) {
+		Retorno retorno = new Retorno();
+		try {
+			emf = Persistence.createEntityManagerFactory("Implementacion Pipamax JPA");
+			em = emf.createEntityManager();
+			em.getTransaction().begin();
+			
+			Departamento departamento = em.find(Departamento.class, dep.getId(), LockModeType.OPTIMISTIC);
+			if(departamento == null)
+				retorno.addError(Errores.departamentoNoEncontrado, dep.getId());
+			else{
+				for(Empleado e:departamento.getEmpleado()){
+					em.lock(e, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+					em.detach(e);
+				}
+				em.detach(departamento);
+				em.getTransaction().commit();
+				retorno.setDatos(departamento);
+			}
+		} catch (OptimisticLockException ole){
+			retorno.addError(Errores.errorDeAccesoConcurrente, ole.getMessage());
+			em.getTransaction().rollback();
+		} catch (PersistenceException pe) {
+			retorno.addError(Errores.departamentoNoEncontrado, dep.getId());
+			em.getTransaction().rollback();
+		} catch (IllegalStateException ise) {
+			em.getTransaction().rollback();
+		}finally{
+			em.close();
+			emf.close();
+		}
+		
+		return retorno;
+	}
+
+	@Override
+	public Retorno editarDepartamento(Departamento dep) {
+		Retorno retorno = new Retorno();
+		try {
+			emf = Persistence.createEntityManagerFactory("Implementacion Pipamax JPA");
+			em = emf.createEntityManager();
+			em.getTransaction().begin();
+			TypedQuery<Departamento> q1 = em.createNamedQuery("negocio.departamentos.Departamento.findBynombre", Departamento.class);
+			TypedQuery<Departamento> q2 = em.createNamedQuery("negocio.departamentos.Departamento.findBycodigo", Departamento.class);
+			q1.setParameter("nombre", dep.getNombre());
+			q2.setParameter("codigo", dep.getCodigo());
+			if(q1.getResultList().size()!=0 && q1.getResultList().get(0).getId()!=dep.getId() || q2.getResultList().size() != 0 && q2.getResultList().get(0).getId()!=dep.getId() ){
+				if (q1.getResultList().size()!=0) retorno.addError(Errores.departamentoNombreRepetido, dep.getNombre());
+				if (q2.getResultList().size()!=0) retorno.addError(Errores.departamentoCodigoRepetido, dep.getCodigo());
+			} else {
+				for(Empleado e:dep.getEmpleado()){
+					Empleado empBuscado = em.find(Empleado.class, e.getId(),LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+					if(empBuscado == null){
+						retorno.addError(Errores.empleadoNoEncontrado, e.getId());
+						break;
+					}else{
+						dep.getEmpleado().remove(e);
+						dep.getEmpleado().add(empBuscado);
+					}
+				}				
+				Departamento editado = em.merge(dep);
+				for(Empleado e:editado.getEmpleado())
+					e.setDepartamento(editado);
+				if (q1.getResultList().size()!=1 || q2.getResultList().size()!=1){
+					retorno.addError(Errores.errorDeAccesoConcurrente, null);
+					em.getTransaction().rollback();
+				}else{
+					em.getTransaction().commit();
+					retorno.setDatos(dep.getId());
+				}
+			}
+		} catch (PersistenceException pe) {
+			em.getTransaction().rollback();
+			retorno.addError(Errores.departamentoNoCreado, null);
+		} catch (IllegalStateException ise){
+			em.getTransaction().rollback();
+		}finally{
+			em.close();
+			emf.close();
+		}
+		
+		return retorno;
+	}
+
+	@Override
+	public Retorno consultarListaDepartamentos() {
+		Retorno retorno = new Retorno();
+		try {
+			emf = Persistence.createEntityManagerFactory("Implementacion Pipamax JPA");
+			em = emf.createEntityManager();
+			em.getTransaction().begin();
+			
+				TypedQuery<Departamento> q = em.createQuery("select obj from Departamento obj", Departamento.class);
+				List<Departamento> deps = q.getResultList();
+				for(Departamento d: deps){
+					em.lock(d, LockModeType.OPTIMISTIC);
+					em.detach(d);
+				}
+				
+			em.getTransaction().commit();
+			retorno.setDatos(deps);
+		} catch (NoResultException nre) {
+			retorno.addError(Errores.departamentoNoEncontrado, null);
+		} catch (IllegalStateException ise) {
+			em.getTransaction().rollback();
+		} finally {
+			em.close();
+			emf.close();
+		}
+		
+		return retorno;
+	}
+	
+}
