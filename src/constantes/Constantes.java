@@ -52,4 +52,9 @@ public abstract class Constantes {
 	public static final int ventaNoBorrada = 604;
 	public static final int ventaDevolucionNoRealizada = 605;
 
+	
+	//empleados parciales tienen turno
+	public static enum tTurno{mañana, tarde};
+	
+	
 }

@@ -4,6 +4,9 @@
 package negocio.empleados;
 
 import javax.persistence.Entity;
+
+import constantes.Constantes.tTurno;
+
 import java.io.Serializable;
 
 /** 
@@ -20,7 +23,8 @@ public class EmpleadoCompleto extends Empleado implements Serializable {
 	 * @generated "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
 	 */
 	private static final long serialVersionUID = 0;
-
+	
+	private boolean esFijo;
 	/** 
 	 * <!-- begin-UML-doc -->
 	 * <!-- end-UML-doc -->
@@ -28,6 +32,27 @@ public class EmpleadoCompleto extends Empleado implements Serializable {
 	 */
 	public EmpleadoCompleto() {
 	}
+	
+	/** 
+	 * <!-- begin-UML-doc -->
+	 * <!-- end-UML-doc -->
+	 * @generated "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
+	 */
+	public EmpleadoCompleto(boolean esFijo) {
+		this.esFijo = esFijo;
+	}
+	
+	
+	public boolean getEsFijo() {
+		return esFijo;
+	}
+
+	public void setEsFijo(boolean esFijo) {
+		this.esFijo = esFijo;
+	}
+	
+	
+	
 	/** 
 	 * (sin Javadoc)
 	 * @see Empleado#calcularSueldo()

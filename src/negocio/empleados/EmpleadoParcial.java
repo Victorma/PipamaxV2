@@ -5,7 +5,7 @@ package negocio.empleados;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
-
+import constantes.Constantes.tTurno;
 /** 
  * <!-- begin-UML-doc -->
  * <!-- end-UML-doc -->
@@ -14,6 +14,9 @@ import java.io.Serializable;
  */
 @Entity
 public class EmpleadoParcial extends Empleado implements Serializable {
+	
+	
+	private tTurno turno;
 	/** 
 	 * <!-- begin-UML-doc -->
 	 * <!-- end-UML-doc -->
@@ -21,14 +24,32 @@ public class EmpleadoParcial extends Empleado implements Serializable {
 	 */
 	private static final long serialVersionUID = 0;
 
+	
 	/** 
 	 * <!-- begin-UML-doc -->
 	 * <!-- end-UML-doc -->
 	 * @generated "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
 	 */
 	public EmpleadoParcial() {
+
+	}
+	
+	/** 
+	 * <!-- begin-UML-doc -->
+	 * <!-- end-UML-doc -->
+	 * @generated "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
+	 */
+	public EmpleadoParcial(tTurno turno) {
+		this.turno = turno;
 	}
 
+	public tTurno getTurno() {
+		return turno;
+	}
+
+	public void setTurno(tTurno turno) {
+		this.turno = turno;
+	}
 
 	/** 
 	 * (sin Javadoc)

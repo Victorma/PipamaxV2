@@ -40,6 +40,10 @@ public class CrearEmpleadoGUI extends GUI {
 	private CampoFormularioTexto direccion;
 	private CampoFormularioNumeroEntero cp;
 	private CampoFormularioSelector<String, String> tiempo;
+	//
+	private CampoFormularioSelector<String, String> esFijo;
+	private CampoFormularioSelector<String, String> turno;
+	//
 	private CampoFormularioSelector<String, Departamento> departamento;
 	private CampoFormularioNumeroEntero telefono;
 	private Formulario formulario;
@@ -69,6 +73,17 @@ public class CrearEmpleadoGUI extends GUI {
 		campos.put("Parcial", "parcial");
 		tiempo = new CampoFormularioSelector<String, String>("Tiempo", campos);
 
+		Map<String, String> camposEmpParcial = new TreeMap<String, String>();
+		camposEmpParcial.put("Mañana", "mañana");
+		camposEmpParcial.put("Tarde", "tarde");
+		turno = new CampoFormularioSelector<String, String>("Turno", camposEmpParcial);
+		
+		Map<String, String> camposEmpCompleto = new TreeMap<String, String>();
+		camposEmpCompleto.put("Sí", "sí");
+		camposEmpCompleto.put("No", "no");
+		esFijo = new CampoFormularioSelector<String, String>("¿Es fijo?", camposEmpCompleto);
+		
+		
 		camposDep = new TreeMap<String, Departamento>();
 		camposDep.put(ninguno, null);
 		departamento = new CampoFormularioSelector<String, Departamento>(
@@ -84,7 +99,10 @@ public class CrearEmpleadoGUI extends GUI {
 		formulario.addCampo(ciudad);
 		formulario.addCampo(direccion);
 		formulario.addCampo(cp);
-		formulario.addCampo(tiempo);
+		//TODO
+		//formulario.addCampo(tiempo);
+		//formulario.addCampo(esFijo);
+		formulario.addCampo(turno);
 		formulario.addCampo(departamento);
 		formulario.addCampo(telefono);
 
@@ -135,7 +153,7 @@ public class CrearEmpleadoGUI extends GUI {
 		ControladorFrontal.getInstancia().accion(Acciones.departamentosListado,
 				null);
 
-		this.setSize(400, 300);
+		this.setSize(400, 350);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
