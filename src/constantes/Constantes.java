@@ -55,7 +55,6 @@ public abstract class Constantes {
 	
 	//empleados parciales tienen turno
 	public static enum tTurno{mañana, tarde};
-	
-	public static final int variabledeprueba = 1;
+
 	
 }
