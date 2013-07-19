@@ -58,6 +58,7 @@ public class SAEmpleadosImp implements SAEmpleados {
 							retorno.addError(Errores.proyectoNoEncontrado, emp.getDepartamento().getId());
 						}else{
 							if(!emp.getProyecto().contains(proy))emp.getProyecto().add(proy);
+							//TODO es absurdo, estamos recorriendo los proyectos del empleado
 							if(!proy.getEmpleado().contains(emp))proy.getEmpleado().add(emp);
 						}
 					}
@@ -101,17 +102,22 @@ public class SAEmpleadosImp implements SAEmpleados {
 		try {
 			em.getTransaction().begin();
 			Empleado e = em.find(Empleado.class, emp.getId(), LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+			
 			if(e == null)
 				retorno.addError(Errores.empleadoNoEncontrado, emp.getId());
 			else{
+				//Se bloquea también el departamento 
+				Departamento dep = em.find(Departamento.class, e.getDepartamento().getId(), LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+				
 				if(e.getProyecto().size()>0){
-					for(Proyecto p:e.getProyecto())	em.detach(p);
 					retorno.addError(Errores.empleadoTieneProyectos, e.getProyecto());
 					em.getTransaction().rollback();
 				}else{
+					//Calling remove on an object will also cascade the remove operation across any relationship that is marked as cascade remove(Departamento-empleado).
 					em.remove(e);
 					em.getTransaction().commit();
 				}
+				
 			}		
 		} catch (OptimisticLockException ole){
 			em.getTransaction().rollback();
@@ -199,7 +205,7 @@ public class SAEmpleadosImp implements SAEmpleados {
 					}
 				}
 				boolean proyCorrecto = true;
-				if(emp.getProyecto().size()>0){
+				if(emp.getProyecto() != null && emp.getProyecto().size()>0){
 					for(Proyecto p:emp.getProyecto()){
 						Proyecto proy = em.find(Proyecto.class, p.getId(), LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 						if(proy == null){

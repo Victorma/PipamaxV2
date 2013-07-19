@@ -11,6 +11,7 @@ import negocio.controlador.departamentos.CommandDepartamentoConsultar;
 import negocio.controlador.departamentos.CommandDepartamentoConsultarLista;
 import negocio.controlador.departamentos.CommandDepartamentoCrear;
 import negocio.controlador.departamentos.CommandDepartamentoEditar;
+import negocio.controlador.departamentos.CommandDepartamentoSalario;
 import negocio.controlador.empleados.CommandEmpleadoBorrar;
 import negocio.controlador.empleados.CommandEmpleadoCalcularSueldo;
 import negocio.controlador.empleados.CommandEmpleadoConsultar;
@@ -430,6 +431,15 @@ public class ControladorFrontalImp extends ControladorFrontal {
 			DispatcherView.getInstancia().actualiza(evento, retorno);
 			break;
 		}
+		
+		case Acciones.departamentosSalario: {
+			comando = new CommandDepartamentoSalario();
+			comando.setContext(datos);
+			retorno = ControladorAplicacion.getInstancia().ejecuta(comando);
+			DispatcherView.getInstancia().actualiza(evento, retorno);
+			break;			
+		}
+		
 
 			//Fin eventos departamentos
 		

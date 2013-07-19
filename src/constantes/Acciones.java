@@ -67,6 +67,7 @@ public class Acciones {
 	public static final int departamentosConsultar = 802;
 	public static final int departamentosBorrar = 803;
 	public static final int departamentosEditar = 804;
+	public static final int departamentosSalario = 805;
 
 	//Acciones de proyectos
 	public static final int proyectosListado = 900;

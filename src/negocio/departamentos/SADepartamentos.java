@@ -53,4 +53,13 @@ public interface SADepartamentos {
 	 * @generated "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
 	 */
 	public Retorno consultarListaDepartamentos();
+	
+	/**
+	 * Calcula la suma de los salarios de los empleados que pertenecen a este departamento
+	 * Si se produce algún error, lo almacena en retorno.
+	 * @param Departamento dep con la id del departamento a consultar.
+	 * @return Retorno con los errores (si los hay) y los datos.
+	 * @generated "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
+	 */
+	public Retorno consultarSalarioDepartamento(Departamento dep);
 }

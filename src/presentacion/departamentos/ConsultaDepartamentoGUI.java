@@ -30,6 +30,8 @@ public class ConsultaDepartamentoGUI extends GUI {
 	private CampoFormularioTexto sueldo;
 	private Formulario formulario;
 	private TablaEmpleados tablaEmpleadosModel;
+	private JButton calcularSalario;
+	private	Departamento depCons;
 
 	CampoFormularioNumeroEntero id;
 	Formulario formularioId;
@@ -102,6 +104,19 @@ public class ConsultaDepartamentoGUI extends GUI {
 				ConsultaDepartamentoGUI.this.dispose();
 			}
 		});
+		
+		this.calcularSalario = new JButton("Calcular Salario");
+		this.calcularSalario.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				ControladorFrontal.getInstancia().accion(Acciones.departamentosSalario, depCons);
+			}
+		});
+		
+		if(dep ==null)
+			calcularSalario.setEnabled(false);
+	
+		botonera.add(this.calcularSalario);
 		botonera.add(cancelar);
 		this.add(botonera, BorderLayout.SOUTH);
 
@@ -116,7 +131,7 @@ public class ConsultaDepartamentoGUI extends GUI {
 
 	@Override
 	public void actualiza(Integer evento, Retorno datos) {
-		if (evento == Acciones.departamentosConsultar)
+		if (evento == Acciones.departamentosConsultar){
 			if (datos.tieneErrores()) {
 				id.setIndicador(false);
 				nombre.setValue("");
@@ -136,13 +151,36 @@ public class ConsultaDepartamentoGUI extends GUI {
 				JOptionPane.showMessageDialog(this, errores.toString(),
 						"Error", JOptionPane.ERROR_MESSAGE);
 			} else {
-				Departamento dep = (Departamento) datos.getDatos();
-				nombre.setValue(dep.getNombre());
-				codigo.setValue(dep.getCodigo());
-				sueldo.setValue(dep.getSueldo().toString());
-				tablaEmpleadosModel.update(dep.getEmpleado());
+				depCons = (Departamento) datos.getDatos();
+				nombre.setValue(depCons.getNombre());
+				codigo.setValue(depCons.getCodigo());
+				sueldo.setValue(depCons.getSueldo().toString());
+				tablaEmpleadosModel.update(depCons.getEmpleado());
 			}
+		}
+		else if (evento == Acciones.departamentosSalario){
+			
+			if (datos.tieneErrores()) {
+				StringBuilder errores = new StringBuilder(
+						"Se produjeron los siguientes errores: \n");
+				for (TError error : datos.getErrores().getLista()) {
+					errores.append("  - ");
+					switch (error.getErrorId()) {
+					default:
+						errores.append(error.getDatos().toString());
+						break;
+					}
+					errores.append("\n");
+				}
+				JOptionPane.showMessageDialog(this, errores.toString(),
+						"Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(this,"Salario: " + datos.getDatos().toString());
+			}
+			
+		}
 	}
+		
 
 	@Override
 	public void alVolver(GUI who) {

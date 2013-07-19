@@ -215,4 +215,38 @@ public class SADepartamentosImp implements SADepartamentos {
 		return retorno;
 	}
 	
+	
+	@Override
+	public Retorno consultarSalarioDepartamento(Departamento dep)
+	{
+		Retorno retorno = new Retorno();
+		try {
+			emf = Persistence.createEntityManagerFactory("Implementacion Pipamax JPA");
+			em = emf.createEntityManager();
+			em.getTransaction().begin();
+			
+			Departamento departamento = em.find(Departamento.class, dep.getId(), LockModeType.OPTIMISTIC);
+			if(departamento == null)
+				retorno.addError(Errores.departamentoNoEncontrado, dep.getId());
+			else{
+				em.getTransaction().commit();
+				retorno.setDatos(departamento.getNumEpleados()*departamento.getSueldo());
+			}
+		} catch (OptimisticLockException ole){
+			retorno.addError(Errores.errorDeAccesoConcurrente, ole.getMessage());
+			em.getTransaction().rollback();
+		} catch (PersistenceException pe) {
+			retorno.addError(Errores.departamentoNoEncontrado, dep.getId());
+			em.getTransaction().rollback();
+		} catch (IllegalStateException ise) {
+			em.getTransaction().rollback();
+		} finally {
+			em.close();
+			emf.close();
+		}
+		
+		return retorno;
+		
+	}
+	
 }

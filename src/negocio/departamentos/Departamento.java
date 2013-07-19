@@ -40,52 +40,6 @@ public class Departamento implements Serializable {
 	@SuppressWarnings("unused")
 	@Version
 	private Integer version;
-	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getNombre() {
-		return nombre;
-	}
-	@Override
-	public String toString() {
-		return "("+codigo+") "+nombre;
-	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-	public Integer getCodigo() {
-		return codigo;
-	}
-	public void setCodigo(Integer codigo) {
-		this.codigo = codigo;
-	}
-	public Set<Empleado> getEmpleado() {
-		return empleado;
-	}	
-	public void setEmpleado(Set<Empleado> empleado) {
-		this.empleado = empleado;
-	}
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @generated "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
-	 */
-	public Departamento() {
-	}
-
-	private Double sueldo;
-	
-	public Double getSueldo() {
-		return sueldo;
-	}
-	public void setSueldo(Double sueldo) {
-		this.sueldo = sueldo;
-	}
-
 	/** 
 	 * <!-- begin-UML-doc -->
 	 * <!-- end-UML-doc -->
@@ -112,4 +66,59 @@ public class Departamento implements Serializable {
 	 */
 	@OneToMany(mappedBy = "departamento")
 	private Set<Empleado> empleado;
+	private Double sueldo;
+	
+	/** 
+	 * <!-- begin-UML-doc -->
+	 * <!-- end-UML-doc -->
+	 * @generated "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
+	 */
+	public Departamento() {
+	}
+	
+	
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getNombre() {
+		return nombre;
+	}
+	//devuelve el número de empleados en el departamento
+	public Integer getNumEpleados(){
+		return this.getEmpleado().size();
+	}
+	
+	@Override
+	public String toString() {
+		return "("+codigo+") "+nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	public Integer getCodigo() {
+		return codigo;
+	}
+	public void setCodigo(Integer codigo) {
+		this.codigo = codigo;
+	}
+	public Set<Empleado> getEmpleado() {
+		return empleado;
+	}	
+	public void setEmpleado(Set<Empleado> empleado) {
+		this.empleado = empleado;
+	}
+	
+	public Double getSueldo() {
+		return sueldo;
+	}
+	public void setSueldo(Double sueldo) {
+		this.sueldo = sueldo;
+	}
+
+
+
 }
