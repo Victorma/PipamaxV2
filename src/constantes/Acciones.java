@@ -1,8 +1,6 @@
 package constantes;
 
 public class Acciones {
-	
-	public static final int prueba = 12;
 
 	//Acciones de Clientes
 	public static final int clientesListado = 100;
