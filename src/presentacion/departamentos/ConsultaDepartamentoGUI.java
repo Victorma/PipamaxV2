@@ -130,7 +130,7 @@ public class ConsultaDepartamentoGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (evento == Acciones.departamentosConsultar){
 			if (datos.tieneErrores()) {
 				id.setIndicador(false);

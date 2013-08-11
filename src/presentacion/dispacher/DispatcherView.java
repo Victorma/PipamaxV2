@@ -1,5 +1,6 @@
 package presentacion.dispacher;
 
+import constantes.Acciones;
 import presentacion.GUI;
 import presentacion.dispacher.imp.DispatcherViewImp;
 import negocio.Retorno;
@@ -16,6 +17,6 @@ public abstract class DispatcherView {
 
 	public abstract GUI getMain();
 
-	public abstract void actualiza(Integer evento, Retorno datos);
+	public abstract void actualiza(Acciones evento, Retorno datos);
 
 }

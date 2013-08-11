@@ -266,7 +266,7 @@ public class MarcasGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 
 		if (!transmiteActualiza(evento, datos)) // si no es consultar, refrescamos la hija.
 			// Comprobacion de errores y elecci�n del mensaje.
@@ -299,7 +299,7 @@ public class MarcasGUI extends GUI {
 
 			} else {
 				switch (evento) {
-				case Acciones.marcasListado:
+				case marcasListado:
 					TransferListaMarcas marcas = (TransferListaMarcas) datos
 							.getDatos();
 					model.getDataVector().removeAllElements();
@@ -312,7 +312,7 @@ public class MarcasGUI extends GUI {
 					table.repaint();
 					pane.repaint();
 					break;
-				case Acciones.marcasReactivar:
+				case marcasReactivar:
 					JOptionPane.showMessageDialog(this,
 							"Marca Reactivada correctamente.");
 					ControladorFrontal.getInstancia().accion(

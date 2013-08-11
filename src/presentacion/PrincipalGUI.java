@@ -1,5 +1,6 @@
 package presentacion;
 
+import constantes.Acciones;
 import constantes.Errores;
 
 /*
@@ -16,7 +17,9 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 
@@ -26,7 +29,6 @@ import negocio.Retorno;
 import negocio.TError;
 import negocio.controlador.CommandRegenerar;
 import negocio.controlador.ControladorAplicacion;
-
 import presentacion.clientes.ClientesGUI;
 import presentacion.departamentos.DepartamentosGUI;
 import presentacion.empleados.EmpleadosGUI;
@@ -118,8 +120,7 @@ public class PrincipalGUI extends GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ControladorAplicacion.getInstancia().ejecuta(
-						new CommandRegenerar());
+				ControladorAplicacion.getInstancia().accion(Acciones.regenerar, null);
 			}
 		});//add CrearListener
 
@@ -222,7 +223,7 @@ public class PrincipalGUI extends GUI {
 	 */
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (datos.tieneErrores()) {
 			Iterator<TError> it = datos.getErrores().getLista().iterator();
 			TError current = null;

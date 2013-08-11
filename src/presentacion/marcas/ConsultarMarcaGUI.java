@@ -147,7 +147,7 @@ public class ConsultarMarcaGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 
 		if (!datos.tieneErrores()) {
 			TComMarcaListaProductos transfer = ((TComMarcaListaProductos) datos

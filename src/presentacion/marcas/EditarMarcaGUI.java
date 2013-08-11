@@ -141,9 +141,9 @@ public class EditarMarcaGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		switch (evento) {
-		case Acciones.marcasConsultar:
+		case marcasConsultar:
 			if (!datos.tieneErrores()) {
 				TransferMarca marca = ((TransferMarca) datos.getDatos());
 				labelId.setText("" + marca.getId());
@@ -154,7 +154,7 @@ public class EditarMarcaGUI extends GUI {
 				this.dispose();
 			}
 			break;
-		case Acciones.marcasEditar:
+		case marcasEditar:
 			if (!datos.tieneErrores()) {
 				JOptionPane.showMessageDialog(this,
 						"Marca editada correctamente.");

@@ -166,7 +166,7 @@ public class ProyectosGUI extends GUI {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if(!transmiteActualiza(evento, datos)){
 			if(evento == Acciones.proyectosListado){
 				if(datos.tieneErrores()){

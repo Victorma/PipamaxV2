@@ -3,6 +3,7 @@
  */
 package presentacion.controlador;
 
+import constantes.Acciones;
 import presentacion.controlador.imp.ControladorFrontalImp;
 
 /** 
@@ -41,5 +42,5 @@ public abstract class ControladorFrontal {
 	 * @param datos
 	 * @generated "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
 	 */
-	public abstract void accion(int evento, Object datos);
+	public abstract void accion(Acciones evento, Object datos);
 }

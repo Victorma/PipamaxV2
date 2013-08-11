@@ -156,15 +156,15 @@ public class CrearProveedorGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 
 		if (!datos.tieneErrores()) {
 			switch (evento) {
-			case Acciones.proveedoresCrear:
+			case proveedoresCrear:
 				JOptionPane.showMessageDialog(this,
 						"Proveedor creado correctamente");
 				break;
-			case Acciones.proveedoresReactivar:
+			case proveedoresReactivar:
 				JOptionPane.showMessageDialog(this,
 						"Proveedor Reactivado correctamente");
 				break;

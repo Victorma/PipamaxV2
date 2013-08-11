@@ -257,7 +257,7 @@ public class ProveedoresGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 
 		if (!transmiteActualiza(evento, datos))
 			if (datos.tieneErrores()) {
@@ -289,7 +289,7 @@ public class ProveedoresGUI extends GUI {
 
 			} else {
 				switch (evento) {
-				case Acciones.proveedoresListado:
+				case proveedoresListado:
 					TransferListaProveedores proveedores = (TransferListaProveedores) datos
 							.getDatos();
 					model.getDataVector().removeAllElements();
@@ -303,7 +303,7 @@ public class ProveedoresGUI extends GUI {
 					table.repaint();
 					pane.repaint();
 					break;
-				case Acciones.proveedoresReactivar:
+				case proveedoresReactivar:
 					JOptionPane.showMessageDialog(this,
 							"Proveedor Reactivado correctamente.");
 					ControladorFrontal.getInstancia().accion(

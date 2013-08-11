@@ -193,7 +193,7 @@ public class CrearProveProduGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (evento == Acciones.proveedoresListado) {
 			listaproves = ((TransferListaProveedores) datos.getDatos())
 					.getLista();

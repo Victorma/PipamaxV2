@@ -1,7 +1,8 @@
 package integracion.transaction.transactionManager.imp;
 import java.util.HashMap;
+
 import integracion.transaction.Transaction;
-import integracion.transaction.imp.TransactionMysql;
+import integracion.transaction.factoriaTransaction.FactoriaTransaction;
 import integracion.transaction.transactionManager.TransactionManager;
 
 public class TransactionManagerImp  extends TransactionManager 
@@ -11,7 +12,7 @@ public class TransactionManagerImp  extends TransactionManager
 	@Override
 	public void createTransaction()
 	{
-		hashMap.put(Thread.currentThread().getId(), new TransactionMysql());
+		hashMap.put(Thread.currentThread().getId(), FactoriaTransaction.getInstancia().createTransaction());
 	}
 
 	@Override

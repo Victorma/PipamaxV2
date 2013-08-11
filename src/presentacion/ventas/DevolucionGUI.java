@@ -357,7 +357,7 @@ public class DevolucionGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (evento == Acciones.ventasConsultar) {
 
 			if (datos.tieneErrores()) {

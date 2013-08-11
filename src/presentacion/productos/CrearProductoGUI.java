@@ -119,7 +119,7 @@ public class CrearProductoGUI extends GUI {
 
 		TransferListaMarcas tlm = new TransferListaMarcas();
 		tlm.setLista(new ArrayList<TransferMarca>());
-		ControladorFrontal.getInstancia().accion(300, tlm);
+		ControladorFrontal.getInstancia().accion(Acciones.marcasListado, tlm);
 
 	}
 
@@ -228,9 +228,9 @@ public class CrearProductoGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		switch (evento) {
-		case Acciones.marcasListado:
+		case marcasListado:
 			if (!datos.tieneErrores()) {
 				listamarcas = ((TransferListaMarcas) datos.getDatos())
 						.getLista();
@@ -249,7 +249,7 @@ public class CrearProductoGUI extends GUI {
 			}
 
 			break;
-		case Acciones.productosCrear:
+		case productosCrear:
 			if (!datos.tieneErrores()) {
 				JOptionPane.showMessageDialog(this,
 						"Producto creado correctamente");

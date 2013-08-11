@@ -312,7 +312,7 @@ public class CrearVentaGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (this.getChild() == null) {
 			if (evento == Acciones.ventasCrear) {
 				if (!datos.tieneErrores()) {
@@ -354,7 +354,7 @@ public class CrearVentaGUI extends GUI {
 							"Error", JOptionPane.ERROR_MESSAGE);
 
 				}
-			} else if (evento.intValue() == Acciones.clientesListado) {
+			} else if (evento == Acciones.clientesListado) {
 				if (datos.tieneErrores()) {
 					JOptionPane.showMessageDialog(this,
 							"No se pudo obtener la lista de clientes", "Error",

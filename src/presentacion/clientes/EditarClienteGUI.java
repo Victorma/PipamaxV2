@@ -271,10 +271,10 @@ public class EditarClienteGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 
 		switch (evento) {
-		case Acciones.clientesConsultar:
+		case clientesConsultar:
 			if (!datos.tieneErrores()) {
 				TransferCliente cliente = (TransferCliente) datos.getDatos();
 
@@ -300,7 +300,7 @@ public class EditarClienteGUI extends GUI {
 				this.dispose();
 			}
 			break;
-		case Acciones.clientesEditar:
+		case clientesEditar:
 			if (!datos.tieneErrores()) {
 				JOptionPane.showMessageDialog(this,
 						"Cliente editado Correctamente");

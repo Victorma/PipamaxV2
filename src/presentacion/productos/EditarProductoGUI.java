@@ -343,9 +343,9 @@ public class EditarProductoGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		switch (evento) {
-		case Acciones.productosConsultar:
+		case productosConsultar:
 			TransferProducto producto = ((TComProducto) datos.getDatos())
 					.getProducto();
 			id = producto.getId();
@@ -361,21 +361,21 @@ public class EditarProductoGUI extends GUI {
 			ControladorFrontal.getInstancia().accion(
 					Acciones.productosListaSuministros, producto);
 			break;
-		case Acciones.productosListaSuministros:
+		case productosListaSuministros:
 			model.update(((TransferListaSuministros) datos.getDatos())
 					.getList());
 			break;
-		case Acciones.productosCrearSuministro:
+		case productosCrearSuministro:
 			if (datos.tieneErrores())
 				JOptionPane.showMessageDialog(this,
 						"Error al crear el suministro.");
 			break;
-		case Acciones.productosBorrarSuministro:
+		case productosBorrarSuministro:
 			if (datos.tieneErrores())
 				JOptionPane.showMessageDialog(this,
 						"Error al borrar el suministro.");
 			break;
-		case Acciones.marcasListado:
+		case marcasListado:
 			listamarcas = ((TransferListaMarcas) datos.getDatos()).getLista();
 			for (int i = 0; i < listamarcas.size(); i++) {
 				scrollmarca.addItem(listamarcas.get(i).getNombre());
@@ -383,11 +383,11 @@ public class EditarProductoGUI extends GUI {
 			scrollmarca.setSelectedIndex(buscaIdMarca(Integer.parseInt(idMarca
 					.getText())));
 			break;
-		case Acciones.productosEditar:
+		case productosEditar:
 			if (datos.tieneErrores())
 				JOptionPane.showMessageDialog(this, "Error al editar.");
 			break;
-		case Acciones.proveedoresListado:
+		case proveedoresListado:
 			ArrayList<TransferProveedor> oldlist = ((TransferListaProveedores) datos
 					.getDatos()).getLista();
 			ArrayList<TransferProveedor> newList = ((TransferListaProveedores) datos

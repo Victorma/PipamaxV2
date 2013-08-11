@@ -229,7 +229,7 @@ public class ConsultarPedidoGUI extends GUI {
 
 	}
 
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (this.getChild() == null) {
 			if (evento == Acciones.pedidosConsultar) {
 

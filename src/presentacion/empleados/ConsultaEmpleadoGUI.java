@@ -156,7 +156,7 @@ public class ConsultaEmpleadoGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (evento == Acciones.empleadosConsultar)
 			if (datos.tieneErrores()) {
 				empCons = null;

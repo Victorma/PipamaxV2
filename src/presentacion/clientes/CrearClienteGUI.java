@@ -249,15 +249,15 @@ public class CrearClienteGUI extends GUI {
 		}
 	}
 
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 
 		if (!datos.tieneErrores()) {
 			switch (evento) {
-			case Acciones.clientesCrear:
+			case clientesCrear:
 				JOptionPane.showMessageDialog(this,
 						"Cliente creado correctamente");
 				break;
-			case Acciones.clientesReactivar:
+			case clientesReactivar:
 				JOptionPane.showMessageDialog(this,
 						"Cliente Reactivado correctamente");
 				break;

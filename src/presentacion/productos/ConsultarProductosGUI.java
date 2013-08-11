@@ -195,12 +195,12 @@ public class ConsultarProductosGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if(datos.tieneErrores()){
 			JOptionPane.showMessageDialog(this, "Producto no encontrado");
 			this.dispose();
 		}else switch (evento) {
-		case Acciones.productosConsultar:
+		case productosConsultar:
 			TransferProducto producto = ((TComProducto) datos.getDatos())
 					.getProducto();
 			id = producto.getId();
@@ -220,11 +220,11 @@ public class ConsultarProductosGUI extends GUI {
 			ControladorFrontal.getInstancia().accion(
 					Acciones.productosListaSuministros, producto);
 			break;
-		case Acciones.productosListaSuministros:
+		case productosListaSuministros:
 			model.update(((TransferListaSuministros) datos.getDatos())
 					.getList());
 			break;
-		case Acciones.productosBorrar:
+		case productosBorrar:
 			if (datos.tieneErrores()) {
 
 				Iterator<TError> it = datos.getErrores().getLista().iterator();

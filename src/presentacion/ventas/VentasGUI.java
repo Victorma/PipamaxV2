@@ -234,7 +234,7 @@ public class VentasGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno retorno) {
+	public void actualiza(Acciones evento, Retorno retorno) {
 
 		if (!transmiteActualiza(evento, retorno)) {
 			if (evento == Acciones.ventasListado)

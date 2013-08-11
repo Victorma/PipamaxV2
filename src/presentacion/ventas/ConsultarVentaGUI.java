@@ -187,7 +187,7 @@ public class ConsultarVentaGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (this.getChild() == null) {
 			if (evento == Acciones.ventasConsultar) {
 

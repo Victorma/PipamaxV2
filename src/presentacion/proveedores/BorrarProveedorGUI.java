@@ -77,7 +77,7 @@ public class BorrarProveedorGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (evento == Acciones.proveedoresBorrar) {
 			if (datos.tieneErrores())
 				JOptionPane.showMessageDialog(this,

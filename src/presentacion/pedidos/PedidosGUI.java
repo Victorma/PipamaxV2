@@ -365,10 +365,10 @@ public class PedidosGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (!transmiteActualiza(evento, datos)) {
 			switch (evento) {
-			case Acciones.pedidosLista:
+			case pedidosLista:
 				if (!datos.tieneErrores()) {
 
 					TransferListaPedidos todos = (TransferListaPedidos) datos
@@ -391,7 +391,7 @@ public class PedidosGUI extends GUI {
 							"Error", JOptionPane.ERROR_MESSAGE);
 
 				break;
-			case Acciones.pedidosAnular:
+			case pedidosAnular:
 				if (datos.tieneErrores()) {
 					Iterator<TError> it = datos.getErrores().getLista()
 							.iterator();
@@ -419,7 +419,7 @@ public class PedidosGUI extends GUI {
 							"Correcto", JOptionPane.INFORMATION_MESSAGE);
 
 				break;
-			case Acciones.pedidosCompletar:
+			case pedidosCompletar:
 				if (datos.tieneErrores()) {
 					Iterator<TError> it = datos.getErrores().getLista()
 							.iterator();
@@ -450,7 +450,7 @@ public class PedidosGUI extends GUI {
 							"Correcto", JOptionPane.INFORMATION_MESSAGE);
 
 				break;
-			case Acciones.pedidosBorrar:
+			case pedidosBorrar:
 				if (datos.tieneErrores()) {
 					Iterator<TError> it = datos.getErrores().getLista()
 							.iterator();

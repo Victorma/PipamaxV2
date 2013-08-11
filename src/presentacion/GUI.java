@@ -5,6 +5,7 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
+import constantes.Acciones;
 import negocio.Retorno;
 
 public abstract class GUI extends JFrame {
@@ -57,11 +58,11 @@ public abstract class GUI extends JFrame {
 		return child;
 	}
 
-	public abstract void actualiza(Integer evento, Retorno datos);
+	public abstract void actualiza(Acciones evento, Retorno datos);
 
 	public abstract void alVolver(GUI who);
 
-	protected boolean transmiteActualiza(Integer evento, Retorno datos) {
+	protected boolean transmiteActualiza(Acciones evento, Retorno datos) {
 		boolean transmitido = false;
 		if (child != null) {
 			transmitido = true;

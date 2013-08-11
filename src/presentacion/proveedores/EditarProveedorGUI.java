@@ -164,9 +164,9 @@ public class EditarProveedorGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		switch (evento) {
-		case Acciones.proveedoresConsultar:
+		case proveedoresConsultar:
 			if (!datos.tieneErrores()) {
 				TransferProveedor cliente = (TransferProveedor) datos
 						.getDatos();
@@ -182,7 +182,7 @@ public class EditarProveedorGUI extends GUI {
 				this.dispose();
 			}
 			break;
-		case Acciones.proveedoresEditar:
+		case proveedoresEditar:
 			if (!datos.tieneErrores()) {
 				JOptionPane.showMessageDialog(this,	"Proveedor modificado correctamente.");
 				this.dispose();

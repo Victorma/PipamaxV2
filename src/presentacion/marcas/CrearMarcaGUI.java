@@ -39,8 +39,6 @@ import negocio.marcas.TransferMarca;
 public class CrearMarcaGUI extends GUI {
 	private static final long serialVersionUID = 1L;
 
-	private final Integer eventoAccion = 301;
-
 	// Paneles de la ventana
 	JPanel norte;
 	JPanel centro;
@@ -104,7 +102,7 @@ public class CrearMarcaGUI extends GUI {
 				marca.setNombre(cajaNombre.getText());
 				cajaNombre.setBackground(Color.green);
 
-				ControladorFrontal.getInstancia().accion(eventoAccion, marca);
+				ControladorFrontal.getInstancia().accion(Acciones.marcasCrear, marca);
 			} catch (InputMismatchException ex) {
 				JOptionPane.showMessageDialog(CrearMarcaGUI.this,
 						"No se permiten campos vacios.");
@@ -119,14 +117,14 @@ public class CrearMarcaGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (!datos.tieneErrores()) {
 			switch (evento) {
-			case Acciones.marcasCrear:
+			case marcasCrear:
 				JOptionPane.showMessageDialog(this,
 						"Marca creada correctamente");
 				break;
-			case Acciones.marcasReactivar:
+			case marcasReactivar:
 				JOptionPane.showMessageDialog(this,
 						"Marca reactivada correctamente");
 				break;

@@ -161,7 +161,7 @@ public class CrearEmpleadoGUI extends GUI {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (evento == Acciones.empleadosCrear)
 			if (datos.tieneErrores()) {
 				StringBuilder errores = new StringBuilder(

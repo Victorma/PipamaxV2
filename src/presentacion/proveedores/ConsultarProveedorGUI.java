@@ -170,7 +170,7 @@ public class ConsultarProveedorGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (!datos.tieneErrores()) {
 			TComProveedorListaProductos transfer = ((TComProveedorListaProductos) datos
 					.getDatos());

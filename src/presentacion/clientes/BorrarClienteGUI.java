@@ -77,7 +77,7 @@ public class BorrarClienteGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if (!datos.tieneErrores()) {
 			JOptionPane
 					.showMessageDialog(this, "Cliente borrado correctamente");

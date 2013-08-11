@@ -202,7 +202,7 @@ public class ClientesGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 
 		if (!transmiteActualiza(evento, datos)) // si no es consultar, refrescamos la hija.
 			// Comprobacion de errores y elecci�n del mensaje.
@@ -235,7 +235,7 @@ public class ClientesGUI extends GUI {
 
 			} else {
 				switch (evento) {
-				case Acciones.clientesListado:
+				case clientesListado:
 					TransferListaClientes clientes = (TransferListaClientes) datos
 							.getDatos();
 					model.getDataVector().removeAllElements();
@@ -251,7 +251,7 @@ public class ClientesGUI extends GUI {
 					table.repaint();
 					pane.repaint();
 					break;
-				case Acciones.clientesReactivar:
+				case clientesReactivar:
 					JOptionPane.showMessageDialog(this,
 							"Cliente Reactivado correctamente.");
 					ControladorFrontal.getInstancia().accion(

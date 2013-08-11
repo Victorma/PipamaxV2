@@ -1,5 +1,6 @@
 package presentacion.dispacher.imp;
 
+import constantes.Acciones;
 import presentacion.GUI;
 import presentacion.PrincipalGUI;
 import presentacion.dispacher.DispatcherView;
@@ -20,7 +21,7 @@ public class DispatcherViewImp extends DispatcherView {
 		return main;
 	}
 
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		main.actualiza(evento, datos);
 	}
 

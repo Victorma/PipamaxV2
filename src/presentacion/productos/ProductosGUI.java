@@ -98,7 +98,8 @@ public class ProductosGUI extends GUI {
 		//set the configurations of the window
 		this.setSize(800, 600);
 		this.setLocationRelativeTo(null);
-		ControladorFrontal.getInstancia().accion(400,
+		//TODO Comprobar que sea necesario el new aqui
+		ControladorFrontal.getInstancia().accion(Acciones.productosListado,
 				new TransferListaProductos());
 		this.setVisible(true);
 
@@ -175,12 +176,12 @@ public class ProductosGUI extends GUI {
 	}
 
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 
 		if (!transmiteActualiza(evento, datos))
 			switch (evento) {
 
-			case Acciones.productosListado:
+			case productosListado:
 				if (datos.tieneErrores()) {
 
 					Iterator<TError> it = datos.getErrores().getLista()

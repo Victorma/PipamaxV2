@@ -202,7 +202,7 @@ public class EditarProyectoGUI extends GUI {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void actualiza(Integer evento, Retorno datos) {
+	public void actualiza(Acciones evento, Retorno datos) {
 		if(evento == Acciones.proyectosEditar)
 			if(datos.tieneErrores()){
 				StringBuilder errores = new StringBuilder("Se produjeron los siguientes errores: \n");
