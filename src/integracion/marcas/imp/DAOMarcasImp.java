@@ -16,7 +16,6 @@ import java.util.ArrayList;
 
 import negocio.marcas.TransferListaMarcas;
 import negocio.marcas.TransferMarca;
-
 import integracion.BBDDConnection;
 import integracion.DAOException;
 import integracion.marcas.DAOMarcas;
@@ -31,8 +30,12 @@ public class DAOMarcasImp implements DAOMarcas
 		boolean error = false;
 		
 		Statement stmt = null;
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -82,8 +85,12 @@ public class DAOMarcasImp implements DAOMarcas
 		boolean error = false;
 		
 		Statement stmt = null;
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -125,8 +132,12 @@ public class DAOMarcasImp implements DAOMarcas
 		boolean error = false;
 		
 		Statement stmt = null;
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -179,8 +190,12 @@ public class DAOMarcasImp implements DAOMarcas
 
 		Statement stmt = null;
 		ResultSet rs = null;
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null || lockMode == 0)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -233,8 +248,12 @@ public class DAOMarcasImp implements DAOMarcas
 	{
 		Statement stmt = null;
 		ResultSet rs = null;
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null || lockMode == 0)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -299,8 +318,12 @@ public class DAOMarcasImp implements DAOMarcas
 		boolean error = false;
 		
 		Statement stmt = null;
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -342,8 +365,12 @@ public class DAOMarcasImp implements DAOMarcas
 	{		
 		Statement stmt = null;
 		ResultSet rs = null;
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null || lockMode == 0)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -402,8 +429,12 @@ public class DAOMarcasImp implements DAOMarcas
 	public void bloquearTablas(int lockMode) throws DAOException
 	{
 		Statement stmt = null;
-		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		
+		//Get the connection from the transaction
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		try 
 		{	
 			stmt = connection.createStatement();
@@ -428,8 +459,12 @@ public class DAOMarcasImp implements DAOMarcas
 	public void desbloquearTablas() throws DAOException
 	{
 		Statement stmt = null;
-		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		
+		//Get the connection from the transaction
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		try 
 		{	
 			stmt = connection.createStatement();

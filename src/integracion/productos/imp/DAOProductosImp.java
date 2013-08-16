@@ -15,7 +15,6 @@ import negocio.productos.TransferProducto;
 import negocio.proveedores.TransferListaSuministros;
 import negocio.proveedores.TransferProveedor;
 import negocio.proveedores.TransferSuministro;
-
 import integracion.BBDDConnection;
 import integracion.DAOException;
 import integracion.productos.DAOProductos;
@@ -30,8 +29,10 @@ public class DAOProductosImp implements DAOProductos {
 
 		Statement stmt = null;
 
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
+		
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -99,7 +100,7 @@ public class DAOProductosImp implements DAOProductos {
 		Statement stmt = null;
 
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -156,7 +157,7 @@ public class DAOProductosImp implements DAOProductos {
 
 		Statement stmt = null;
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -218,7 +219,7 @@ public class DAOProductosImp implements DAOProductos {
 		Statement stmt = null;
 		ResultSet rs = null;
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 
 		if(connection == null || lockMode == 0)
 		{
@@ -287,7 +288,7 @@ public class DAOProductosImp implements DAOProductos {
 		ResultSet rs = null;
 		TransferSuministro suministroSalida = new TransferSuministro();
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 
 		if(connection == null || lockMode == 0)
 		{
@@ -348,7 +349,7 @@ public class DAOProductosImp implements DAOProductos {
 		Statement stmt = null;
 
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -412,7 +413,7 @@ public class DAOProductosImp implements DAOProductos {
 		Statement stmt = null;
 		ResultSet rs = null;
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 
 		if(connection == null || lockMode == 0)
 		{
@@ -476,7 +477,7 @@ public class DAOProductosImp implements DAOProductos {
 		Statement stmt = null;
 		ResultSet rs = null;
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 
 		if(connection == null || lockMode == 0)
 		{
@@ -538,7 +539,7 @@ public class DAOProductosImp implements DAOProductos {
 		Statement stmt = null;
 
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -591,7 +592,7 @@ public class DAOProductosImp implements DAOProductos {
 		ResultSet rs = null;
 
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 
 		TransferProducto productoSalida = new TransferProducto();
 		if(connection == null || lockMode == 0)
@@ -664,7 +665,7 @@ public class DAOProductosImp implements DAOProductos {
 		Statement stmt = null;
 		ResultSet rs = null;
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 
 		if(connection == null || lockMode == 0)
 		{
@@ -724,7 +725,7 @@ public class DAOProductosImp implements DAOProductos {
 	{
 		Statement stmt = null;
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		try 
 		{	
 			stmt = connection.createStatement();
@@ -754,7 +755,7 @@ public class DAOProductosImp implements DAOProductos {
 	{
 		Statement stmt = null;
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		try 
 		{	
 			stmt = connection.createStatement();

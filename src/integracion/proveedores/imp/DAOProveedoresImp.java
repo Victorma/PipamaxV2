@@ -25,7 +25,7 @@ public class DAOProveedoresImp implements DAOProveedores{
 		Statement stmt = null;
 
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -94,7 +94,7 @@ public class DAOProveedoresImp implements DAOProveedores{
 
 		Statement stmt = null;
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -159,7 +159,7 @@ public class DAOProveedoresImp implements DAOProveedores{
 		Statement stmt = null;
 
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -208,7 +208,7 @@ public class DAOProveedoresImp implements DAOProveedores{
 		ResultSet rs = null;
 
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 
 		TransferProveedor proveedorSalida = new TransferProveedor();
 		if(connection == null || lockMode == 0)
@@ -279,7 +279,7 @@ public class DAOProveedoresImp implements DAOProveedores{
 		ResultSet rs = null;
 		TransferProveedor proveedorSalida = new TransferProveedor();
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 
 		if(connection == null || lockMode == 0)
 		{
@@ -351,7 +351,7 @@ public class DAOProveedoresImp implements DAOProveedores{
 		Statement stmt = null;
 		ResultSet rs = null;
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 
 		if(connection == null || lockMode == 0)
 		{
@@ -408,7 +408,7 @@ public class DAOProveedoresImp implements DAOProveedores{
 		Statement stmt = null;
 
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 
 		if(connection == null)
 		{
@@ -456,7 +456,7 @@ public class DAOProveedoresImp implements DAOProveedores{
 	{
 		Statement stmt = null;
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		try 
 		{	
 			stmt = connection.createStatement();
@@ -478,7 +478,7 @@ public class DAOProveedoresImp implements DAOProveedores{
 	{
 		Statement stmt = null;
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		try 
 		{	
 			stmt = connection.createStatement();

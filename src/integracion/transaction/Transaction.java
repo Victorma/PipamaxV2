@@ -1,7 +1,5 @@
 package integracion.transaction;
 
-import java.sql.Connection;
-
 public interface Transaction {
 	public boolean start();
 
@@ -9,6 +7,6 @@ public interface Transaction {
 
 	public boolean rollback();
 
-	public Connection getResource();
+	public Object getResource();
 
 }

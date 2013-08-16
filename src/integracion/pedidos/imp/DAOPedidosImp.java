@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import negocio.pedidos.TransferListaPedidos;
 import negocio.pedidos.TransferPedido;
 import negocio.productos.TransferProducto;
-
 import integracion.BBDDConnection;
 import integracion.DAOException;
 import integracion.pedidos.DAOPedidos;
@@ -25,8 +24,12 @@ public class DAOPedidosImp implements DAOPedidos {
 		boolean error = false;
 
 		Statement stmt = null;
+
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -99,8 +102,12 @@ public class DAOPedidosImp implements DAOPedidos {
 		boolean error = false;
 		
 		Statement stmt = null;
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -149,8 +156,12 @@ public class DAOPedidosImp implements DAOPedidos {
 
 
 		Statement stmt = null;
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -200,8 +211,12 @@ public class DAOPedidosImp implements DAOPedidos {
 
 		Statement stmt = null;
 		ResultSet rs = null;
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null || lockMode == 0)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -279,8 +294,12 @@ public class DAOPedidosImp implements DAOPedidos {
 		boolean error = false;
 
 		Statement stmt = null;
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -331,9 +350,12 @@ public class DAOPedidosImp implements DAOPedidos {
 
 		Statement stmt = null;
 		ResultSet rs = null;
-
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null || lockMode == 0)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -401,8 +423,12 @@ public class DAOPedidosImp implements DAOPedidos {
 
 		Statement stmt = null;
 		ResultSet rs = null;
+		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null || lockMode == 0)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -456,8 +482,12 @@ public class DAOPedidosImp implements DAOPedidos {
 	public void bloquearTablas(int lockMode) throws DAOException
 	{
 		Statement stmt = null;
-		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		
+		//Get the connection from the transaction
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		try 
 		{	
 			stmt = connection.createStatement();
@@ -480,8 +510,12 @@ public class DAOPedidosImp implements DAOPedidos {
 	public void desbloquearTablas() throws DAOException
 	{
 		Statement stmt = null;
-		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		
+		//Get the connection from the transaction
+		Connection connection = null;
+		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		try 
 		{	
 			stmt = connection.createStatement();

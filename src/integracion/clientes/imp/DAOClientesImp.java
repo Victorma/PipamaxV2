@@ -31,7 +31,12 @@ public class DAOClientesImp implements DAOClientes
 		Statement stmt = null;
 		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		
+		try{
+		connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -123,7 +128,12 @@ public class DAOClientesImp implements DAOClientes
 		Statement stmt = null;
 		ResultSet rs = null;
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		
+		try{
+		connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+			
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -248,8 +258,13 @@ public class DAOClientesImp implements DAOClientes
 		
 		Statement stmt = null;
 		
-		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		//Get the connection from the transaction
+		Connection connection = null;
+		
+		try{
+		connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -304,8 +319,12 @@ public class DAOClientesImp implements DAOClientes
 		Statement stmt = null;
 		ResultSet rs = null;
 		
-		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		//Get the connection from the transaction
+		Connection connection = null;
+		
+		try{
+		connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
 		
 		TransferCliente clienteSalida = new TransferCliente();
 		if(connection == null || lockMode == 0)
@@ -414,8 +433,12 @@ public class DAOClientesImp implements DAOClientes
 		Statement stmt = null;
 		ResultSet rs = null;
 		TransferCliente clienteSalida = new TransferCliente();
-		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		//Get the connection from the transaction
+		Connection connection = null;
+		
+		try{
+		connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
 
 		if(connection == null || lockMode == 0)
 		{
@@ -523,8 +546,12 @@ public class DAOClientesImp implements DAOClientes
 
 		Statement stmt = null;
 		ResultSet rs = null;
-		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		//Get the connection from the transaction
+		Connection connection = null;
+		
+		try{
+		connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
 
 		if(connection == null || lockMode == 0)
 		{
@@ -586,8 +613,12 @@ public class DAOClientesImp implements DAOClientes
 		
 		Statement stmt = null;
 		
-		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		//Get the connection from the transaction
+		Connection connection = null;
+		
+		try{
+		connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
 		
 		if(connection == null)
 		{
@@ -634,8 +665,13 @@ public class DAOClientesImp implements DAOClientes
 	public void bloquearTablas(int lockMode) throws DAOException
 	{
 		Statement stmt = null;
-		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		//Get the connection from the transaction
+		Connection connection = null;
+		
+		try{
+		connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		try 
 		{	
 			stmt = connection.createStatement();
@@ -657,7 +693,12 @@ public class DAOClientesImp implements DAOClientes
 	{
 		Statement stmt = null;
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null;
+		
+		try{
+		connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+		}catch(ClassCastException ex){};
+		
 		try 
 		{	
 			stmt = connection.createStatement();

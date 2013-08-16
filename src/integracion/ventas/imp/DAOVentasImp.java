@@ -29,7 +29,7 @@ public class DAOVentasImp implements DAOVentas {
 		Statement stmt = null;
 
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -116,7 +116,7 @@ public class DAOVentasImp implements DAOVentas {
 		Statement stmt = null;
 		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -176,7 +176,7 @@ public class DAOVentasImp implements DAOVentas {
 		Statement stmt = null;
 		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		if(connection == null)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -230,7 +230,7 @@ public class DAOVentasImp implements DAOVentas {
 		ResultSet rs = null;
 		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		if(connection == null || lockMode == 0)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -314,7 +314,7 @@ public class DAOVentasImp implements DAOVentas {
 		ResultSet rs = null;
 		
 		//Get the connection from the transaction
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		if(connection == null || lockMode == 0)
 		{
 			//if we dont find the transaction, make the sentence with no transaction
@@ -374,7 +374,7 @@ public class DAOVentasImp implements DAOVentas {
 	{
 		Statement stmt = null;
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		try 
 		{	
 			stmt = connection.createStatement();
@@ -398,7 +398,7 @@ public class DAOVentasImp implements DAOVentas {
 	{
 		Statement stmt = null;
 		//Get the transction and the connection
-		Connection connection = TransactionManager.getInstancia().getTransaction().getResource();
+		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
 		try 
 		{	
 			stmt = connection.createStatement();

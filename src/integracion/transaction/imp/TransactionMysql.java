@@ -105,7 +105,7 @@ public class TransactionMysql implements Transaction {
 	}
 
 	@Override
-	public Connection getResource() {
+	public Object getResource() {
 		return connection;
 	}
 
