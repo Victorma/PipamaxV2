@@ -66,11 +66,6 @@ public interface DAOVentas {
 	public boolean devolucion(TransferVenta transferVenta) throws DAOException;
 	
 	/**
-	 * Metodo para bloquear las tablas de ventas
-	 */
-	public void bloquearTablas(int lockMode) throws DAOException;
-	
-	/**
 	 * Metodo para desbloquear las tablas
 	 */
 	public void desbloquearTablas() throws DAOException;

@@ -61,12 +61,7 @@ public interface DAOMarcas
 	 * @throws DAOException
 	 */
 	public boolean borrarMarca(TransferMarca marca) throws DAOException;
-	
-	/**
-	 * Metodo para bloquear las tablas de clientes
-	 */
-	public void bloquearTablas(int lockMode) throws DAOException;
-	
+
 	/**
 	 * Metodo para desbloquear las tablas
 	 */

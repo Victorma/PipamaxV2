@@ -1,6 +1,10 @@
 package negocio.clientes.imp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import constantes.Errores;
+import constantes.LockModes;
 import integracion.DAOException;
 import integracion.clientes.DAOClientes;
 import integracion.clientes.factoria.FactoriaDAOClientes;
@@ -33,7 +37,10 @@ public class SAClientesImp implements SAClientes{
 			try
 			{
 				//Bloqueamos la tabla clientes
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("clientes"); tablas.add("clientesvip");
+				transaction.lock(LockModes.ReadAndWrite, tablas);
+				
 				right &= DAO.consultarClienteDNI(cliente,0).getId() == -1;
 				if(!right)
 					retorno.addError(Errores.clienteDNIRepetido, dniCliente);
@@ -81,7 +88,9 @@ public class SAClientesImp implements SAClientes{
 			try
 			{		
 				//Bloqueamos la tabla clientes
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("clientes"); tablas.add("clientesvip");
+				transaction.lock(LockModes.ReadAndWrite, tablas);
 				
 				TransferCliente aux = new TransferCliente();
 				
@@ -220,7 +229,9 @@ public class SAClientesImp implements SAClientes{
 			try
 			{
 				//Bloqueamos la tabla clientes
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("clientes"); tablas.add("clientesvip");
+				transaction.lock(LockModes.ReadAndWrite, tablas);
 				
 				if(!DAO.borrarCliente(cliente))
 				{
@@ -268,7 +279,9 @@ public class SAClientesImp implements SAClientes{
 			try 
 			{
 				//Bloqueamos la tabla clientes
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("clientes"); tablas.add("clientesvip");
+				transaction.lock(LockModes.ReadAndWrite, tablas);
 				
 				if(DAO.consultarClienteDNI(cliente,0).getId() == -1)
 				{

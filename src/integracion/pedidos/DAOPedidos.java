@@ -76,12 +76,7 @@ public interface DAOPedidos {
 	 * @throws DAOException
 	 */
 	boolean compruebaProductoNoPendienteDeRecepcion(TransferProducto producto, int lockMode)throws DAOException;
-	
-	/**
-	 * Metodo para bloquear las tablas de pedidos
-	 */
-	public void bloquearTablas(int lockMode) throws DAOException;
-	
+
 	/**
 	 * Metodo para desbloquear las tablas
 	 */

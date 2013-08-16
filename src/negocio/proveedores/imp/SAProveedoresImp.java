@@ -1,6 +1,10 @@
 package negocio.proveedores.imp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import constantes.Errores;
+import constantes.LockModes;
 import integracion.DAOException;
 import integracion.proveedores.DAOProveedores;
 import integracion.proveedores.factoria.FactoriaDAOProveedores;
@@ -34,7 +38,9 @@ public class SAProveedoresImp implements SAProveedores{
 		{
 			try{
 				//Bloqueamos la tabla proveedores
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("proveedores");
+				transaction.lock(LockModes.ReadAndWrite, tablas);
 				
 				right&=DAO.consultarProveedorNIF(proveedor, 0).getId() == -1;
 				if(!right)
@@ -84,7 +90,9 @@ public class SAProveedoresImp implements SAProveedores{
 
 			try{
 				//Bloqueamos la tabla proveedores
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("proveedores");
+				transaction.lock(LockModes.ReadAndWrite, tablas);
 				
 				TransferProveedor aux = new TransferProveedor();
 				aux.setNif(nifProveedor);
@@ -215,7 +223,9 @@ public class SAProveedoresImp implements SAProveedores{
 		{
 			try {
 				//Bloqueamos la tabla proveedores
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("proveedores");
+				transaction.lock(LockModes.ReadAndWrite, tablas);
 				
 				right&=DAO.borrarProveedor(proveedor);
 				if(!right)
@@ -258,7 +268,9 @@ public class SAProveedoresImp implements SAProveedores{
 
 			try {
 				//Bloqueamos la tabla proveedores
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("proveedores");
+				transaction.lock(LockModes.ReadAndWrite, tablas);
 				
 				right&=DAO.consultarProveedorNIF(proveedor, 0).getId() != -1;
 				if(!right)

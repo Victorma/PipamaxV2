@@ -6,6 +6,7 @@ package negocio.productos.imp;
 import java.util.Iterator;
 
 import constantes.Errores;
+import constantes.LockModes;
 import integracion.DAOException;
 import integracion.marcas.DAOMarcas;
 import integracion.marcas.factoria.FactoriaDAOMarcas;
@@ -52,7 +53,7 @@ public class SAProductosImp implements SAProductos {
 				marca.setId(producto.getIdMarca());
 				
 				//Bloqueamos la tabla productos
-				DAO.bloquearTablas(4);
+				transaction.lock(LockModes.LockProductos1, null);
 			
 				marca = DAOM.consultarMarca(marca, 3);
 
@@ -100,7 +101,7 @@ public class SAProductosImp implements SAProductos {
 
 			try {
 				//Bloqueamos la tabla productos
-				DAO.bloquearTablas(6);
+				transaction.lock(LockModes.LockProductos3, null);
 				right&= !DAOP.compruebaProductoNoPendienteDeRecepcion(producto, 0);
 				if(!right)
 					retorno.addError(Errores.productoEnProceso, producto.getId());
@@ -146,7 +147,7 @@ public class SAProductosImp implements SAProductos {
 				marca.setId(producto.getIdMarca());
 				
 				//Bloqueamos la tabla productos
-				DAO.bloquearTablas(4);
+				transaction.lock(LockModes.LockProductos1, null);
 				
 				marca = DAOM.consultarMarca(marca, 3);
 
@@ -361,7 +362,7 @@ public class SAProductosImp implements SAProductos {
 		{
 			try {
 				//Bloqueamos la tabla productos
-				DAO.bloquearTablas(5);
+				transaction.lock(LockModes.LockProductos2, null);
 				
 				right&=DAO.borrarSuministro(suministro);
 				if(!right)

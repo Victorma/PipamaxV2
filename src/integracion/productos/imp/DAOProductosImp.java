@@ -721,36 +721,6 @@ public class DAOProductosImp implements DAOProductos {
 		return out;
 	}
 
-	public void bloquearTablas(int lockMode) throws DAOException
-	{
-		Statement stmt = null;
-		//Get the transction and the connection
-		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
-		try 
-		{	
-			stmt = connection.createStatement();
-
-			if(lockMode == 1)
-				stmt.execute("LOCK TABLES productos WRITE");
-			else if(lockMode == 2)
-				stmt.execute("LOCK TABLES productos READ");
-			else if(lockMode == 3)
-				stmt.execute("LOCK TABLES productos WRITE, productos AS prod READ");
-			else if (lockMode == 4)
-				 stmt.execute("LOCK TABLES productos WRITE, productos AS prod READ, marcas WRITE, marcas AS mar READ");
-			else if (lockMode == 5)
-				 stmt.execute("LOCK TABLES productos WRITE, productos AS prod READ, suministros WRITE, suministros AS sum READ, proveedores WRITE, proveedores AS prov READ");
-			else if (lockMode == 6)
-				 stmt.execute("LOCK TABLES productos WRITE, productos AS prod READ, pedidos WRITE, pedidos AS ped READ, linea_pedido WRITE, linea_pedido AS liped READ, suministros WRITE, suministros AS sum READ, proveedores WRITE, proveedores AS prov READ, ventas WRITE, ventas AS vent READ");
-			
-			
-		}
-		catch(SQLException ex)
-		{
-			throw new DAOException(ex);
-		}
-	}
-
 	public void desbloquearTablas() throws DAOException
 	{
 		Statement stmt = null;

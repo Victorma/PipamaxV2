@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import constantes.Errores;
+import constantes.LockModes;
 import integracion.DAOException;
 import integracion.marcas.DAOMarcas;
 import integracion.marcas.factoria.FactoriaDAOMarcas;
@@ -56,8 +57,8 @@ public class SAPedidosImp implements SAPedidos{
 		if(transaction.start())
 		{
 			try{
-				//Bloqueamos la tabla marcas
-				pedidos.bloquearTablas(4);
+				//Bloqueamos la tabla pedidos
+				transaction.lock(LockModes.LockPedidos, null);
 				
 				//Buscamos el proveedor				
 				proveedor.setId(pedido.getIdProveedor());
@@ -283,7 +284,9 @@ public class SAPedidosImp implements SAPedidos{
 		{
 			try {
 				//Bloqueamos la tabla marcas
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("pedidos"); tablas.add("linea_pedido");
+				transaction.lock(LockModes.ReadAndWrite, null);
 				
 				int idPedido = pedido.getId();
 				pedido = DAO.consultarPedido(pedido,0);
@@ -335,7 +338,7 @@ public class SAPedidosImp implements SAPedidos{
 
 			try {
 				//Bloqueamos la tabla marcas
-				DAO.bloquearTablas(4);
+				transaction.lock(LockModes.LockPedidos, null);
 				
 				int idPedido = pedido.getId();
 				pedido = DAO.consultarPedido(pedido,0);
@@ -401,7 +404,10 @@ public class SAPedidosImp implements SAPedidos{
 		{
 			try {
 				//Bloqueamos la tabla marcas
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("pedidos"); tablas.add("linea_pedido");
+				transaction.lock(LockModes.ReadAndWrite, null);
+				
 				int idPedido = pedido.getId();
 				pedido = DAO.consultarPedido(pedido,0);
 				if(pedido.getId()==-1){

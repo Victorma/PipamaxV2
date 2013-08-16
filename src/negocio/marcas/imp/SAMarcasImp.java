@@ -1,8 +1,10 @@
 package negocio.marcas.imp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import constantes.Errores;
+import constantes.LockModes;
 import integracion.DAOException;
 import integracion.marcas.DAOMarcas;
 import integracion.marcas.factoria.FactoriaDAOMarcas;
@@ -43,7 +45,8 @@ public class SAMarcasImp implements SAMarcas
 			try 
 			{
 				//Bloqueamos la tabla marcas
-				DAO.bloquearTablas(4);
+				transaction.lock(LockModes.LockMarcas, null);
+				
 				right &= DAO.consultarMarcaNombre(marca,0).getId() == -1;
 				if(!right)
 					retorno.addError(Errores.marcaNombreRepetido, nombreMarca);
@@ -96,7 +99,10 @@ public class SAMarcasImp implements SAMarcas
 			try 
 			{
 				//Bloqueamos la tabla marcas
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("marcas");
+				transaction.lock(LockModes.ReadAndWrite, tablas);
+				
 				TransferMarca aux = new TransferMarca();
 				aux.setNombre(nombreMarca);
 				aux = DAO.consultarMarcaNombre(aux,0);
@@ -228,7 +234,7 @@ public class SAMarcasImp implements SAMarcas
 			//Ejecutamos un try por el lanzamiento de retorno en el acceso a la base de datos
 			try {
 				//Bloqueamos la tabla marcas
-				DAO.bloquearTablas(4);
+				transaction.lock(LockModes.LockMarcas, null);
 				
 				TransferListaProductos prods = DAOP.productosPorMarca(marca,0);
 				List<TransferProducto> lista = prods.getList();
@@ -282,7 +288,10 @@ public class SAMarcasImp implements SAMarcas
 		{
 			try {
 				//Bloqueamos la tabla marcas
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("marcas");
+				transaction.lock(LockModes.ReadAndWrite, tablas);
+				
 				if(DAO.consultarMarcaNombre(marca,0).getId() == -1)
 					retorno.addError(Errores.marcaNoEncontradoNombre, nombreMarca);
 				else

@@ -450,29 +450,6 @@ public class DAOProveedoresImp implements DAOProveedores{
 		return !error;
 
 	}
-
-
-	public void bloquearTablas(int lockMode) throws DAOException
-	{
-		Statement stmt = null;
-		//Get the transction and the connection
-		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
-		try 
-		{	
-			stmt = connection.createStatement();
-			
-			if(lockMode == 1)
-				stmt.execute("LOCK TABLES proveedores WRITE");
-			else if(lockMode == 2)
-				stmt.execute("LOCK TABLES proveedores READ");
-			else if(lockMode == 3)
-				stmt.execute("LOCK TABLES proveedores WRITE, proveedores AS prov READ");
-		}
-		catch(SQLException ex)
-		{
-			throw new DAOException(ex);
-		}
-	}
 	
 	public void desbloquearTablas() throws DAOException
 	{

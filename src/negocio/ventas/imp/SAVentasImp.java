@@ -9,6 +9,7 @@ import java.util.List;
 import constantes.Errores;
 
 
+import constantes.LockModes;
 import integracion.DAOException;
 import integracion.clientes.DAOClientes;
 import integracion.clientes.factoria.FactoriaDAOClientes;
@@ -53,7 +54,8 @@ public class SAVentasImp implements SAVentas {
 
 			try{
 				//Bloqueamos la tabla ventas
-				ventas.bloquearTablas(4);
+				transaction.lock(LockModes.LockVentas, null);
+				
 				//Buscamos el cliente
 				TransferCliente cliente = new TransferCliente();
 				cliente.setId(venta.getIdCliente());
@@ -154,7 +156,9 @@ public class SAVentasImp implements SAVentas {
 			try
 			{
 				//Bloqueamos la tabla Ventas
-				DAO.bloquearTablas(3);
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("ventas"); tablas.add("lineasVenta");
+				transaction.lock(LockModes.ReadAndWrite, null);
 				
 				right &= DAO.borraVenta(transferVenta);
 				if(!right)
@@ -196,7 +200,7 @@ public class SAVentasImp implements SAVentas {
 		{
 			try{
 				//Bloqueamos la tabla Ventas
-				DAO.bloquearTablas(4);
+				transaction.lock(LockModes.LockVentas, null);
 				
 				venta = DAO.consultaVenta(venta,0);
 

@@ -426,36 +426,6 @@ public class DAOMarcasImp implements DAOMarcas
 		return marca;
 	}
 	
-	public void bloquearTablas(int lockMode) throws DAOException
-	{
-		Statement stmt = null;
-		
-		//Get the connection from the transaction
-		Connection connection = null;
-		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
-		}catch(ClassCastException ex){};
-		
-		try 
-		{	
-			stmt = connection.createStatement();
-			
-			if(lockMode == 1)
-				stmt.execute("LOCK TABLE marcas WRITE");
-			else if(lockMode == 2)
-				stmt.execute("LOCK TABLES marcas READ");
-			else if(lockMode == 3)
-				stmt.execute("LOCK TABLES marcas WRITE, marcas AS mar READ");
-			else if (lockMode == 4)
-				stmt.execute("LOCK TABLES marcas WRITE, marcas AS mar READ, productos WRITE, productos AS prod READ, pedidos WRITE, pedidos AS ped READ, linea_pedido WRITE, linea_pedido AS liped READ, suministros WRITE, suministros AS sum READ, proveedores WRITE, proveedores AS prov READ, ventas WRITE, ventas AS vent READ");
-		}
-		catch(SQLException ex)
-		{
-			throw new DAOException(ex);
-		}
-	}
-	
-	
-	
 	public void desbloquearTablas() throws DAOException
 	{
 		Statement stmt = null;

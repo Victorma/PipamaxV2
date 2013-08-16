@@ -660,34 +660,6 @@ public class DAOClientesImp implements DAOClientes
 		return !error;
 		
 	}
-
-
-	public void bloquearTablas(int lockMode) throws DAOException
-	{
-		Statement stmt = null;
-		//Get the connection from the transaction
-		Connection connection = null;
-		
-		try{
-		connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
-		}catch(ClassCastException ex){};
-		
-		try 
-		{	
-			stmt = connection.createStatement();
-			
-			if(lockMode == 1)
-				stmt.execute("LOCK TABLES clientes WRITE,clientesvip WRITE");
-			else if(lockMode == 2)
-				stmt.execute("LOCK TABLES clientes READ,clientesvip READ");
-			else if(lockMode == 3)
-				stmt.execute("LOCK TABLES clientes WRITE, clientes AS cli READ, clientesvip WRITE, clientesvip AS clivip READ");
-		}
-		catch(SQLException ex)
-		{
-			throw new DAOException(ex);
-		}
-	}
 	
 	public void desbloquearTablas() throws DAOException
 	{

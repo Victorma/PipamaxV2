@@ -370,30 +370,6 @@ public class DAOVentasImp implements DAOVentas {
 		return out;
 	}
 	
-	public void bloquearTablas(int lockMode) throws DAOException
-	{
-		Statement stmt = null;
-		//Get the transction and the connection
-		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
-		try 
-		{	
-			stmt = connection.createStatement();
-			
-			if(lockMode == 1)
-				stmt.execute("LOCK TABLES ventas WRITE,lineasVenta WRITE");
-			else if(lockMode == 2)
-				stmt.execute("LOCK TABLES ventas READ,lineasVenta READ");
-			else if(lockMode == 3)
-				stmt.execute("LOCK TABLES ventas WRITE, ventas AS ven READ, lineasVenta WRITE, lineasVenta AS lin READ");
-			else if (lockMode == 4)
-				 stmt.execute("LOCK TABLES ventas WRITE, ventas AS ven READ, lineasventa WRITE, lineasventa AS lv READ, productos WRITE, productos AS prod READ, clientes WRITE, clientes AS cli READ, clientesvip WRITE, clientesvip AS clivip READ");
-		}
-		catch(SQLException ex)
-		{
-			throw new DAOException(ex);
-		}
-	}
-	
 	public void desbloquearTablas() throws DAOException
 	{
 		Statement stmt = null;

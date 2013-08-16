@@ -6,8 +6,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Properties;
 
+import constantes.LockModes;
 import integracion.transaction.Transaction;
 
 public class TransactionMysql implements Transaction {
@@ -107,6 +109,56 @@ public class TransactionMysql implements Transaction {
 	@Override
 	public Object getResource() {
 		return connection;
+	}
+	
+	@Override
+	public boolean lock(LockModes mode, List<String> tables) {
+		boolean error = false;
+		Statement stmt = null;
+		String query = "LOCK TABLES ";
+		
+		try{	
+			stmt = connection.createStatement();
+			
+			if(mode == LockModes.Write)
+			{
+				for(String table:tables){query.concat(table); query.concat(" WRITE,");}
+				query = query.substring(0, query.length()-1);
+				stmt.execute(query);
+			}
+			else if(mode == LockModes.Read)
+			{
+				for(String table:tables){query.concat(table); query.concat(" READ,");}
+				query = query.substring(0, query.length()-1);
+				stmt.execute(query);
+			}
+			else if(mode == LockModes.ReadAndWrite)
+			{
+				for(String table:tables){
+					query.concat(table); query.concat(" WRITE, ");
+					query.concat(table); query.concat(" as "); 
+					query.concat(table); query.concat("2 READ,");
+				}
+				query = query.substring(0, query.length()-1);
+				stmt.execute(query);
+			}
+			else if(mode == LockModes.LockMarcas)
+				stmt.execute("LOCK TABLES marcas WRITE, marcas AS mar READ, productos WRITE, productos AS prod READ, pedidos WRITE, pedidos AS ped READ, linea_pedido WRITE, linea_pedido AS liped READ, suministros WRITE, suministros AS sum READ, proveedores WRITE, proveedores AS prov READ, ventas WRITE, ventas AS vent READ");
+			else if(mode == LockModes.LockPedidos)
+				 stmt.execute("LOCK TABLES pedidos WRITE, pedidos AS ped READ, linea_pedido WRITE, linea_pedido AS lin READ, productos WRITE, productos AS prod READ, suministros WRITE, suministros AS sum READ, proveedores WRITE, proveedores AS prov READ");
+			else if (mode == LockModes.LockProductos1)
+				 stmt.execute("LOCK TABLES productos WRITE, productos AS prod READ, marcas WRITE, marcas AS mar READ");
+			else if (mode == LockModes.LockProductos2)
+				 stmt.execute("LOCK TABLES productos WRITE, productos AS prod READ, suministros WRITE, suministros AS sum READ, proveedores WRITE, proveedores AS prov READ");
+			else if (mode == LockModes.LockProductos3)
+				 stmt.execute("LOCK TABLES productos WRITE, productos AS prod READ, pedidos WRITE, pedidos AS ped READ, linea_pedido WRITE, linea_pedido AS liped READ, suministros WRITE, suministros AS sum READ, proveedores WRITE, proveedores AS prov READ, ventas WRITE, ventas AS vent READ");
+			else if (mode == LockModes.LockVentas)
+				 stmt.execute("LOCK TABLES ventas WRITE, ventas AS ven READ, lineasventa WRITE, lineasventa AS lv READ, productos WRITE, productos AS prod READ, clientes WRITE, clientes AS cli READ, clientesvip WRITE, clientesvip AS clivip READ");
+		
+		}
+		catch(SQLException ex){error = true;}
+
+		return !error;
 	}
 
 }
