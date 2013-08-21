@@ -1,14 +1,14 @@
-package constantes;
+package integracion.transaction;
 
 public enum LockModes {
 	Write,
 	Read,
 	ReadAndWrite,
-	LockMarcas,
+	/*LockMarcas,
 	LockPedidos,
 	LockProductos1,
 	LockProductos2,
 	LockProductos3,
-	LockVentas,
+	LockVentas,*/
 	LockAll
 }

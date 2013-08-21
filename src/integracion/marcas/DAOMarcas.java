@@ -62,9 +62,4 @@ public interface DAOMarcas
 	 */
 	public boolean borrarMarca(TransferMarca marca) throws DAOException;
 
-	/**
-	 * Metodo para desbloquear las tablas
-	 */
-	public void desbloquearTablas() throws DAOException;
-
 }

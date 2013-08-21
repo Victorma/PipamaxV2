@@ -9,7 +9,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Properties;
 
-import constantes.LockModes;
+import integracion.transaction.LockModes;
 import integracion.transaction.Transaction;
 
 public class TransactionMysql implements Transaction {
@@ -142,6 +142,8 @@ public class TransactionMysql implements Transaction {
 				query = query.substring(0, query.length()-1);
 				stmt.execute(query);
 			}
+			
+			/* ####### Se guarda este código porque contiene el dominio de tablas al las que afecta cada módulo #######
 			else if(mode == LockModes.LockMarcas)
 				stmt.execute("LOCK TABLES marcas WRITE, marcas AS mar READ, productos WRITE, productos AS prod READ, pedidos WRITE, pedidos AS ped READ, linea_pedido WRITE, linea_pedido AS liped READ, suministros WRITE, suministros AS sum READ, proveedores WRITE, proveedores AS prov READ, ventas WRITE, ventas AS vent READ");
 			else if(mode == LockModes.LockPedidos)
@@ -154,10 +156,28 @@ public class TransactionMysql implements Transaction {
 				 stmt.execute("LOCK TABLES productos WRITE, productos AS prod READ, pedidos WRITE, pedidos AS ped READ, linea_pedido WRITE, linea_pedido AS liped READ, suministros WRITE, suministros AS sum READ, proveedores WRITE, proveedores AS prov READ, ventas WRITE, ventas AS vent READ");
 			else if (mode == LockModes.LockVentas)
 				 stmt.execute("LOCK TABLES ventas WRITE, ventas AS ven READ, lineasventa WRITE, lineasventa AS lv READ, productos WRITE, productos AS prod READ, clientes WRITE, clientes AS cli READ, clientesvip WRITE, clientesvip AS clivip READ");
-		
+			   ########################################################################################################*/
+			
+			else if (mode == LockModes.LockAll)
+				 stmt.execute("FLUSH TABLES WITH READ LOCK");
 		}
 		catch(SQLException ex){error = true;}
 
+		return !error;
+	}
+	
+	@Override
+	public boolean unlock(){
+		boolean error = true;
+		Statement stmt = null;
+		
+		try 
+		{	
+			stmt = connection.createStatement();
+			stmt.execute("UNLOCK TABLES");
+		}
+		catch(SQLException ex){error = false;}
+		
 		return !error;
 	}
 

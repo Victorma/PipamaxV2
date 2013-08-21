@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import constantes.Errores;
-import constantes.LockModes;
 import integracion.DAOException;
 import integracion.marcas.DAOMarcas;
 import integracion.marcas.factoria.FactoriaDAOMarcas;
 import integracion.productos.DAOProductos;
 import integracion.productos.factoria.FactoriaDAOProductos;
+import integracion.transaction.LockModes;
 import integracion.transaction.Transaction;
 import integracion.transaction.transactionManager.TransactionManager;
 import negocio.Retorno;
@@ -45,7 +45,7 @@ public class SAMarcasImp implements SAMarcas
 			try 
 			{
 				//Bloqueamos la tabla marcas
-				transaction.lock(LockModes.LockMarcas, null);
+				transaction.lock(LockModes.LockAll, null);
 				
 				right &= DAO.consultarMarcaNombre(marca,0).getId() == -1;
 				if(!right)
@@ -234,7 +234,7 @@ public class SAMarcasImp implements SAMarcas
 			//Ejecutamos un try por el lanzamiento de retorno en el acceso a la base de datos
 			try {
 				//Bloqueamos la tabla marcas
-				transaction.lock(LockModes.LockMarcas, null);
+				transaction.lock(LockModes.LockAll, null);
 				
 				TransferListaProductos prods = DAOP.productosPorMarca(marca,0);
 				List<TransferProducto> lista = prods.getList();

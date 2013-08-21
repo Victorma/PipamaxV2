@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import constantes.Errores;
-import constantes.LockModes;
 import integracion.DAOException;
 import integracion.clientes.DAOClientes;
 import integracion.clientes.factoria.FactoriaDAOClientes;
+import integracion.transaction.LockModes;
 import integracion.transaction.Transaction;
 import integracion.transaction.transactionManager.TransactionManager;
 import negocio.Retorno;

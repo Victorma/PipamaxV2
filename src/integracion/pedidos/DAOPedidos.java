@@ -76,9 +76,4 @@ public interface DAOPedidos {
 	 * @throws DAOException
 	 */
 	boolean compruebaProductoNoPendienteDeRecepcion(TransferProducto producto, int lockMode)throws DAOException;
-
-	/**
-	 * Metodo para desbloquear las tablas
-	 */
-	public void desbloquearTablas() throws DAOException;
 }

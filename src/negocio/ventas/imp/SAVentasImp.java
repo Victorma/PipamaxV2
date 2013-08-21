@@ -9,7 +9,6 @@ import java.util.List;
 import constantes.Errores;
 
 
-import constantes.LockModes;
 import integracion.DAOException;
 import integracion.clientes.DAOClientes;
 import integracion.clientes.factoria.FactoriaDAOClientes;
@@ -17,6 +16,7 @@ import integracion.marcas.DAOMarcas;
 import integracion.marcas.factoria.FactoriaDAOMarcas;
 import integracion.productos.DAOProductos;
 import integracion.productos.factoria.FactoriaDAOProductos;
+import integracion.transaction.LockModes;
 import integracion.transaction.Transaction;
 import integracion.transaction.transactionManager.TransactionManager;
 import integracion.ventas.DAOVentas;
@@ -54,7 +54,7 @@ public class SAVentasImp implements SAVentas {
 
 			try{
 				//Bloqueamos la tabla ventas
-				transaction.lock(LockModes.LockVentas, null);
+				transaction.lock(LockModes.LockAll, null);
 				
 				//Buscamos el cliente
 				TransferCliente cliente = new TransferCliente();
@@ -200,7 +200,7 @@ public class SAVentasImp implements SAVentas {
 		{
 			try{
 				//Bloqueamos la tabla Ventas
-				transaction.lock(LockModes.LockVentas, null);
+				transaction.lock(LockModes.LockAll, null);
 				
 				venta = DAO.consultaVenta(venta,0);
 

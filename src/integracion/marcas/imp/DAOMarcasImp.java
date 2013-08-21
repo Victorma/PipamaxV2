@@ -425,24 +425,4 @@ public class DAOMarcasImp implements DAOMarcas
 		
 		return marca;
 	}
-	
-	public void desbloquearTablas() throws DAOException
-	{
-		Statement stmt = null;
-		
-		//Get the connection from the transaction
-		Connection connection = null;
-		try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
-		}catch(ClassCastException ex){};
-		
-		try 
-		{	
-			stmt = connection.createStatement();
-			stmt.execute("UNLOCK TABLES");
-		}
-		catch(SQLException ex)
-		{
-			throw new DAOException(ex);
-		}
-	}
 }

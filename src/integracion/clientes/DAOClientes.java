@@ -63,10 +63,5 @@ public interface DAOClientes {
 	 * @throws DAOException
 	 */
 	public TransferCliente consultarClienteDNI(TransferCliente cliente, int lockMode) throws DAOException;
-
-	/**
-	 * Metodo para desbloquear las tablas
-	 */
-	public void desbloquearTablas() throws DAOException;
 	 
 }

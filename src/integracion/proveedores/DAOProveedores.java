@@ -62,11 +62,5 @@ public interface DAOProveedores {
 	 * @throws DAOException
 	 */
 	public TransferProveedor consultarProveedorNIF(TransferProveedor proveedor, int lockMode) throws DAOException;	
-
-	/**
-	 * Metodo para desbloquear las tablas
-	 */
-	public void desbloquearTablas() throws DAOException;
-	 
 	
 }

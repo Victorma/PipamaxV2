@@ -101,10 +101,5 @@ public interface DAOProductos {
 	 * @throws DAOException 
 	 */
 	public TransferSuministro consultarSuministro(TransferSuministro suministro, int lockMode) throws DAOException;
-
-	/**
-	 * Metodo para desbloquear las tablas
-	 */
-	public void desbloquearTablas() throws DAOException;
 	
 }

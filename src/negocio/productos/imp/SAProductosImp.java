@@ -6,7 +6,6 @@ package negocio.productos.imp;
 import java.util.Iterator;
 
 import constantes.Errores;
-import constantes.LockModes;
 import integracion.DAOException;
 import integracion.marcas.DAOMarcas;
 import integracion.marcas.factoria.FactoriaDAOMarcas;
@@ -16,6 +15,7 @@ import integracion.productos.DAOProductos;
 import integracion.productos.factoria.FactoriaDAOProductos;
 import integracion.proveedores.DAOProveedores;
 import integracion.proveedores.factoria.FactoriaDAOProveedores;
+import integracion.transaction.LockModes;
 import integracion.transaction.Transaction;
 import integracion.transaction.transactionManager.TransactionManager;
 import negocio.Retorno;
@@ -52,8 +52,8 @@ public class SAProductosImp implements SAProductos {
 				TransferMarca marca = new TransferMarca();
 				marca.setId(producto.getIdMarca());
 				
-				//Bloqueamos la tabla productos
-				transaction.lock(LockModes.LockProductos1, null);
+				//Bloqueamos la tabla productos (modo 1)
+				transaction.lock(LockModes.LockAll, null);
 			
 				marca = DAOM.consultarMarca(marca, 3);
 
@@ -100,8 +100,8 @@ public class SAProductosImp implements SAProductos {
 		{
 
 			try {
-				//Bloqueamos la tabla productos
-				transaction.lock(LockModes.LockProductos3, null);
+				//Bloqueamos la tabla productos (modo 3)
+				transaction.lock(LockModes.LockAll, null);
 				right&= !DAOP.compruebaProductoNoPendienteDeRecepcion(producto, 0);
 				if(!right)
 					retorno.addError(Errores.productoEnProceso, producto.getId());
@@ -146,8 +146,8 @@ public class SAProductosImp implements SAProductos {
 				TransferMarca marca = new TransferMarca();
 				marca.setId(producto.getIdMarca());
 				
-				//Bloqueamos la tabla productos
-				transaction.lock(LockModes.LockProductos1, null);
+				//Bloqueamos la tabla productos (modo 1)
+				transaction.lock(LockModes.LockAll, null);
 				
 				marca = DAOM.consultarMarca(marca, 3);
 
@@ -361,8 +361,8 @@ public class SAProductosImp implements SAProductos {
 		if(transaction.start())
 		{
 			try {
-				//Bloqueamos la tabla productos
-				transaction.lock(LockModes.LockProductos2, null);
+				//Bloqueamos la tabla productos (modo 2)
+				transaction.lock(LockModes.LockAll, null);
 				
 				right&=DAO.borrarSuministro(suministro);
 				if(!right)
