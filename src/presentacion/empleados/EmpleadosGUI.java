@@ -25,7 +25,7 @@ import negocio.TError;
 import negocio.empleados.Empleado;
 import negocio.proyectos.Proyecto;
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 import presentacion.empleados.tabla.TablaEmpleados;
 
 public class EmpleadosGUI extends GUI {
@@ -113,9 +113,9 @@ public class EmpleadosGUI extends GUI {
 								"Borrar", JOptionPane.YES_NO_OPTION);
 						consultar.dispose();
 						if (respuesta == JOptionPane.YES_OPTION) {
-							ControladorFrontal.getInstancia().accion(
+							ControladorAplicacion.getInstancia().accion(
 									Acciones.empleadosBorrar, empleado);
-							ControladorFrontal.getInstancia().accion(
+							ControladorAplicacion.getInstancia().accion(
 									Acciones.empleadosListado, null);
 						}
 					}
@@ -166,7 +166,7 @@ public class EmpleadosGUI extends GUI {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
-		ControladorFrontal.getInstancia().accion(Acciones.empleadosListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.empleadosListado,
 				null);
 	}
 
@@ -203,7 +203,7 @@ public class EmpleadosGUI extends GUI {
 					JOptionPane.showMessageDialog(this, errores.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 				} else {
 					JOptionPane.showMessageDialog(this,"Empleado borrado correctamente.", "Correcto", JOptionPane.INFORMATION_MESSAGE);
-					ControladorFrontal.getInstancia().accion(Acciones.empleadosListado, null);
+					ControladorAplicacion.getInstancia().accion(Acciones.empleadosListado, null);
 				}
 			}
 		}
@@ -212,7 +212,7 @@ public class EmpleadosGUI extends GUI {
 
 	@Override
 	public void alVolver(GUI who) {
-		ControladorFrontal.getInstancia().accion(Acciones.empleadosListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.empleadosListado,
 				null);
 	}
 

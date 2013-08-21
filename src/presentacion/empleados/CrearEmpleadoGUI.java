@@ -22,7 +22,7 @@ import negocio.empleados.Empleado;
 import negocio.empleados.EmpleadoCompleto;
 import negocio.empleados.EmpleadoParcial;
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 import presentacion.formulario.CampoFormularioDNI;
 import presentacion.formulario.CampoFormularioNumeroEntero;
 import presentacion.formulario.CampoFormularioSelector;
@@ -132,7 +132,7 @@ public class CrearEmpleadoGUI extends GUI {
 					emp.setCp(cp.getResultado());
 					emp.setDepartamento(departamento.getResultado());
 					emp.setTelefono(telefono.getResultado());
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.empleadosCrear, emp);
 				}
 			}
@@ -150,7 +150,7 @@ public class CrearEmpleadoGUI extends GUI {
 		botonera.add(cancelar);
 		this.add(botonera, BorderLayout.SOUTH);
 
-		ControladorFrontal.getInstancia().accion(Acciones.departamentosListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.departamentosListado,
 				null);
 
 		this.setSize(400, 350);

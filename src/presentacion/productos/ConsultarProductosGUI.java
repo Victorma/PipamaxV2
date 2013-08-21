@@ -30,7 +30,7 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -169,7 +169,7 @@ public class ConsultarProductosGUI extends GUI {
 
 		TransferProducto tp = new TransferProducto();
 		tp.setId(_id);
-		ControladorFrontal.getInstancia().accion(Acciones.productosConsultar,
+		ControladorAplicacion.getInstancia().accion(Acciones.productosConsultar,
 				tp);
 
 		if (borrar) {
@@ -179,7 +179,7 @@ public class ConsultarProductosGUI extends GUI {
 			if (respuesta == JOptionPane.YES_OPTION) {
 				TransferProducto aBorrar = new TransferProducto();
 				aBorrar.setId(id);
-				ControladorFrontal.getInstancia().accion(
+				ControladorAplicacion.getInstancia().accion(
 						Acciones.productosBorrar, aBorrar);
 			}
 			this.dispose();
@@ -215,9 +215,9 @@ public class ConsultarProductosGUI extends GUI {
 			
 			TransferMarca trm = new TransferMarca();
 			trm.setId(producto.getIdMarca());
-			ControladorFrontal.getInstancia().accion(Acciones.marcasConsultar,
+			ControladorAplicacion.getInstancia().accion(Acciones.marcasConsultar,
 					trm);
-			ControladorFrontal.getInstancia().accion(
+			ControladorAplicacion.getInstancia().accion(
 					Acciones.productosListaSuministros, producto);
 			break;
 		case productosListaSuministros:

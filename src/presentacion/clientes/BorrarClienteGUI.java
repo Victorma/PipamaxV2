@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.clientes.TransferCliente;
@@ -64,7 +64,7 @@ public class BorrarClienteGUI extends GUI {
 			TransferCliente cliente = new TransferCliente();
 
 			cliente.setId(id);
-			ControladorFrontal.getInstancia().accion(Acciones.clientesBorrar,
+			ControladorAplicacion.getInstancia().accion(Acciones.clientesBorrar,
 					cliente);
 		}
 	}

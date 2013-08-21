@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.proveedores.TransferProveedor;
@@ -65,7 +65,7 @@ public class BorrarProveedorGUI extends GUI {
 		public void actionPerformed(ActionEvent e) {
 			TransferProveedor proveedor = new TransferProveedor();
 			proveedor.setId(id);
-			ControladorFrontal.getInstancia().accion(
+			ControladorAplicacion.getInstancia().accion(
 					Acciones.proveedoresBorrar, proveedor);
 		}
 	}

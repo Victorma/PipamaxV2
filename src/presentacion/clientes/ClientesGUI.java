@@ -28,7 +28,7 @@ import javax.swing.table.DefaultTableModel;
 
 import javax.swing.JTable;
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.*;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -145,7 +145,7 @@ public class ClientesGUI extends GUI {
 
 		TransferListaClientes clientes = new TransferListaClientes();
 		clientes.setLista(new ArrayList<TransferCliente>());
-		ControladorFrontal.getInstancia().accion(Acciones.clientesListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.clientesListado,
 				clientes);
 
 		this.addWindowListener(new ListenerCerrar());
@@ -254,7 +254,7 @@ public class ClientesGUI extends GUI {
 				case clientesReactivar:
 					JOptionPane.showMessageDialog(this,
 							"Cliente Reactivado correctamente.");
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.clientesListado,
 							new TransferListaClientes());
 					break;
@@ -299,7 +299,7 @@ public class ClientesGUI extends GUI {
 			if (dni != -1) {
 				TransferCliente transfer = new TransferCliente();
 				transfer.setDNI(dni);
-				ControladorFrontal.getInstancia().accion(
+				ControladorAplicacion.getInstancia().accion(
 						Acciones.clientesReactivar, transfer);
 			}
 		}
@@ -339,7 +339,7 @@ public class ClientesGUI extends GUI {
 
 	@Override
 	public void alVolver(GUI who) {
-		ControladorFrontal.getInstancia().accion(Acciones.clientesListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.clientesListado,
 				new TransferListaClientes());
 	}
 

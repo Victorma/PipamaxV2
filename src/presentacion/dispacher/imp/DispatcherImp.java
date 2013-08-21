@@ -3,10 +3,10 @@ package presentacion.dispacher.imp;
 import constantes.Acciones;
 import presentacion.GUI;
 import presentacion.PrincipalGUI;
-import presentacion.dispacher.DispatcherView;
+import presentacion.dispacher.Dispatcher;
 import negocio.Retorno;
 
-public class DispatcherViewImp extends DispatcherView {
+public class DispatcherImp extends Dispatcher {
 
 	private GUI main;
 

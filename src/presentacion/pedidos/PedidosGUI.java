@@ -25,7 +25,7 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -121,7 +121,7 @@ public class PedidosGUI extends GUI {
 								"Borrar", JOptionPane.YES_NO_OPTION);
 						consultar.dispose();
 						if (respuesta == JOptionPane.YES_OPTION) {
-							ControladorFrontal.getInstancia().accion(
+							ControladorAplicacion.getInstancia().accion(
 									Acciones.pedidosAnular, pedido);
 						}
 					}
@@ -152,7 +152,7 @@ public class PedidosGUI extends GUI {
 										"Borrar", JOptionPane.YES_NO_OPTION);
 						consultar.dispose();
 						if (respuesta == JOptionPane.YES_OPTION) {
-							ControladorFrontal.getInstancia().accion(
+							ControladorAplicacion.getInstancia().accion(
 									Acciones.pedidosCompletar, pedido);
 						}
 					}
@@ -182,7 +182,7 @@ public class PedidosGUI extends GUI {
 								"Borrar", JOptionPane.YES_NO_OPTION);
 						consultar.dispose();
 						if (respuesta == JOptionPane.YES_OPTION) {
-							ControladorFrontal.getInstancia().accion(
+							ControladorAplicacion.getInstancia().accion(
 									Acciones.pedidosBorrar, pedido);
 						}
 					}
@@ -273,7 +273,7 @@ public class PedidosGUI extends GUI {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
-		ControladorFrontal.getInstancia().accion(Acciones.pedidosLista,
+		ControladorAplicacion.getInstancia().accion(Acciones.pedidosLista,
 				new TransferListaPedidos());
 	}
 
@@ -484,7 +484,7 @@ public class PedidosGUI extends GUI {
 
 	@Override
 	public void alVolver(GUI who) {
-		ControladorFrontal.getInstancia().accion(Acciones.pedidosLista,
+		ControladorAplicacion.getInstancia().accion(Acciones.pedidosLista,
 				new TransferListaPedidos());
 	}
 

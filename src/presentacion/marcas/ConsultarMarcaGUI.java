@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
 
 import javax.swing.JTable;
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.marcas.TComMarcaListaProductos;
@@ -85,7 +85,7 @@ public class ConsultarMarcaGUI extends GUI {
 		marca.setMarca(new TransferMarca());
 		marca.setProductos(new TransferListaProductos());
 		marca.getMarca().setId(id);
-		ControladorFrontal.getInstancia().accion(
+		ControladorAplicacion.getInstancia().accion(
 				Acciones.marcasListadoProductos, marca);
 
 	}

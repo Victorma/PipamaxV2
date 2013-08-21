@@ -34,7 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -229,7 +229,7 @@ public class CrearClienteGUI extends GUI {
 				}
 				cajaDescuento.setBackground(Color.green);
 				if (cliente.getDescuento() != -1)
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.clientesCrear, cliente);
 			} catch (NumberFormatException ex) {
 				JOptionPane.showMessageDialog(CrearClienteGUI.this,
@@ -287,7 +287,7 @@ public class CrearClienteGUI extends GUI {
 									"El DNI ya existe. ¿Desea reactivarlo? (Se conservaran los antiguos datos)")) {
 						TransferCliente transfer = new TransferCliente();
 						transfer.setDNI(Integer.parseInt(cajaDNI.getText()));
-						ControladorFrontal.getInstancia().accion(
+						ControladorAplicacion.getInstancia().accion(
 								Acciones.clientesReactivar, transfer);
 					}
 					break;

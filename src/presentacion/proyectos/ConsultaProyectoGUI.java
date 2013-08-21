@@ -18,7 +18,7 @@ import negocio.TError;
 import negocio.empleados.Empleado;
 import negocio.proyectos.Proyecto;
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 import presentacion.empleados.tabla.TablaEmpleados;
 import presentacion.formulario.CampoFormularioNumeroEntero;
 import presentacion.formulario.CampoFormularioTexto;
@@ -59,7 +59,7 @@ public class ConsultaProyectoGUI extends GUI {
 				if(formularioId.esCorrecto()){
 					Proyecto pro = new Proyecto();
 					pro.setId(id.getResultado());
-					ControladorFrontal.getInstancia().accion(Acciones.proyectosConsultar, pro);
+					ControladorAplicacion.getInstancia().accion(Acciones.proyectosConsultar, pro);
 				}
 			}
 		});
@@ -111,7 +111,7 @@ public class ConsultaProyectoGUI extends GUI {
 		
 		this.empleadosProyecto = new HashSet<Empleado>();
 		if(pry!=null && pry.getId() > 0)
-			ControladorFrontal.getInstancia().accion(Acciones.proyectosConsultar, pry);
+			ControladorAplicacion.getInstancia().accion(Acciones.proyectosConsultar, pry);
 	}
 
 	@Override

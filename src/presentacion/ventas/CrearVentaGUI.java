@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -87,7 +87,7 @@ public class CrearVentaGUI extends GUI {
 		calendar = new JDateChooser();
 		calendar.setDateFormatString("dd-MM-YYYY");
 
-		ControladorFrontal.getInstancia().accion(Acciones.clientesListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.clientesListado,
 				new TransferListaClientes());
 
 		/*listaClientes.getLista().add(new TransferCliente());
@@ -181,7 +181,7 @@ public class CrearVentaGUI extends GUI {
 					venta.getVenta().setFecha(
 							dateFormat
 									.format(calendar.getJCalendar().getDate()));
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.ventasCrear, venta.getVenta());
 				}
 

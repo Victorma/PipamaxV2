@@ -1,7 +1,7 @@
 package presentacion.proveedores;
 
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 import presentacion.proveedores.EditarProveedorGUI;
 import constantes.Acciones;
 
@@ -108,7 +108,7 @@ public class EditarProveedorGUI extends GUI {
 		// Consultamos los datos del Proveedor.
 		TransferProveedor Proveedor = new TransferProveedor();
 		Proveedor.setId(id);
-		ControladorFrontal.getInstancia().accion(Acciones.proveedoresConsultar,
+		ControladorAplicacion.getInstancia().accion(Acciones.proveedoresConsultar,
 				Proveedor);
 	}
 
@@ -145,7 +145,7 @@ public class EditarProveedorGUI extends GUI {
 				Proveedor.setEmail(cajaEmail.getText());
 				cajaEmail.setBackground(Color.green);
 
-				ControladorFrontal.getInstancia().accion(
+				ControladorAplicacion.getInstancia().accion(
 						Acciones.proveedoresEditar, Proveedor);
 			} catch (NumberFormatException ex) {
 				JOptionPane.showMessageDialog(EditarProveedorGUI.this,

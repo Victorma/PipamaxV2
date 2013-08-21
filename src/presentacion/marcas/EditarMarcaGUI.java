@@ -30,7 +30,7 @@ import java.util.InputMismatchException;
 import javax.swing.*;
 
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.marcas.TransferMarca;
@@ -90,7 +90,7 @@ public class EditarMarcaGUI extends GUI {
 		// Consultamos los datos del cliente.
 		TransferMarca marca = new TransferMarca();
 		marca.setId(id);
-		ControladorFrontal.getInstancia().accion(Acciones.marcasConsultar,
+		ControladorAplicacion.getInstancia().accion(Acciones.marcasConsultar,
 				marca);
 	}
 
@@ -121,7 +121,7 @@ public class EditarMarcaGUI extends GUI {
 				marca.setNombre(cajaNombre.getText());
 				cajaNombre.setBackground(Color.green);
 
-				ControladorFrontal.getInstancia().accion(Acciones.marcasEditar,
+				ControladorAplicacion.getInstancia().accion(Acciones.marcasEditar,
 						marca);
 			} catch (NumberFormatException ex) {
 				JOptionPane.showMessageDialog(EditarMarcaGUI.this,

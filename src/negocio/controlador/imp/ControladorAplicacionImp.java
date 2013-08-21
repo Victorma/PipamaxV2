@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import presentacion.dispacher.DispatcherView;
+import presentacion.dispacher.Dispatcher;
 import constantes.Acciones;
 import negocio.Retorno;
 import negocio.controlador.Command;
@@ -121,7 +121,7 @@ public class ControladorAplicacionImp extends ControladorAplicacion {
 		Command comando = parseCommand(evento);
 		comando.setContext(datos);
 		retorno = ejecuta(comando);
-		DispatcherView.getInstancia().actualiza(evento, retorno);
+		Dispatcher.getInstancia().actualiza(evento, retorno);
 	}
 
 }

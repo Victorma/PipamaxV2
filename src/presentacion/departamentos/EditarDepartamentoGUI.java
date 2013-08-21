@@ -15,7 +15,7 @@ import negocio.Retorno;
 import negocio.TError;
 import negocio.departamentos.Departamento;
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 import presentacion.formulario.CampoFormularioNumeroEntero;
 import presentacion.formulario.CampoFormularioTexto;
 import presentacion.formulario.Formulario;
@@ -54,7 +54,7 @@ public class EditarDepartamentoGUI extends GUI {
 				if (formularioId.esCorrecto()) {
 					Departamento dep = new Departamento();
 					dep.setId(id.getResultado());
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.departamentosConsultar, dep);
 				}
 			}
@@ -100,7 +100,7 @@ public class EditarDepartamentoGUI extends GUI {
 							departamento.setNombre(nombre.getResultado());
 							departamento.setCodigo(codigo.getResultado());
 							departamento.setSueldo(s);
-							ControladorFrontal.getInstancia().accion(
+							ControladorAplicacion.getInstancia().accion(
 									Acciones.departamentosEditar, departamento);
 						}
 					}catch (IllegalArgumentException ile){
@@ -127,7 +127,7 @@ public class EditarDepartamentoGUI extends GUI {
 		this.setVisible(true);
 
 		if (dep != null && dep.getId() > 0)
-			ControladorFrontal.getInstancia().accion(
+			ControladorAplicacion.getInstancia().accion(
 					Acciones.departamentosConsultar, dep);
 	}
 

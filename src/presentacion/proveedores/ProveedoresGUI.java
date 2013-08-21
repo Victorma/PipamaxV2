@@ -26,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
 
 import javax.swing.JTable;
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -138,7 +138,7 @@ public class ProveedoresGUI extends GUI {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
-		ControladorFrontal.getInstancia().accion(Acciones.proveedoresListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.proveedoresListado,
 				new TransferListaProveedores());
 	}
 
@@ -242,7 +242,7 @@ public class ProveedoresGUI extends GUI {
 			if (nif != -1) {
 				TransferProveedor transfer = new TransferProveedor();
 				transfer.setNif(nif);
-				ControladorFrontal.getInstancia().accion(
+				ControladorAplicacion.getInstancia().accion(
 						Acciones.proveedoresReactivar, transfer);
 			}
 		}
@@ -306,7 +306,7 @@ public class ProveedoresGUI extends GUI {
 				case proveedoresReactivar:
 					JOptionPane.showMessageDialog(this,
 							"Proveedor Reactivado correctamente.");
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.proveedoresListado,
 							new TransferListaProveedores());
 					break;
@@ -316,6 +316,6 @@ public class ProveedoresGUI extends GUI {
 
 	@Override
 	public void alVolver(GUI who) {
-		ControladorFrontal.getInstancia().accion(Acciones.proveedoresListado, new TransferListaProveedores());
+		ControladorAplicacion.getInstancia().accion(Acciones.proveedoresListado, new TransferListaProveedores());
 	};
 }

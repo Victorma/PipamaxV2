@@ -18,7 +18,7 @@ import negocio.empleados.Empleado;
 import negocio.empleados.EmpleadoCompleto;
 import negocio.empleados.EmpleadoParcial;
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 import presentacion.formulario.CampoFormularioDNI;
 import presentacion.formulario.CampoFormularioNumeroEntero;
 import presentacion.formulario.CampoFormularioSelector;
@@ -71,7 +71,7 @@ public class ConsultaEmpleadoGUI extends GUI {
 				if (formularioId.esCorrecto()) {
 					Empleado emp = (tiempo.getResultado().equalsIgnoreCase("completo")?new EmpleadoCompleto():new EmpleadoParcial());
 					emp.setId(id.getResultado());
-					ControladorFrontal.getInstancia().accion(Acciones.empleadosConsultar, emp);
+					ControladorAplicacion.getInstancia().accion(Acciones.empleadosConsultar, emp);
 				}
 			}
 		});
@@ -129,7 +129,7 @@ public class ConsultaEmpleadoGUI extends GUI {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ControladorFrontal.getInstancia().accion(Acciones.empleadosSalario, empCons);
+				ControladorAplicacion.getInstancia().accion(Acciones.empleadosSalario, empCons);
 			}
 		});
 		
@@ -151,7 +151,7 @@ public class ConsultaEmpleadoGUI extends GUI {
 		this.setVisible(true);
 
 		if (emp != null && emp.getId() > 0)
-			ControladorFrontal.getInstancia().accion(
+			ControladorAplicacion.getInstancia().accion(
 					Acciones.empleadosConsultar, emp);
 	}
 

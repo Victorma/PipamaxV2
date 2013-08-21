@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
 
 import javax.swing.JTable;
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -63,7 +63,7 @@ public class MarcasGUI extends GUI {
 
 		initializeMarcasPanel();
 
-		ControladorFrontal.getInstancia().accion(Acciones.marcasListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.marcasListado,
 				new TransferListaMarcas());
 
 		addWindowListener(new ListenerCerrar());
@@ -258,7 +258,7 @@ public class MarcasGUI extends GUI {
 			if (!nombre.equals("")) {
 				TransferMarca transfer = new TransferMarca();
 				transfer.setNombre(nombre);
-				ControladorFrontal.getInstancia().accion(
+				ControladorAplicacion.getInstancia().accion(
 						Acciones.marcasReactivar, transfer);
 			}
 		}
@@ -315,7 +315,7 @@ public class MarcasGUI extends GUI {
 				case marcasReactivar:
 					JOptionPane.showMessageDialog(this,
 							"Marca Reactivada correctamente.");
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.marcasListado, new TransferListaMarcas());
 					break;
 				}
@@ -324,7 +324,7 @@ public class MarcasGUI extends GUI {
 
 	@Override
 	public void alVolver(GUI who) {
-		ControladorFrontal.getInstancia().accion(Acciones.marcasListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.marcasListado,
 				new TransferListaMarcas());
 	};
 

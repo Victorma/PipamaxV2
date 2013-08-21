@@ -27,7 +27,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.clientes.TransferCliente;
@@ -64,7 +64,7 @@ public class ConsultarClienteGUI extends GUI {
 
 		TransferCliente cliente = new TransferCliente();
 		cliente.setId(id);
-		ControladorFrontal.getInstancia().accion(Acciones.clientesConsultar,
+		ControladorAplicacion.getInstancia().accion(Acciones.clientesConsultar,
 				cliente);
 
 		//set the configurations of the window

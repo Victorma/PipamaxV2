@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.marcas.TransferListaMarcas;
@@ -61,7 +61,7 @@ public class BorrarMarcaGUI extends GUI {
 			TransferMarca marca = new TransferMarca();
 			marca.setId(id);
 
-			ControladorFrontal.getInstancia().accion(Acciones.marcasBorrar,
+			ControladorAplicacion.getInstancia().accion(Acciones.marcasBorrar,
 					marca);
 		}
 	}
@@ -85,7 +85,7 @@ public class BorrarMarcaGUI extends GUI {
 
 	@Override
 	public void alVolver(GUI who) {
-		ControladorFrontal.getInstancia().accion(Acciones.marcasListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.marcasListado,
 				new TransferListaMarcas());
 	}
 

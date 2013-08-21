@@ -22,7 +22,7 @@ import negocio.TError;
 import negocio.empleados.Empleado;
 import negocio.proyectos.Proyecto;
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 import presentacion.empleados.tabla.TablaEmpleados;
 import presentacion.formulario.CampoFormularioNumeroEntero;
 import presentacion.formulario.CampoFormularioSelector;
@@ -73,7 +73,7 @@ public class EditarProyectoGUI extends GUI {
 				if(formularioId.esCorrecto()){
 					Proyecto pro = new Proyecto();
 					pro.setId(id.getResultado());
-					ControladorFrontal.getInstancia().accion(Acciones.proyectosConsultar, pro);
+					ControladorAplicacion.getInstancia().accion(Acciones.proyectosConsultar, pro);
 				}
 			}
 		});
@@ -165,7 +165,7 @@ public class EditarProyectoGUI extends GUI {
 						proyecto.setNombre(nombre.getResultado());
 						proyecto.setDescripcion(descripcion.getResultado());
 						proyecto.setEmpleado(empleadosProyecto);
-						ControladorFrontal.getInstancia().accion(Acciones.proyectosEditar, proyecto);
+						ControladorAplicacion.getInstancia().accion(Acciones.proyectosEditar, proyecto);
 					}
 				}
 			}
@@ -186,7 +186,7 @@ public class EditarProyectoGUI extends GUI {
 		this.empleadosProyecto = new HashSet<Empleado>();
 		
 		if(pry!=null && pry.getId() > 0)
-			ControladorFrontal.getInstancia().accion(Acciones.proyectosConsultar, pry);
+			ControladorAplicacion.getInstancia().accion(Acciones.proyectosConsultar, pry);
 		
 		this.setSize(400, 400);
 		this.setLocationRelativeTo(null);
@@ -243,7 +243,7 @@ public class EditarProyectoGUI extends GUI {
 				empleadosProyecto.clear();
 				this.nombre.setValue(proyecto.getNombre());
 				this.descripcion.setValue(proyecto.getDescripcion());
-				ControladorFrontal.getInstancia().accion(Acciones.empleadosListado, null);
+				ControladorAplicacion.getInstancia().accion(Acciones.empleadosListado, null);
 				for(Empleado e:proyecto.getEmpleado()){
 					empMap.remove(e.getNombreCompleto());
 					empleadosProyecto.add(e);

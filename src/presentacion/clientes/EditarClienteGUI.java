@@ -32,7 +32,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.clientes.TransferCliente;
@@ -162,7 +162,7 @@ public class EditarClienteGUI extends GUI {
 		// Consultamos los datos del cliente.
 		TransferCliente cliente = new TransferCliente();
 		cliente.setId(id);
-		ControladorFrontal.getInstancia().accion(Acciones.clientesConsultar,
+		ControladorAplicacion.getInstancia().accion(Acciones.clientesConsultar,
 				cliente);
 	}
 
@@ -243,7 +243,7 @@ public class EditarClienteGUI extends GUI {
 				cajaDescuento.setBackground(Color.green);
 
 				if (cliente.getDescuento() != -1)
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.clientesEditar, cliente);
 			} catch (NumberFormatException ex) {
 				JOptionPane.showMessageDialog(EditarClienteGUI.this,

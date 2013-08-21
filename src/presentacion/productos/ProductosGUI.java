@@ -22,7 +22,7 @@ import java.util.Iterator;
 import javax.swing.*;
 
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -99,7 +99,7 @@ public class ProductosGUI extends GUI {
 		this.setSize(800, 600);
 		this.setLocationRelativeTo(null);
 		//TODO Comprobar que sea necesario el new aqui
-		ControladorFrontal.getInstancia().accion(Acciones.productosListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.productosListado,
 				new TransferListaProductos());
 		this.setVisible(true);
 
@@ -213,7 +213,7 @@ public class ProductosGUI extends GUI {
 
 	@Override
 	public void alVolver(GUI who) {
-		ControladorFrontal.getInstancia().accion(Acciones.productosListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.productosListado,
 				new TransferListaProductos());
 	}
 }

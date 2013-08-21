@@ -15,7 +15,7 @@ import negocio.Retorno;
 import negocio.TError;
 import negocio.departamentos.Departamento;
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 import presentacion.empleados.tabla.TablaEmpleados;
 import presentacion.formulario.CampoFormularioNumeroEntero;
 import presentacion.formulario.CampoFormularioTexto;
@@ -60,7 +60,7 @@ public class ConsultaDepartamentoGUI extends GUI {
 				if (formularioId.esCorrecto()) {
 					Departamento dep = new Departamento();
 					dep.setId(id.getResultado());
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.departamentosConsultar, dep);
 				}
 			}
@@ -109,7 +109,7 @@ public class ConsultaDepartamentoGUI extends GUI {
 		this.calcularSalario.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ControladorFrontal.getInstancia().accion(Acciones.departamentosSalario, depCons);
+				ControladorAplicacion.getInstancia().accion(Acciones.departamentosSalario, depCons);
 			}
 		});
 		
@@ -125,7 +125,7 @@ public class ConsultaDepartamentoGUI extends GUI {
 		this.setVisible(true);
 
 		if (dep != null && dep.getId() > 0)
-			ControladorFrontal.getInstancia().accion(
+			ControladorAplicacion.getInstancia().accion(
 					Acciones.departamentosConsultar, dep);
 	}
 

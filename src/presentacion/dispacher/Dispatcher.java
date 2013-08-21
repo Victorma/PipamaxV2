@@ -2,16 +2,16 @@ package presentacion.dispacher;
 
 import constantes.Acciones;
 import presentacion.GUI;
-import presentacion.dispacher.imp.DispatcherViewImp;
+import presentacion.dispacher.imp.DispatcherImp;
 import negocio.Retorno;
 
-public abstract class DispatcherView {
+public abstract class Dispatcher {
 
-	protected static DispatcherView instancia = null;
+	protected static Dispatcher instancia = null;
 
-	public static DispatcherView getInstancia() {
+	public static Dispatcher getInstancia() {
 		if (instancia == null)
-			instancia = new DispatcherViewImp();
+			instancia = new DispatcherImp();
 		return instancia;
 	}
 

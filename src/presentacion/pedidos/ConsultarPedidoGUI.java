@@ -24,7 +24,7 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -147,7 +147,7 @@ public class ConsultarPedidoGUI extends GUI {
 		TComPedido tComPedido = new TComPedido();
 		tComPedido.setPedido(this.pedido.getPedido());
 
-		ControladorFrontal.getInstancia().accion(Acciones.pedidosConsultar,
+		ControladorAplicacion.getInstancia().accion(Acciones.pedidosConsultar,
 				tComPedido);
 	}
 

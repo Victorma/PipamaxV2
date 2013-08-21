@@ -32,7 +32,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.marcas.TransferListaMarcas;
@@ -119,7 +119,7 @@ public class CrearProductoGUI extends GUI {
 
 		TransferListaMarcas tlm = new TransferListaMarcas();
 		tlm.setLista(new ArrayList<TransferMarca>());
-		ControladorFrontal.getInstancia().accion(Acciones.marcasListado, tlm);
+		ControladorAplicacion.getInstancia().accion(Acciones.marcasListado, tlm);
 
 	}
 
@@ -205,7 +205,7 @@ public class CrearProductoGUI extends GUI {
 					_aEnviar.setStock(0);
 					_aEnviar.setBorrado(false);
 
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.productosCrear, _aEnviar);
 
 					dispose();

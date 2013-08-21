@@ -28,7 +28,7 @@ import negocio.departamentos.Departamento;
 import negocio.empleados.Empleado;
 import negocio.proyectos.Proyecto;
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 
 public class DepartamentosGUI extends GUI {
 
@@ -115,9 +115,9 @@ public class DepartamentosGUI extends GUI {
 								"Borrar", JOptionPane.YES_NO_OPTION);
 						consultar.dispose();
 						if (respuesta == JOptionPane.YES_OPTION) {
-							ControladorFrontal.getInstancia().accion(
+							ControladorAplicacion.getInstancia().accion(
 									Acciones.departamentosBorrar, departamento);
-							ControladorFrontal.getInstancia().accion(
+							ControladorAplicacion.getInstancia().accion(
 									Acciones.departamentosListado, null);
 						}
 					}
@@ -168,7 +168,7 @@ public class DepartamentosGUI extends GUI {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
-		ControladorFrontal.getInstancia().accion(Acciones.departamentosListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.departamentosListado,
 				null);
 	}
 
@@ -261,7 +261,7 @@ public class DepartamentosGUI extends GUI {
 				JOptionPane.showMessageDialog(this, errores.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 			} else {
 				JOptionPane.showMessageDialog(this, "Departamento borrado correctamente.", "Correcto", JOptionPane.INFORMATION_MESSAGE);
-				ControladorFrontal.getInstancia().accion(Acciones.empleadosListado, null);
+				ControladorAplicacion.getInstancia().accion(Acciones.empleadosListado, null);
 			}
 		}
 		}
@@ -270,7 +270,7 @@ public class DepartamentosGUI extends GUI {
 
 	@Override
 	public void alVolver(GUI who) {
-		ControladorFrontal.getInstancia().accion(Acciones.departamentosListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.departamentosListado,
 				null);
 	}
 

@@ -14,7 +14,7 @@ import negocio.Retorno;
 import negocio.TError;
 import negocio.departamentos.Departamento;
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 import presentacion.formulario.CampoFormularioNumeroEntero;
 import presentacion.formulario.CampoFormularioTexto;
 import presentacion.formulario.Formulario;
@@ -66,7 +66,7 @@ public class CrearDepartamentoGUI extends GUI {
 						dep.setNombre(nombre.getResultado());
 						dep.setCodigo(codigo.getResultado());
 						dep.setSueldo(s);
-						ControladorFrontal.getInstancia().accion(
+						ControladorAplicacion.getInstancia().accion(
 								Acciones.departamentosCrear, dep);
 					}
 				}catch (IllegalArgumentException ile){

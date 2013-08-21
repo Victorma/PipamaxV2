@@ -25,7 +25,7 @@ import java.util.Iterator;
 import javax.swing.*;
 
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -136,7 +136,7 @@ public class CrearProveedorGUI extends GUI {
 				proveedor.setEmail(cajaEmail.getText());
 				cajaEmail.setBackground(Color.green);
 
-				ControladorFrontal.getInstancia().accion(
+				ControladorAplicacion.getInstancia().accion(
 						Acciones.proveedoresCrear, proveedor);
 			} catch (NumberFormatException ex) {
 				JOptionPane.showMessageDialog(CrearProveedorGUI.this,
@@ -194,7 +194,7 @@ public class CrearProveedorGUI extends GUI {
 									"El DNI ya existe. ¿Desea reactivarlo? (Se conservarám los antiguos datos)")) {
 						TransferProveedor transfer = new TransferProveedor();
 						transfer.setNif(Integer.parseInt(cajaNIF.getText()));
-						ControladorFrontal.getInstancia().accion(
+						ControladorAplicacion.getInstancia().accion(
 								Acciones.proveedoresReactivar, transfer);
 					}
 					break;

@@ -19,7 +19,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.proveedores.TransferListaProveedores;
@@ -98,7 +98,7 @@ public class CrearProveProduGUI extends GUI {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
-		ControladorFrontal.getInstancia().accion(Acciones.proveedoresListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.proveedoresListado,
 				null);
 	}
 
@@ -172,7 +172,7 @@ public class CrearProveProduGUI extends GUI {
 						if (_aEnviar.getPrecio() <= 0)
 							throw new NumberFormatException();
 
-						ControladorFrontal.getInstancia().accion(
+						ControladorAplicacion.getInstancia().accion(
 								Acciones.productosCrearSuministro, _aEnviar);
 						dispose();
 					}

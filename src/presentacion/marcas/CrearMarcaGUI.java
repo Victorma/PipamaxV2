@@ -30,7 +30,7 @@ import java.util.Iterator;
 import javax.swing.*;
 
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -102,7 +102,7 @@ public class CrearMarcaGUI extends GUI {
 				marca.setNombre(cajaNombre.getText());
 				cajaNombre.setBackground(Color.green);
 
-				ControladorFrontal.getInstancia().accion(Acciones.marcasCrear, marca);
+				ControladorAplicacion.getInstancia().accion(Acciones.marcasCrear, marca);
 			} catch (InputMismatchException ex) {
 				JOptionPane.showMessageDialog(CrearMarcaGUI.this,
 						"No se permiten campos vacios.");
@@ -154,7 +154,7 @@ public class CrearMarcaGUI extends GUI {
 									"El nombre ya existe. ¿Desea reactivarlo?")) {
 						TransferMarca transfer = new TransferMarca();
 						transfer.setNombre(cajaNombre.getText());
-						ControladorFrontal.getInstancia().accion(
+						ControladorAplicacion.getInstancia().accion(
 								Acciones.marcasReactivar, transfer);
 					}
 					break;

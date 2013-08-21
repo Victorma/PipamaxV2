@@ -37,7 +37,7 @@ import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -112,7 +112,7 @@ public class CrearPedidoGUI extends GUI {
 					tComPLP.setProveedor(pedido.getProveedor());
 					tComPLP.setProductos(new TransferListaProductos());
 
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.pedidosConsProdProv, tComPLP);
 				}
 			}
@@ -122,7 +122,7 @@ public class CrearPedidoGUI extends GUI {
 		calendar.setEnabled(false);
 		calendar.setDateFormatString("dd-MM-YYYY");
 
-		ControladorFrontal.getInstancia().accion(Acciones.proveedoresListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.proveedoresListado,
 				new TransferListaProveedores());
 
 		top.add(textoTop);
@@ -202,7 +202,7 @@ public class CrearPedidoGUI extends GUI {
 									.format(calendar.getJCalendar().getDate()));
 					pedido.getPedido().setIdProveedor(
 							pedido.getProveedor().getId());
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.pedidosCrear, pedido.getPedido());
 				}
 

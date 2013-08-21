@@ -19,7 +19,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.ventas.TransferListaVentas;
@@ -119,9 +119,9 @@ public class VentasGUI extends GUI {
 								"Borrar", JOptionPane.YES_NO_OPTION);
 						consultar.dispose();
 						if (respuesta == JOptionPane.YES_OPTION) {
-							ControladorFrontal.getInstancia().accion(
+							ControladorAplicacion.getInstancia().accion(
 									Acciones.ventasBorrar, venta);
-							ControladorFrontal.getInstancia().accion(
+							ControladorAplicacion.getInstancia().accion(
 									Acciones.ventasListado,
 									new TransferListaVentas());
 						}
@@ -173,7 +173,7 @@ public class VentasGUI extends GUI {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
-		ControladorFrontal.getInstancia().accion(Acciones.ventasListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.ventasListado,
 				new TransferListaVentas());
 	}
 
@@ -258,7 +258,7 @@ public class VentasGUI extends GUI {
 	@Override
 	public void alVolver(GUI who) {
 
-		ControladorFrontal.getInstancia().accion(Acciones.ventasListado,
+		ControladorAplicacion.getInstancia().accion(Acciones.ventasListado,
 				new TransferListaVentas());
 
 	}

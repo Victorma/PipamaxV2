@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
 
 import javax.swing.JTable;
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.productos.TransferListaProductos;
@@ -113,7 +113,7 @@ public class ConsultarProveedorGUI extends GUI {
 		tprov.setId(id);
 		proveedor.setProveedor(tprov);
 		proveedor.setProductos(new TransferListaProductos());
-		ControladorFrontal.getInstancia().accion(Acciones.pedidosConsProdProv,
+		ControladorAplicacion.getInstancia().accion(Acciones.pedidosConsProdProv,
 				proveedor);
 	}
 

@@ -20,7 +20,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -235,7 +235,7 @@ public class DevolucionGUI extends GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ControladorFrontal.getInstancia().accion(
+				ControladorAplicacion.getInstancia().accion(
 						Acciones.ventasDevolucion, aDevolver.getVenta());
 			}
 
@@ -293,7 +293,7 @@ public class DevolucionGUI extends GUI {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
-		ControladorFrontal.getInstancia().accion(Acciones.ventasConsultar,
+		ControladorAplicacion.getInstancia().accion(Acciones.ventasConsultar,
 				tventa);
 	}
 

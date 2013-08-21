@@ -18,7 +18,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.TError;
@@ -124,7 +124,7 @@ public class ConsultarVentaGUI extends GUI {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
-		ControladorFrontal.getInstancia().accion(Acciones.ventasConsultar,
+		ControladorAplicacion.getInstancia().accion(Acciones.ventasConsultar,
 				tventa);
 
 	}

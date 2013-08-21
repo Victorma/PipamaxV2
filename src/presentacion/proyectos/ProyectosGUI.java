@@ -22,7 +22,7 @@ import negocio.Retorno;
 import negocio.TError;
 import negocio.proyectos.Proyecto;
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 import presentacion.proyectos.tabla.TablaProyectos;
 
 public class ProyectosGUI extends GUI {
@@ -106,8 +106,8 @@ public class ProyectosGUI extends GUI {
 						int respuesta = JOptionPane.showConfirmDialog(consultar, "¿Desea borrar este proyecto?", "Borrar", JOptionPane.YES_NO_OPTION);
 						consultar.dispose();
 						if(respuesta == JOptionPane.YES_OPTION){
-							ControladorFrontal.getInstancia().accion(Acciones.proyectosBorrar, proyecto);
-							ControladorFrontal.getInstancia().accion(Acciones.empleadosListado, null);
+							ControladorAplicacion.getInstancia().accion(Acciones.proyectosBorrar, proyecto);
+							ControladorAplicacion.getInstancia().accion(Acciones.empleadosListado, null);
 						}
 					}
 				}
@@ -157,7 +157,7 @@ public class ProyectosGUI extends GUI {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		
-		ControladorFrontal.getInstancia().accion(Acciones.proyectosListado, null);
+		ControladorAplicacion.getInstancia().accion(Acciones.proyectosListado, null);
 	}
 	
 	private Proyecto getSelectedProyecto(){
@@ -187,7 +187,7 @@ public class ProyectosGUI extends GUI {
 					JOptionPane.showMessageDialog(this, errores.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 				}else{
 					JOptionPane.showMessageDialog(this, "Proyecto borrado con éxito.");
-					ControladorFrontal.getInstancia().accion(Acciones.proyectosListado, null);
+					ControladorAplicacion.getInstancia().accion(Acciones.proyectosListado, null);
 				}
 			}			
 		}
@@ -196,7 +196,7 @@ public class ProyectosGUI extends GUI {
 
 	@Override
 	public void alVolver(GUI who) {
-		ControladorFrontal.getInstancia().accion(Acciones.proyectosListado, null);
+		ControladorAplicacion.getInstancia().accion(Acciones.proyectosListado, null);
 	}
 
 }

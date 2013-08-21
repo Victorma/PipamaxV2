@@ -33,7 +33,7 @@ import javax.swing.text.Document;
 
 import javax.swing.JComboBox;
 import presentacion.GUI;
-import presentacion.controlador.*;
+import negocio.controlador.ControladorAplicacion;
 
 import negocio.Retorno;
 import negocio.marcas.TransferListaMarcas;
@@ -227,7 +227,7 @@ public class EditarProductoGUI extends GUI {
 		TransferProducto transfer = new TransferProducto();
 		transfer.setId(id);
 
-		ControladorFrontal.getInstancia().accion(Acciones.productosConsultar,
+		ControladorAplicacion.getInstancia().accion(Acciones.productosConsultar,
 				transfer);
 
 	}
@@ -289,7 +289,7 @@ public class EditarProductoGUI extends GUI {
 	private class BorrarProveedorListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (table.getSelectedRow() != -1) {
-				ControladorFrontal.getInstancia().accion(
+				ControladorAplicacion.getInstancia().accion(
 						Acciones.productosBorrarSuministro,
 						model.getTransfer(table.getSelectedRow()));
 				alVolver(null);
@@ -321,7 +321,7 @@ public class EditarProductoGUI extends GUI {
 					if (_aEnviar.getStock() < 0)
 						throw new NumberFormatException();
 
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.productosEditar, _aEnviar);
 
 					dispose();
@@ -356,9 +356,9 @@ public class EditarProductoGUI extends GUI {
 
 			TransferListaMarcas tlm = new TransferListaMarcas();
 			tlm.setLista(new ArrayList<TransferMarca>());
-			ControladorFrontal.getInstancia().accion(Acciones.marcasListado,
+			ControladorAplicacion.getInstancia().accion(Acciones.marcasListado,
 					tlm);
-			ControladorFrontal.getInstancia().accion(
+			ControladorAplicacion.getInstancia().accion(
 					Acciones.productosListaSuministros, producto);
 			break;
 		case productosListaSuministros:
@@ -415,7 +415,7 @@ public class EditarProductoGUI extends GUI {
 
 		TransferProducto producto = new TransferProducto();
 		producto.setId(id);
-		ControladorFrontal.getInstancia().accion(
+		ControladorAplicacion.getInstancia().accion(
 				Acciones.productosListaSuministros, producto);
 	}
 

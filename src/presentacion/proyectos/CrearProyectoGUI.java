@@ -22,7 +22,7 @@ import negocio.TError;
 import negocio.empleados.Empleado;
 import negocio.proyectos.Proyecto;
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 import presentacion.empleados.tabla.TablaEmpleados;
 import presentacion.formulario.CampoFormularioSelector;
 import presentacion.formulario.CampoFormularioTexto;
@@ -132,7 +132,7 @@ public class CrearProyectoGUI extends GUI {
 					pro.setNombre(nombre.getResultado());
 					pro.setDescripcion(descripcion.getResultado());
 					pro.setEmpleado(empleadosProyecto);
-					ControladorFrontal.getInstancia().accion(Acciones.proyectosCrear, pro);
+					ControladorAplicacion.getInstancia().accion(Acciones.proyectosCrear, pro);
 				}
 			}
 		});
@@ -150,7 +150,7 @@ public class CrearProyectoGUI extends GUI {
 		this.add(botonera,BorderLayout.SOUTH);
 		
 		this.empleadosProyecto = new HashSet<Empleado>();
-		ControladorFrontal.getInstancia().accion(Acciones.empleadosListado, null);
+		ControladorAplicacion.getInstancia().accion(Acciones.empleadosListado, null);
 		
 		this.setSize(400, 400);
 		this.setLocationRelativeTo(null);

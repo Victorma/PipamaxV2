@@ -1,6 +1,6 @@
 package main;
 
-import presentacion.dispacher.DispatcherView;
+import presentacion.dispacher.Dispatcher;
 
 public class Pipamax {
 
@@ -9,7 +9,7 @@ public class Pipamax {
 	 */
 
 	public static void main(String[] args) {
-		DispatcherView.getInstancia().getMain();
+		Dispatcher.getInstancia().getMain();
 	}
 
 }

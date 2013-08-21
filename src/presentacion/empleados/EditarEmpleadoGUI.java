@@ -21,7 +21,7 @@ import negocio.empleados.Empleado;
 import negocio.empleados.EmpleadoCompleto;
 import negocio.empleados.EmpleadoParcial;
 import presentacion.GUI;
-import presentacion.controlador.ControladorFrontal;
+import negocio.controlador.ControladorAplicacion;
 import presentacion.formulario.CampoFormularioDNI;
 import presentacion.formulario.CampoFormularioNumeroEntero;
 import presentacion.formulario.CampoFormularioSelector;
@@ -71,7 +71,7 @@ public class EditarEmpleadoGUI extends GUI {
 				if (formularioId.esCorrecto()) {
 					Empleado emp = (tiempo.getResultado().equalsIgnoreCase("completo")?new EmpleadoCompleto():new EmpleadoParcial());
 					emp.setId(id.getResultado());
-					ControladorFrontal.getInstancia().accion(
+					ControladorAplicacion.getInstancia().accion(
 							Acciones.empleadosConsultar, emp);
 				}
 			}
@@ -147,7 +147,7 @@ public class EditarEmpleadoGUI extends GUI {
 						empleado.setDepartamento(departamento.getResultado());
 						empleado.setCp(cp.getResultado());
 						empleado.setTelefono(telefono.getResultado());
-						ControladorFrontal.getInstancia().accion(
+						ControladorAplicacion.getInstancia().accion(
 								Acciones.empleadosEditar, empleado);
 					}
 				}
@@ -170,9 +170,9 @@ public class EditarEmpleadoGUI extends GUI {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
-		ControladorFrontal.getInstancia().accion(Acciones.departamentosListado,	null);
+		ControladorAplicacion.getInstancia().accion(Acciones.departamentosListado,	null);
 		if (emp != null && emp.getId() > 0)
-			ControladorFrontal.getInstancia().accion(Acciones.empleadosConsultar, emp);
+			ControladorAplicacion.getInstancia().accion(Acciones.empleadosConsultar, emp);
 	}
 
 	@SuppressWarnings("unchecked")
