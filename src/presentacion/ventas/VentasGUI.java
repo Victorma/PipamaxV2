@@ -64,7 +64,7 @@ public class VentasGUI extends GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				new CrearVentaGUI(VentasGUI.this);
+				new AdminVentaGUI(VentasGUI.this, null);
 			}
 		});
 		abrir.setPreferredSize(new Dimension(130, 30));
@@ -86,7 +86,7 @@ public class VentasGUI extends GUI {
 		});
 		leftTop.add(consultar);
 
-		devolucion = new JButton("Devolucion");
+		devolucion = new JButton("Modificar venta / Devolución");
 		devolucion.addActionListener(new ActionListener() {
 
 			@Override
@@ -95,7 +95,7 @@ public class VentasGUI extends GUI {
 				if (venta == null)
 					venta = pideId();
 				if (venta != null)
-					new DevolucionGUI(VentasGUI.this, venta);
+					new AdminVentaGUI(VentasGUI.this, venta);
 
 			}
 		});
@@ -182,7 +182,7 @@ public class VentasGUI extends GUI {
 		private static final long serialVersionUID = 1L;
 		private TransferListaVentas ventas;
 		private final String[] colNames = new String[] { "Id", "Fecha",
-				"Id Cliente" };
+				"Id Cliente", "Estado" };
 
 
 		TablaVentas() {
@@ -226,6 +226,13 @@ public class VentasGUI extends GUI {
 			case 2:
 				out = "" + ventas.getListaVentas().get(row).getIdCliente();
 				break;
+			case 3:
+				if(ventas.getListaVentas().get(row).isCerrada()){
+					out = "Cerrada";
+				}else{
+					out = "Abierta";
+					
+				}
 			}
 
 			return out;

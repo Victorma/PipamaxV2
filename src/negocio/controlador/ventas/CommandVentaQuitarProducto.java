@@ -7,31 +7,28 @@ import negocio.ventas.SAVentas;
 import negocio.ventas.TransferVenta;
 import negocio.ventas.factoria.FactoriaSAVentas;
 
-public class CommandVentaDevolucion implements Command {
+public class CommandVentaQuitarProducto implements Command {
 
 	private TransferVenta venta;
 	private TransferProducto producto;
-	private Integer cantidad;
 	private Retorno retorno;
 
-	public CommandVentaDevolucion() {
+	public CommandVentaQuitarProducto() {
 		venta = null;
 		producto = null;
-		cantidad = null;
 	}
 
-	public CommandVentaDevolucion(Object datos) {
+	public CommandVentaQuitarProducto(Object datos) {
 		Object[] arrayDatos = (Object[]) datos;
 		this.venta = (TransferVenta) arrayDatos[0];
 		this.producto = (TransferProducto) arrayDatos[1];
-		this.cantidad = (Integer) arrayDatos[2];
 	}
 
 	@Override
 	public Retorno execute() {
 		SAVentas SA = FactoriaSAVentas.getInstancia().getInstanciaSAVentas();
 
-		retorno = SA.devolucion(venta,producto,cantidad);
+		retorno = SA.quitarProducto(venta,producto);
 		return retorno;
 	}
 
@@ -40,7 +37,6 @@ public class CommandVentaDevolucion implements Command {
 		Object[] arrayDatos = (Object[]) datos;
 		this.venta = (TransferVenta) arrayDatos[0];
 		this.producto = (TransferProducto) arrayDatos[1];
-		this.cantidad = (Integer) arrayDatos[2];
 	}
 
 }

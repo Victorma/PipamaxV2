@@ -68,6 +68,7 @@ public abstract class Errores {
 	public static final int ventaDevolucionNoRealizada = 605;
 	public static final int ventaSinProductos = 606;
 	public static final int ventaProductoNoPertenece = 607;
+	public static final int ventaNoCerrada = 608;
 
 	//Errores de empleados
 	public static final int empleadoNoEncontrado = 701;
@@ -92,6 +93,8 @@ public abstract class Errores {
 	public static final int proyectoNoCreado = 903;
 	public static final int proyectoNoBorrado = 904;
 	public static final int proyectoNoModificado = 905;
+
+
 
 
 

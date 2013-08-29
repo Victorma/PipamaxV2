@@ -1,14 +1,12 @@
-/**
- * 
- */
 package negocio.ventas.imp;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import constantes.Errores;
-
-
 import integracion.DAOException;
 import integracion.clientes.DAOClientes;
 import integracion.clientes.factoria.FactoriaDAOClientes;
@@ -20,7 +18,7 @@ import integracion.transaction.LockModes;
 import integracion.transaction.Transaction;
 import integracion.transaction.transactionManager.TransactionManager;
 import integracion.ventas.DAOVentas;
-import integracion.ventas.factoria.FactoriaDAOVentas;
+import integracion.ventas.imp.DAOVentasImp;
 import negocio.Retorno;
 import negocio.clientes.TransferCliente;
 import negocio.marcas.TransferMarca;
@@ -33,225 +31,238 @@ import negocio.ventas.TransferVenta;
 
 public class SAVentasImp implements SAVentas {
 
-	public Retorno creaVenta(TransferVenta venta)
-	{
-
-		DAOClientes clientes = FactoriaDAOClientes.getInstancia().getInstanciaDAOClientes();
-		DAOProductos productos = FactoriaDAOProductos.getInstancia().getInstanciaDAOProductos();
-		DAOVentas ventas = FactoriaDAOVentas.getInstancia().getInstanciaDAOVentas();
+	@Override
+	public Retorno abrirVenta(TransferCliente cliente) {
 		
-		Retorno salida = new Retorno();
-		//Boolean of everything was OK
-		boolean right = true;
-		TransactionManager transactionManager = TransactionManager.getInstancia();
-		//save the transaction in the transactionManager
-		transactionManager.createTransaction();
-		//get the transaction
-		Transaction transaction = transactionManager.getTransaction();
-		//Start the transaction
-		if(transaction.start())
-		{
-
+		Retorno retorno = new Retorno();
+		
+		DAOVentas daoVentas = new DAOVentasImp();
+		DAOClientes daoClientes = FactoriaDAOClientes.getInstancia().getInstanciaDAOClientes();
+		
+		TransactionManager.getInstancia().createTransaction();
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		
+		if (trans.start()) {
 			try{
-				//Bloqueamos la tabla ventas
-				transaction.lock(LockModes.LockAll, null);
+				trans.lock(LockModes.LockAll, null);
 				
-				//Buscamos el cliente
-				TransferCliente cliente = new TransferCliente();
-				cliente.setId(venta.getIdCliente());
-				cliente = clientes.consultarCliente(cliente,3);
+				TransferCliente comprador = daoClientes.consultarCliente(cliente, 0);
+				if(comprador != null){
+					TransferVenta venta = new TransferVenta();
+					venta.setIdCliente(comprador.getId());
+					venta.setDescuento(comprador.getDescuento());
+					
+					DateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY");
+					Date date = new Date();
+					venta.setFecha(dateFormat.format(date));
+					
+					Integer id = daoVentas.abrirVenta(venta);
+					if (id != null) {
+						retorno.setDatos(id);
+						trans.commit();
+					}else
+						retorno.addError(Errores.ventaNoCreada, null);
+				}else
+					retorno.addError(Errores.clienteNoEncontrado, cliente.getId());
+			}catch(DAOException daoe){
+				retorno.addError(Errores.errorDeAcceso, daoe);
+			}
+			
+			if (retorno.tieneErrores())
+				trans.rollback();
+		}
+		
+		TransactionManager.getInstancia().deleteTransaction();
+		
+		return retorno;
+	}
 
-				//Comprobamos que el cliente exista
-				right &= cliente.getId() != -1;
-				if(!right)
-					salida.addError(Errores.clienteNoEncontrado,venta.getIdCliente());
-				else {
-					// Comprobamos que la venta tenga productos
-					right &= venta.getNumLineasVenta() != 0;
-					if(!right)
-						salida.addError(Errores.ventaSinProductos, null);
-					else {
-						venta.setDescuento(cliente.getDescuento());
-						//Comprobamos que los productos existan y tengan stock
-						TransferProducto producto[] = new TransferProducto[venta.getNumLineasVenta()];
-
-						int i = 0;		
-						boolean productoNoEncontrado = false, noSuficienteStock = false;
-						while(i < venta.getNumLineasVenta()){
-
-							// Comprobamos que los productos existan y tengan stock y ademas almacenamos los datos de los productos en un array para 
-							// poder utilizarlos mas adelante
-							producto[i] = new TransferProducto();
-							producto[i].setId(venta.getLineaVenta(i).getIdProducto());
-							producto[i] = productos.consultaProducto(producto[i],3);
-
-							productoNoEncontrado = productoNoEncontrado || producto[i].getId() == -1 || producto[i].getBorrado(); 
-							if(productoNoEncontrado)
-							{
-								right = false;
-								salida.addError(Errores.productoNoEncontrado,venta.getLineaVenta(i).getIdProducto());
+	@Override
+	public Retorno agregarProducto(TransferVenta transferVenta,
+			TransferProducto producto, Integer cantidad) {
+		Retorno retorno = new Retorno();
+		
+		DAOVentas daoVentas = new DAOVentasImp();
+		DAOProductos daoProductos = FactoriaDAOProductos.getInstancia().getInstanciaDAOProductos();
+		
+		TransactionManager.getInstancia().createTransaction();
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		
+		if (trans.start()) {
+			try{
+				trans.lock(LockModes.LockAll, null);
+				
+				TransferVenta venta = daoVentas.consultaVenta(transferVenta);
+				if (venta != null) {
+					TransferProducto productoAgregar = daoProductos.consultaProducto(producto, 0);
+					if(productoAgregar != null){
+						Integer pos = null;
+						for(int i = 0; i< venta.getNumLineasVenta(); i++)
+							if (venta.getLineaVenta(i).getIdProducto() == producto.getId()){
+								pos = i;
+								break;
 							}
-							else
-							{
-								noSuficienteStock = noSuficienteStock || producto[i].getStock() < venta.getLineaVenta(i).getCantidad();
-								if(noSuficienteStock)
-								{
-									salida.addError(Errores.ventaProductoStockInsuficiente,new int[]{venta.getLineaVenta(i).getIdProducto(), producto[i].getStock()});
-									right = false;
-								}
-									
-							}
-							i++;   
-						}
 						
-						if(!productoNoEncontrado && !noSuficienteStock){
-							int i1 = 0;
-							//Actualizamos el stock de los productos
-							while(i1 < venta.getNumLineasVenta()){
-								venta.getLineaVenta(i1).setPrecio(producto[i1].getPrecio()); // Establecemos el precio del producto como el precio actual
-								producto[i1].setStock(producto[i1].getStock() - venta.getLineaVenta(i1).getCantidad()); // Modificamos el stock
-								right &= productos.modificarProducto(producto[i1]);
-								if(!right)
-									salida.addError(Errores.productoNoModificado, null); // Este error no deberia producirse nunca
-								i1++;
+						if (cantidad > 0) {
+							boolean agregado = false;
+							if (pos == null) {
+								agregado = daoVentas.agregarProducto(venta, productoAgregar, cantidad);
+							} else {
+								agregado = daoVentas.modificarProducto(venta, productoAgregar, venta.getLineaVenta(pos).getCantidad() + cantidad);
 							}
-							//Por ultimo creamos la venta
-							right &= ventas.creaVenta(venta);
-							if(!right)
-								salida.addError(Errores.ventaNoCreada, null);
-						}
-					}
-				}
-			}catch(DAOException ex){
-				right = false;
-				salida.addError(Errores.errorDeAcceso, ex);	
-			}
-
-			//If everything was OK commit, else the queries does not work
-			//if(right)
-				transaction.commit();
-			//else
-				//transaction.rollback();
-		}
-
-		//borramos la transaccion del transaction manager
-		transactionManager.deleteTransaction();
-		return salida;	
-	}
-
-	public Retorno borraVenta(TransferVenta transferVenta) {
-		Retorno retorno = new Retorno();
-		DAOVentas DAO = FactoriaDAOVentas.getInstancia().getInstanciaDAOVentas();
-
-		//Boolean of everything was OK
-		boolean right = true;
-		TransactionManager transactionManager = TransactionManager.getInstancia();
-		//save the transaction in the transactionManager
-		transactionManager.createTransaction();
-		//get the transaction
-		Transaction transaction = transactionManager.getTransaction();
-		//Start the transaction
-		if(transaction.start())
-		{
-			try
-			{
-				//Bloqueamos la tabla Ventas
-				List<String> tablas = new ArrayList<String>();
-				tablas.add("ventas"); tablas.add("lineasVenta");
-				transaction.lock(LockModes.ReadAndWrite, null);
-				
-				right &= DAO.borraVenta(transferVenta);
-				if(!right)
-					retorno.addError(Errores.ventaNoBorrada, null);
-			}catch(DAOException ex){
-				retorno.addError(Errores.errorDeAcceso, ex);
-				right = false;
-			}
-			//If everything was OK commit, else the queries does not work
-			if(right)
-				transaction.commit();
-			else
-				transaction.rollback();
-		}
-
-		//borramos la transaccion del transaction manager
-		transactionManager.deleteTransaction();
-		return retorno;
-	}
-
-	public Retorno devolucion(TransferVenta transferVenta){
-
-		Retorno retorno = new Retorno();
-
-		TransferVenta venta = new TransferVenta();
-		venta.setId(transferVenta.getId());
-
-		DAOVentas DAO = FactoriaDAOVentas.getInstancia().getInstanciaDAOVentas();
-
-		//Boolean of everything was OK
-		boolean right = true;
-		TransactionManager transactionManager = TransactionManager.getInstancia();
-		//save the transaction in the transactionManager
-		transactionManager.createTransaction();
-		//get the transaction
-		Transaction transaction = transactionManager.getTransaction();
-		//Start the transaction
-		if(transaction.start())
-		{
-			try{
-				//Bloqueamos la tabla Ventas
-				transaction.lock(LockModes.LockAll, null);
-				
-				venta = DAO.consultaVenta(venta,0);
-
-				right &= venta.getId() != -1;
-				if(!right)
+							
+							if (agregado)
+								trans.commit();
+							else
+								retorno.addError(Errores.ventaNoCreada, null);
+						}else
+							retorno.addError(Errores.ventaNoCreada, cantidad);
+					}else
+						retorno.addError(Errores.productoNoEncontrado, producto.getId());
+				}else
 					retorno.addError(Errores.ventaNoEncontrada, transferVenta.getId());
-				else{
-					boolean lineaVentaNoEncontrada = false;
-					for(int i = 0; i < transferVenta.getNumLineasVenta(); i++){
-						lineaVentaNoEncontrada = true;
-						for(int j = 0; j < venta.getNumLineasVenta(); j++)
-							if(venta.getLineaVenta(j).getIdProducto() == transferVenta.getLineaVenta(i).getIdProducto()){
-								transferVenta.getLineaVenta(i).setIdVenta(venta.getLineaVenta(j).getIdVenta());
-								lineaVentaNoEncontrada = false;
-							}
-						if(lineaVentaNoEncontrada)
-							retorno.addError(Errores.ventaProductoNoPertenece, transferVenta.getLineaVenta(i).getIdProducto());
-					}
-					if(retorno.getErrores().getLista().size()==0){
-						right &= DAO.devolucion(transferVenta);
-						if(!right)
-							retorno.addError(Errores.ventaDevolucionNoRealizada, null);
-						else
-							retorno.setDatos(transferVenta);
-					}
-				}
-
-
-			}catch(DAOException ex){
-				retorno.addError(Errores.errorDeAcceso, ex);
-				right = false;
+			}catch(DAOException daoe){
+				retorno.addError(Errores.errorDeAcceso, daoe);
 			}
-
-			//If everything was OK commit, else the queries does not work
-			if(right)
-				transaction.commit();
-			else
-				transaction.rollback();
+			
+			if (retorno.tieneErrores())
+				trans.rollback();
 		}
-
-		//borramos la transaccion del transaction manager
-		transactionManager.deleteTransaction();
-
+		
+		TransactionManager.getInstancia().deleteTransaction();
+		
 		return retorno;
 	}
 
-	public Retorno consultaListaVentas() 
-	{
+	@Override
+	public Retorno quitarProducto(TransferVenta transferVenta,
+			TransferProducto producto) {
+		
+		Retorno retorno = new Retorno();
+		
+		DAOVentas daoVentas = new DAOVentasImp();
+		DAOProductos daoProductos = FactoriaDAOProductos.getInstancia().getInstanciaDAOProductos();
+		
+		TransactionManager.getInstancia().createTransaction();
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		
+		if (trans.start()) {
+			try{
+				trans.lock(LockModes.LockAll, null);
+				
+				TransferVenta venta = daoVentas.consultaVenta(transferVenta);
+				if (venta != null) {
+					TransferProducto productoQuitar = daoProductos.consultaProducto(producto, 0);
+					if(productoQuitar != null){
+						Integer pos = null;
+						for(int i = 0; i< venta.getNumLineasVenta(); i++)
+							if (venta.getLineaVenta(i).getIdProducto() == producto.getId()){
+								pos = i;
+								break;
+							}
+						
+						if (pos != null) {
+							boolean quitado = daoVentas.quitarProducto(venta, productoQuitar);
+							if (quitado)
+								trans.commit();
+							else
+								retorno.addError(Errores.ventaNoCreada, null);
+						}else
+							retorno.addError(Errores.ventaProductoNoPertenece, productoQuitar);
+					}else
+						retorno.addError(Errores.productoNoEncontrado, producto.getId());
+				}else
+					retorno.addError(Errores.ventaNoEncontrada, transferVenta.getId());
+			}catch(DAOException daoe){
+				retorno.addError(Errores.errorDeAcceso, daoe);
+			}
+			
+			if (retorno.tieneErrores())
+				trans.rollback();
+		}
+		
+		TransactionManager.getInstancia().deleteTransaction();
+		
+		return retorno;
+	}
+
+	@Override
+	public Retorno devolucion(TransferVenta transferVenta,
+			TransferProducto producto, Integer cantidad) {
+		
+		Retorno retorno = new Retorno();
+		
+		DAOVentas daoVentas = new DAOVentasImp();
+		DAOProductos daoProductos = FactoriaDAOProductos.getInstancia().getInstanciaDAOProductos();
+		
+		TransactionManager.getInstancia().createTransaction();
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		
+		if (trans.start()) {
+			try{
+				trans.lock(LockModes.LockAll, null);
+				
+				TransferVenta venta = daoVentas.consultaVenta(transferVenta);
+				if (venta != null) {
+					if(venta.isCerrada()) {
+						TransferProducto productoQuitar = daoProductos.consultaProducto(producto, 0);
+						boolean aumentarStock = true;
+						if(productoQuitar == null)
+							aumentarStock = false;
+						
+						Integer pos = null;
+						for(int i = 0; i< venta.getNumLineasVenta(); i++)
+							if (venta.getLineaVenta(i).getIdProducto() == producto.getId()){
+								pos = i;
+								break;
+							}
+						
+						if (pos != null) {
+							if(cantidad > 0 && cantidad <= venta.getLineaVenta(pos).getCantidad()){
+								boolean quitado = false;
+								if(cantidad < venta.getLineaVenta(pos).getCantidad())
+									quitado = daoVentas.modificarProducto(transferVenta, producto, cantidad);
+								else
+									quitado = daoVentas.quitarProducto(transferVenta, producto);
+								
+								if (quitado){
+									if (aumentarStock) {
+										productoQuitar.setStock(producto.getStock() + cantidad);
+										if (daoProductos.modificarProducto(producto))
+											trans.commit();
+										else
+											retorno.addError(Errores.productoNoModificado, producto.getId());
+									}else
+										trans.commit();
+								}else
+									retorno.addError(Errores.ventaDevolucionNoRealizada, null);
+							}else
+								retorno.addError(Errores.ventaDevolucionNoRealizada, null);
+						}else
+							retorno.addError(Errores.ventaProductoNoPertenece, productoQuitar);
+						//retorno.addError(Errores.productoNoEncontrado, producto.getId());
+					}else
+						retorno.addError(Errores.ventaNoCerrada, transferVenta.getId());
+				}else
+					retorno.addError(Errores.ventaNoEncontrada, transferVenta.getId());
+			}catch(DAOException daoe){
+				retorno.addError(Errores.errorDeAcceso, daoe);
+			}
+			
+			if (retorno.tieneErrores())
+				trans.rollback();
+		}
+		
+		TransactionManager.getInstancia().deleteTransaction();
+		
+		return retorno;
+	}
+
+	@Override
+	public Retorno consultaListaVentas() {
 		Retorno retorno = new Retorno();
 		TransferListaVentas ventas = new TransferListaVentas();
-		DAOVentas DAO = FactoriaDAOVentas.getInstancia().getInstanciaDAOVentas();
+		DAOVentas DAO = new DAOVentasImp();
 
 		//Boolean of everything was OK
 		boolean right = true;
@@ -264,8 +275,13 @@ public class SAVentasImp implements SAVentas {
 		if(transaction.start())
 		{
 			try {
-				ventas.setListaVentas(DAO.consultaListadoVentas(3).getListaVentas());
-				retorno.setDatos(ventas);
+				ventas = DAO.consultaListadoVentas();
+				if (ventas != null) {
+					retorno.setDatos(ventas);
+					transaction.commit();
+				}else
+					right = false;
+				
 			}catch(DAOException ex){
 				retorno.addError(Errores.errorDeAcceso, ex);
 				right = false;
@@ -284,12 +300,11 @@ public class SAVentasImp implements SAVentas {
 		return retorno;
 	}
 
-
-	public Retorno consultaVenta(TransferVenta venta)
-	{
+	@Override
+	public Retorno consultaVenta(TransferVenta venta) {
 		Retorno retorno = new Retorno();
 
-		DAOVentas ventas = FactoriaDAOVentas.getInstancia().getInstanciaDAOVentas();
+		DAOVentas ventas = new DAOVentasImp();
 		DAOClientes clientes = FactoriaDAOClientes.getInstancia().getInstanciaDAOClientes();
 		DAOProductos productos = FactoriaDAOProductos.getInstancia().getInstanciaDAOProductos();
 		DAOMarcas marcas = FactoriaDAOMarcas.getInstancia().getInstanciaDAOMarcas();	
@@ -310,7 +325,7 @@ public class SAVentasImp implements SAVentas {
 		{
 			try{
 				//Comprobamos que existe la venta.
-				tComVenta.setVenta(ventas.consultaVenta(venta,3));
+				tComVenta.setVenta(ventas.consultaVenta(venta));
 
 				right &= tComVenta.getVenta().getId() != -1;
 				if(!right)
@@ -379,4 +394,91 @@ public class SAVentasImp implements SAVentas {
 		}
 		return retorno;
 	}
+
+	@Override
+	public Retorno cerrarVenta(TransferVenta venta) {
+		Retorno retorno = new Retorno();
+		
+		DAOVentas daoVentas = new DAOVentasImp();
+		DAOProductos daoProductos = FactoriaDAOProductos.getInstancia().getInstanciaDAOProductos();
+		
+		TransactionManager.getInstancia().createTransaction();
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		
+		if (trans.start()) {
+			try{
+				trans.lock(LockModes.LockAll, null);
+				TransferVenta aCerrar = daoVentas.consultaVenta(venta);
+				if (aCerrar != null) {
+					for(int i = 0; i< aCerrar.getNumLineasVenta(); i++){
+						TransferProducto producto = new TransferProducto();
+						producto.setId(aCerrar.getLineaVenta(i).getIdProducto());
+						producto = daoProductos.consultaProducto(producto, 0);
+						if (producto.getStock() >= aCerrar.getLineaVenta(i).getCantidad()) {
+							producto.setStock(producto.getStock() - aCerrar.getLineaVenta(i).getCantidad());
+							daoProductos.modificarProducto(producto);
+						}else
+							retorno.addError(Errores.ventaProductoStockInsuficiente, producto);
+					}
+					if (!daoVentas.cerrarVenta(aCerrar))
+						retorno.addError(Errores.ventaNoCerrada, null);
+					
+				}else
+					retorno.addError(Errores.ventaNoEncontrada, venta.getId());
+			}catch(DAOException daoe){
+				retorno.addError(Errores.errorDeAcceso, daoe);
+			}
+			
+			if (retorno.tieneErrores())
+				trans.rollback();
+			else
+				trans.commit();
+		}
+		
+		TransactionManager.getInstancia().deleteTransaction();
+		
+		return retorno;
+	}
+
+	@Override
+	public Retorno borrarVenta(TransferVenta venta) {
+		Retorno retorno = new Retorno();
+		DAOVentas DAO = new DAOVentasImp();
+
+		//Boolean of everything was OK
+		boolean right = true;
+		TransactionManager transactionManager = TransactionManager.getInstancia();
+		//save the transaction in the transactionManager
+		transactionManager.createTransaction();
+		//get the transaction
+		Transaction transaction = transactionManager.getTransaction();
+		//Start the transaction
+		if(transaction.start())
+		{
+			try
+			{
+				//Bloqueamos la tabla Ventas
+				List<String> tablas = new ArrayList<String>();
+				tablas.add("ventas"); tablas.add("lineasVenta");
+				transaction.lock(LockModes.LockAll, null);
+				
+				right &= DAO.borraVenta(venta);
+				if(!right)
+					retorno.addError(Errores.ventaNoBorrada, null);
+			}catch(DAOException ex){
+				retorno.addError(Errores.errorDeAcceso, ex);
+				right = false;
+			}
+			//If everything was OK commit, else the queries does not work
+			if(right)
+				transaction.commit();
+			else
+				transaction.rollback();
+		}
+
+		//borramos la transaccion del transaction manager
+		transactionManager.deleteTransaction();
+		return retorno;
+	}
+
 }

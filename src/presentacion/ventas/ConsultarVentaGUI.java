@@ -124,8 +124,7 @@ public class ConsultarVentaGUI extends GUI {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
-		ControladorAplicacion.getInstancia().accion(Acciones.ventasConsultar,
-				tventa);
+		ControladorAplicacion.getInstancia().accion(Acciones.ventasConsultar, tventa);
 
 	}
 

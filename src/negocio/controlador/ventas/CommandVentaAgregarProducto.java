@@ -7,20 +7,20 @@ import negocio.ventas.SAVentas;
 import negocio.ventas.TransferVenta;
 import negocio.ventas.factoria.FactoriaSAVentas;
 
-public class CommandVentaDevolucion implements Command {
+public class CommandVentaAgregarProducto implements Command {
 
 	private TransferVenta venta;
 	private TransferProducto producto;
 	private Integer cantidad;
 	private Retorno retorno;
 
-	public CommandVentaDevolucion() {
+	public CommandVentaAgregarProducto() {
 		venta = null;
 		producto = null;
 		cantidad = null;
 	}
 
-	public CommandVentaDevolucion(Object datos) {
+	public CommandVentaAgregarProducto(Object datos) {
 		Object[] arrayDatos = (Object[]) datos;
 		this.venta = (TransferVenta) arrayDatos[0];
 		this.producto = (TransferProducto) arrayDatos[1];
@@ -31,7 +31,7 @@ public class CommandVentaDevolucion implements Command {
 	public Retorno execute() {
 		SAVentas SA = FactoriaSAVentas.getInstancia().getInstanciaSAVentas();
 
-		retorno = SA.devolucion(venta,producto,cantidad);
+		retorno = SA.agregarProducto(venta,producto,cantidad);
 		return retorno;
 	}
 

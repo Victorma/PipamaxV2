@@ -1,9 +1,8 @@
-/**
- * 
- */
 package negocio.ventas;
 
 import negocio.Retorno;
+import negocio.clientes.TransferCliente;
+import negocio.productos.TransferProducto;
 
 public interface SAVentas {
 
@@ -22,7 +21,7 @@ public interface SAVentas {
 	 * @param transferVenta
 	 * @return Una lista de errores con los posibles errores que hayan ocurrido
 	 */
-	public Retorno creaVenta(TransferVenta transferVenta);
+	public Retorno abrirVenta(TransferCliente cliente);
 
 	/** 
 	 * Borra la venta.
@@ -32,8 +31,53 @@ public interface SAVentas {
 	 * @param transferVenta contiene la id de la venta a borrar.
 	 * @return Una lista de errores con los posibles errores que hayan ocurrido
 	 */
-	public Retorno borraVenta(TransferVenta transferVenta);
+	public Retorno agregarProducto(TransferVenta transferVenta, TransferProducto producto, Integer cantidad);
+	
+	/** 
+	 * Borra la venta.
+	 * Puede retornar:
+	 *  - ventaNoBorrada
+	 *  - errorDeAcceso
+	 * @param transferVenta contiene la id de la venta a borrar.
+	 * @return Una lista de errores con los posibles errores que hayan ocurrido
+	 */
+	public Retorno quitarProducto(TransferVenta transferVenta, TransferProducto producto);
 
+	
+	/**
+	 * Recibe un transfer venta que contiene la venta a crear y sus lineas de venta
+	 * Comprueba que exista el cliente, los productos y que haya al menos una linea de venta.
+	 * Crea la venta.
+	 * Puede retornar:
+	 *  - clienteNoEncontrado
+	 *  - ventaSinProductos
+	 *  - productoNoEncontrado
+	 *  - ventaProductoStockInsuficiente
+	 *  - productoNoModificado // No deberia devolver este error, significaria un fallo grave en la BBDD
+	 *  - ventaNoCreada // No deberia devolver este error, significaria un fallo grave en la BBDD
+	 *  - errorDeAcceso
+	 * @param transferVenta
+	 * @return Una lista de errores con los posibles errores que hayan ocurrido
+	 */
+	public Retorno cerrarVenta(TransferVenta venta);
+	
+	/**
+	 * Recibe un transfer venta que contiene la venta a crear y sus lineas de venta
+	 * Comprueba que exista el cliente, los productos y que haya al menos una linea de venta.
+	 * Crea la venta.
+	 * Puede retornar:
+	 *  - clienteNoEncontrado
+	 *  - ventaSinProductos
+	 *  - productoNoEncontrado
+	 *  - ventaProductoStockInsuficiente
+	 *  - productoNoModificado // No deberia devolver este error, significaria un fallo grave en la BBDD
+	 *  - ventaNoCreada // No deberia devolver este error, significaria un fallo grave en la BBDD
+	 *  - errorDeAcceso
+	 * @param transferVenta
+	 * @return Una lista de errores con los posibles errores que hayan ocurrido
+	 */
+	public Retorno borrarVenta(TransferVenta venta);
+	
 	/** 
 	 * Devuelve las lineas de venta solicitadas, es decir, los productos que esten en ellas.
 	 * Verifica que todas las lineas de venta existan en la venta y calcula las nuevas cantidades.
@@ -46,7 +90,7 @@ public interface SAVentas {
 	 * @param transferVenta contiene las lineas de venta a devolver
 	 * @return Una lista de errores con los posibles errores que hayan ocurrido
 	 */
-	public Retorno devolucion(TransferVenta transferVenta);
+	public Retorno devolucion(TransferVenta transferVenta, TransferProducto producto, Integer cantidad);
 
 	/** 
 	 * Se consulta el listado de ventas.
@@ -70,4 +114,5 @@ public interface SAVentas {
 	 * @return Una lista de errores con los posibles errores que hayan ocurrido
 	 */
 	public Retorno consultaVenta(TransferVenta venta);
+	
 }

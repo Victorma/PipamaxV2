@@ -1,5 +1,6 @@
 package negocio.ventas;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import negocio.clientes.TransferCliente;
@@ -9,7 +10,7 @@ public class TComVenta {
 
 	private TransferVenta venta;
 	private TransferCliente cliente;
-	private List<TComProducto> productos;
+	private List<TComProducto> productos = new ArrayList<TComProducto>();
 
 	public TransferCliente getCliente() {
 		return cliente;

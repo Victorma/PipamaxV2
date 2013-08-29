@@ -6,16 +6,16 @@ import negocio.ventas.SAVentas;
 import negocio.ventas.TransferVenta;
 import negocio.ventas.factoria.FactoriaSAVentas;
 
-public class CommandVentaBorrar implements Command {
-
+public class CommandVentaCerrar implements Command {
+	
 	private TransferVenta datos;
 	private Retorno retorno;
 
-	public CommandVentaBorrar() {
+	public CommandVentaCerrar() {
 		datos = null;
 	}
 
-	public CommandVentaBorrar(TransferVenta datos) {
+	public CommandVentaCerrar(TransferVenta datos) {
 		this.datos = datos;
 	}
 
@@ -23,7 +23,7 @@ public class CommandVentaBorrar implements Command {
 	public Retorno execute() {
 		SAVentas SA = FactoriaSAVentas.getInstancia().getInstanciaSAVentas();
 
-		retorno = SA.borrarVenta(datos);
+		retorno = SA.cerrarVenta(datos);
 		return retorno;
 	}
 

@@ -1,12 +1,4 @@
-/**
- * 
- */
 package integracion.ventas.imp;
-
-import integracion.BBDDConnection;
-import integracion.DAOException;
-import integracion.transaction.transactionManager.TransactionManager;
-import integracion.ventas.DAOVentas;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -14,359 +6,287 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
+import negocio.productos.TransferProducto;
 import negocio.ventas.TransferListaVentas;
 import negocio.ventas.TransferVenta;
+import integracion.BBDDConnection;
+import integracion.DAOException;
+import integracion.transaction.Transaction;
+import integracion.transaction.transactionManager.TransactionManager;
+import integracion.ventas.DAOVentas;
 
 public class DAOVentasImp implements DAOVentas {
 
 	@Override
-	public boolean creaVenta(TransferVenta transferVenta) throws DAOException {
+	public Integer abrirVenta(TransferVenta venta)
+			throws DAOException {
 		
-		boolean error = false;
+		Integer id = null;
 		
-		Statement stmt = null;
+		Connection conn = null;
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		if (trans != null) 
+			conn = (Connection) trans.getResource();
+		else 
+			conn = BBDDConnection.getConnection();
 
-		//Get the connection from the transaction
-		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
-		if(connection == null)
-		{
-			//if we dont find the transaction, make the sentence with no transaction
-			try
-			{
-				connection = BBDDConnection.getConnection();
-				stmt = connection.createStatement();		
-				
-				stmt.addBatch("INSERT INTO ventas (fecha,idCliente,descuento,activo) " + 
-				"VALUES(STR_TO_DATE('" + 
-					transferVenta.getFecha() + "','%d-%m-%Y'), '" +
-					transferVenta.getIdCliente() + "', '" +
-					transferVenta.getDescuento() + "', '" +
-					"1')"
-				);
-				
-				for(int i=0; i< transferVenta.getNumLineasVenta(); i++)
-					stmt.addBatch("INSERT INTO lineasVenta (idProducto, cantidad, precio, idVenta) " +
-							"VALUES(' " +
-							transferVenta.getLineaVenta(i).getIdProducto() + "', '" +
-							transferVenta.getLineaVenta(i).getCantidad() + "', '"+
-							transferVenta.getLineaVenta(i).getPrecio() + "', " +
-							"(SELECT max(Id) from ventas))" +
-							"");
-				
-				for(int current: stmt.executeBatch())
-					if(current != 1)
-						error = true;
-				
+		try {
+			Statement stmt = conn.createStatement();
+			int actualizadas = stmt.executeUpdate("INSERT INTO ventas (fecha,idCliente,descuento) " + 
+					"VALUES(STR_TO_DATE('" + 
+						venta.getFecha() + "','%d-%m-%Y'), '" +
+						venta.getIdCliente() + "', '" +
+						venta.getDescuento() + "')"
+					);
+			
+			if (actualizadas == 1) {
+				boolean result = stmt.execute("SELECT max(id) as id FROM ventas");
+				if (result) {
+					ResultSet rs = stmt.getResultSet();
+					rs.next();
+					id = rs.getInt("id");
+				}
 			}
-			catch(SQLException ex) {
-				throw new DAOException(ex);
-			}
-		}
-		else
-		{
-			try
-			{
-				stmt = connection.createStatement();
-				
-				stmt.addBatch("INSERT INTO ventas (fecha,idCliente,descuento,activo) " + 
-				"VALUES(STR_TO_DATE('" + 
-					transferVenta.getFecha() + "','%d-%m-%Y'), '" +
-					transferVenta.getIdCliente() + "', '" +
-					transferVenta.getDescuento() + "', '" +
-					"1')"
-				);
-				
-				for(int i=0; i< transferVenta.getNumLineasVenta(); i++)
-					stmt.addBatch("INSERT INTO lineasVenta (idProducto, cantidad, precio, idVenta) " +
-							"VALUES(' " +
-							transferVenta.getLineaVenta(i).getIdProducto() + "', '" +
-							transferVenta.getLineaVenta(i).getCantidad() + "', '"+
-							transferVenta.getLineaVenta(i).getPrecio() + "', " +
-							"(SELECT max(Id) from ventas))" +
-							"");
-				
-				for(int current: stmt.executeBatch())
-					if(current != 1)
-						error = true;
-				
-			}
-			catch(SQLException ex) {
-				throw new DAOException(ex);
-			}
+			
+		} catch (SQLException ex) {
+			throw new DAOException(ex);
 		}
 		
-		return !error;
+		return id;
 	}
 
 	@Override
-	public boolean modificaVenta(TransferVenta transferVenta)
-	{
-		// TODO Auto-generated method stub
-		return true;
+	public boolean agregarProducto(TransferVenta venta,
+			TransferProducto producto, Integer cantidad) throws DAOException {
+		
+		boolean result = true;
+		
+		Connection conn = null;
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		if (trans != null) 
+			conn = (Connection) trans.getResource();
+		else 
+			conn = BBDDConnection.getConnection();
+
+		try {
+			Statement stmt = conn.createStatement();
+			int actualizadas = stmt.executeUpdate("INSERT INTO lineasventa (idProducto, cantidad, precio, idVenta) " +
+					"VALUES('" +
+					producto.getId() + "', '" +
+					cantidad + "', '"+
+					producto.getPrecio() + "', '" +
+					venta.getId() + "')");
+			
+			result = actualizadas == 1;
+			
+		} catch (SQLException ex) {
+			throw new DAOException(ex);
+		}
+		
+		return result;
 	}
 	
 	@Override
-	public boolean devolucion(TransferVenta transferVenta) throws DAOException {
+	public boolean modificarProducto(TransferVenta transferVenta,
+			TransferProducto producto, Integer cantidad) throws DAOException {
+		boolean result = true;
 		
+		Connection conn = null;
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		if (trans != null) 
+			conn = (Connection) trans.getResource();
+		else 
+			conn = BBDDConnection.getConnection();
+
+		try {
+			Statement stmt = conn.createStatement();
+			int actualizadas = stmt.executeUpdate("UPDATE lineasventa SET cantidad = '" + cantidad + 
+					"' WHERE idProducto = '" + producto.getId() + "' AND idVenta = '" + transferVenta.getId() + "'");
+			
+			if(actualizadas != 1)
+				result = false;
+			
+		} catch (SQLException ex) {
+			throw new DAOException(ex);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public boolean quitarProducto(TransferVenta venta, TransferProducto producto)
+			throws DAOException {
+		
+		boolean result = true;
+		
+		Connection conn = null;
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		if (trans != null) 
+			conn = (Connection) trans.getResource();
+		else 
+			conn = BBDDConnection.getConnection();
+
+		try {
+			Statement stmt = conn.createStatement();
+			int actualizadas = stmt.executeUpdate("DELETE FROM lineasventa WHERE idProducto = '" + producto.getId() +
+					"' AND idVenta = '" + venta.getId() + "'");
+			
+			if(actualizadas != 1)
+				result = false;
+			
+		} catch (SQLException ex) {
+			throw new DAOException(ex);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public boolean cerrarVenta(TransferVenta venta) throws DAOException {
 		
 		boolean error = false;
 		
-		Statement stmt = null;
-		
-		//Get the connection from the transaction
-		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
-		if(connection == null)
-		{
-			//if we dont find the transaction, make the sentence with no transaction
-			try
-			{
-				connection = BBDDConnection.getConnection();
+		Connection conn = null;
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		if (trans != null) 
+			conn = (Connection) trans.getResource();
+		else 
+			conn = BBDDConnection.getConnection();
 
-				stmt = connection.createStatement();
-				
-				for(int i=0; i< transferVenta.getNumLineasVenta(); i++)
-					stmt.addBatch("UPDATE lineasVenta SET cantidad = cantidad - " + transferVenta.getLineaVenta(i).getCantidad() + " " +
-							"WHERE idVenta = " + transferVenta.getLineaVenta(i).getIdVenta() +
-							" AND idProducto = " + transferVenta.getLineaVenta(i).getIdProducto()
-							);
-				
-				for(int current: stmt.executeBatch())
-					if(current != 1)
-						error = true;
-				
-				stmt.execute("DELETE FROM lineasVenta WHERE cantidad = '0' AND IdVenta = '" + transferVenta.getId() + "'");
-				
-			}
-			catch(SQLException ex) {
-				throw new DAOException(ex);
-			}
-		}
-		else
-		{
-			try {
-				stmt = connection.createStatement();
-				
-				for(int i=0; i< transferVenta.getNumLineasVenta(); i++)
-					stmt.addBatch("UPDATE lineasVenta SET cantidad = cantidad - " + transferVenta.getLineaVenta(i).getCantidad() + " " +
-							"WHERE idVenta = " + transferVenta.getLineaVenta(i).getIdVenta() +
-							" AND idProducto = " + transferVenta.getLineaVenta(i).getIdProducto()
-							);
-				
-				for(int current: stmt.executeBatch())
-					if(current != 1)
-						error = true;
-				
-				stmt.execute("DELETE FROM lineasVenta WHERE cantidad = '0' AND IdVenta = '" + transferVenta.getId() + "'");
-				
-			}
-			catch(SQLException ex) {
-				throw new DAOException(ex);
-			}
+		try {
+			Statement stmt = conn.createStatement();
+			int actualizadas = stmt.executeUpdate("UPDATE ventas " +
+					"SET cerrada = '1' " +
+					"WHERE id = '" + venta.getId() +
+					"' AND cerrada = '0'"
+					);
+
+			if(actualizadas != 1)
+					error = true;
+			
+		} catch (SQLException ex) {
+			throw new DAOException(ex);
 		}
 		
 		return !error;
+	}
+
+	@Override
+	public TransferVenta consultaVenta(TransferVenta venta)
+			throws DAOException {
+		
+		TransferVenta consulta = null;
+		
+		Connection conn = null;
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		if (trans != null) 
+			conn = (Connection) trans.getResource();
+		else 
+			conn = BBDDConnection.getConnection();
+
+		try {
+			Statement stmt = conn.createStatement();
+			DateFormat formateador = new SimpleDateFormat("dd-MM-YYYY");
+			stmt.execute("SELECT id,fecha,idCliente,descuento,cerrada FROM ventas " +
+			"WHERE id = '" + venta.getId() +
+			"' AND activo = '1'");
+			
+			ResultSet rs = stmt.getResultSet();
+
+			if(rs.next()) {
+				
+				consulta = new TransferVenta();
+				
+				consulta.setId(rs.getInt("id"));
+				consulta.setFecha(formateador.format(rs.getDate("fecha")));
+				consulta.setIdCliente(rs.getInt("idCliente"));
+				consulta.setDescuento(rs.getFloat("descuento"));
+				consulta.setCerrada(rs.getInt("cerrada") == 1);
+				
+				stmt.execute("SELECT * FROM lineasventa " +
+						"WHERE idVenta = '" + venta.getId() + "'");
+				
+				rs = stmt.getResultSet();
+				while(rs.next()) 
+					consulta.addLineaVenta(rs.getInt("idProducto"), rs.getInt("cantidad"), rs.getDouble("precio"), rs.getInt("idVenta"));
+			}
+			
+		} catch (SQLException ex) {
+			throw new DAOException(ex);
+		}
+		
+		return consulta;
+	}
+
+	@Override
+	public TransferListaVentas consultaListadoVentas()
+			throws DAOException {
+
+		TransferListaVentas consulta = null;
+		
+		Connection conn = null;
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		if (trans != null) 
+			conn = (Connection) trans.getResource();
+		else 
+			conn = BBDDConnection.getConnection();
+
+		try {
+			Statement stmt = conn.createStatement();
+			DateFormat formateador = new SimpleDateFormat("dd-MM-YYYY");
+			stmt.execute("SELECT id, fecha, idCliente, cerrada FROM ventas WHERE activo = 1");
+			ResultSet rs = stmt.getResultSet();
+			
+			consulta = new TransferListaVentas();
+			TransferVenta aux;
+			while(rs.next()) {
+				aux = new TransferVenta();
+				aux.setId(rs.getInt("id"));
+				aux.setFecha(formateador.format(rs.getDate("fecha")));
+				aux.setIdCliente(rs.getInt("idCliente"));
+				aux.setCerrada(rs.getInt("cerrada") == 1);
+				consulta.getListaVentas().add(aux);					
+			}
+			
+		} catch (SQLException ex) {
+			throw new DAOException(ex);
+		}
+		
+		return consulta;
+		
 	}
 
 	@Override
 	public boolean borraVenta(TransferVenta transferVenta) throws DAOException {
+
+		
 		boolean error = false;
 		
-		Statement stmt = null;
-		
-		//Get the connection from the transaction
-		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
-		if(connection == null)
-		{
-			//if we dont find the transaction, make the sentence with no transaction
-			try 
-			{
-				connection = BBDDConnection.getConnection();
-				stmt = connection.createStatement();
-				
-				int actualizadas = stmt.executeUpdate("UPDATE ventas " +
-					"SET activo = '0' " +
-					"WHERE id = '" + transferVenta.getId() +
-					"' AND activo = '1'"
-					);
-	
-				if(actualizadas != 1)
-					error = true;
-				
-			}catch(SQLException sqlex){
-				throw new DAOException(sqlex);
-			}
-		}
-		else
-		{
-			try {
-				stmt = connection.createStatement();
-				
-				int actualizadas = stmt.executeUpdate("UPDATE ventas " +
+		Connection conn = null;
+		Transaction trans = TransactionManager.getInstancia().getTransaction();
+		if (trans != null) 
+			conn = (Connection) trans.getResource();
+		else 
+			conn = BBDDConnection.getConnection();
+
+		try {
+			Statement stmt = conn.createStatement();
+			int actualizadas = stmt.executeUpdate("UPDATE ventas " +
 					"SET activo = '0' " +
 					"WHERE id = '" + transferVenta.getId() +
 					"' AND activo = '1'"
 					);
 
-				if(actualizadas != 1)
+			if(actualizadas != 1)
 					error = true;
-				
-			}catch(SQLException sqlex){
-				throw new DAOException(sqlex);
-			}
+			
+		} catch (SQLException ex) {
+			throw new DAOException(ex);
 		}
 		
 		return !error;
-	}
+		
+	}	
 
-	@Override
-	public TransferVenta consultaVenta(TransferVenta transferVenta, int lockMode) throws DAOException
-	{
-		
-		TransferVenta out = new TransferVenta();
-		
-		Statement stmt = null;
-		ResultSet rs = null;
-		
-		//Get the connection from the transaction
-		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
-		if(connection == null || lockMode == 0)
-		{
-			//if we dont find the transaction, make the sentence with no transaction
-			try
-			{ 
-				if(connection == null)
-					connection = BBDDConnection.getConnection();
-				
-				stmt = connection.createStatement();
-				DateFormat formateador = new SimpleDateFormat("dd-MM-YYYY");
-				stmt.execute("SELECT id,fecha,idCliente,descuento FROM ventas " +
-				"WHERE id = '" + transferVenta.getId() +
-				"' AND activo = '1'");
-				rs = stmt.getResultSet();
-	
-				if(rs.next()) {
-					
-					out.setId(rs.getInt(1));
-					out.setFecha(formateador.format(rs.getDate(2)));
-					out.setIdCliente(rs.getInt(3));
-					out.setDescuento(rs.getFloat(4));
-					
-					stmt.execute("SELECT * FROM lineasVenta " +
-							"WHERE idVenta = '" + transferVenta.getId() + "'");
-					
-					rs = stmt.getResultSet();
-					while(rs.next()) {
-						out.addLineaVenta(rs.getInt(1), rs.getInt(2), rs.getDouble(3), rs.getInt(4));
-					}
-					
-				}else{
-					out.setId(-1);
-				}
-			}catch(SQLException sqlex){
-				throw new DAOException(sqlex);
-			}
-		}
-		else
-		{
-			try {
-				stmt = connection.createStatement();
-				DateFormat formateador = new SimpleDateFormat("dd-MM-YYYY");
-				stmt.execute("SELECT id,fecha,idCliente,descuento FROM ventas " +
-				"WHERE id = '" + transferVenta.getId() +
-				"' AND activo = '1' FOR UPDATE");
-				rs = stmt.getResultSet();
-
-				if(rs.next()) {
-					
-					out.setId(rs.getInt(1));
-					out.setFecha(formateador.format(rs.getDate(2)));
-					out.setIdCliente(rs.getInt(3));
-					out.setDescuento(rs.getFloat(4));
-					
-					stmt.execute("SELECT * FROM lineasVenta " +
-							"WHERE idVenta = '" + transferVenta.getId() + "' FOR UPDATE");
-					
-					rs = stmt.getResultSet();
-					while(rs.next()) {
-						out.addLineaVenta(rs.getInt(1), rs.getInt(2), rs.getDouble(3), rs.getInt(4));
-					}
-					
-				}else{
-					out.setId(-1);
-				}
-			}catch(SQLException sqlex){
-				throw new DAOException(sqlex);
-			}
-		}
-		
-		return out;
-	}
-
-	@Override
-	public TransferListaVentas consultaListadoVentas(int lockMode) throws DAOException {
-		
-		TransferListaVentas out = new TransferListaVentas();
-		out.setListaVentas(new ArrayList<TransferVenta>());
-		
-		Statement stmt = null;
-		ResultSet rs = null;
-		
-		//Get the connection from the transaction
-		Connection connection = null; try{connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource(); }catch(ClassCastException ex){};
-		if(connection == null || lockMode == 0)
-		{
-			//if we dont find the transaction, make the sentence with no transaction
-			
-			try
-			{
-				if(connection == null)
-					connection = BBDDConnection.getConnection();
-				
-				stmt = connection.createStatement();
-				DateFormat formateador = new SimpleDateFormat("dd-MM-YYYY");
-				stmt.execute("SELECT id, fecha, idCliente FROM ventas WHERE activo = 1");
-				rs = stmt.getResultSet();
-				
-				TransferVenta aux;
-				while(rs.next()) {
-					
-					aux = new TransferVenta();
-					aux.setId(rs.getInt(1));
-					aux.setFecha(formateador.format(rs.getDate(2)));
-					aux.setIdCliente(rs.getInt(3));
-					out.getListaVentas().add(aux);				
-					
-				}
-				
-			}catch(SQLException sqlex){
-				throw new DAOException(sqlex);
-			}
-		}
-		else
-		{
-			try {
-				stmt = connection.createStatement();
-				DateFormat formateador = new SimpleDateFormat("dd-MM-YYYY");
-				stmt.execute("SELECT id, fecha, idCliente FROM ventas WHERE activo = 1 FOR UPDATE");
-				rs = stmt.getResultSet();
-				
-				TransferVenta aux;
-				while(rs.next()) {
-					
-					aux = new TransferVenta();
-					aux.setId(rs.getInt(1));
-					aux.setFecha(formateador.format(rs.getDate(2)));
-					aux.setIdCliente(rs.getInt(3));
-					out.getListaVentas().add(aux);				
-					
-				}
-				
-			}catch(SQLException sqlex){
-				throw new DAOException(sqlex);
-			}
-		}
-		return out;
-	}
 }

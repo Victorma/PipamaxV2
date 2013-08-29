@@ -148,7 +148,7 @@ public class PrincipalGUI extends GUI {
 		this.add(nombres, BorderLayout.SOUTH);
 
 		//set the configurations of the window
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setSize(800, 500);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);

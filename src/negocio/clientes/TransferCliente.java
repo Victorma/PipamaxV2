@@ -109,4 +109,8 @@ public class TransferCliente {
 	public void setDescuento(float descuento) {
 		this.descuento = descuento;
 	}
+	
+	public String toString(){
+		return "("+id+") "+name+" "+lastName+" - "+DNI;
+	}
 }

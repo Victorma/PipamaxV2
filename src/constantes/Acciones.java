@@ -48,7 +48,11 @@ public enum Acciones {
 
 	//Acciones de ventas
 	ventasListado,
-	ventasCrear,
+	ventasCrear, //TODO borrar
+	ventasAbrir,
+	ventasAgregarProducto,
+	ventasQuitarProducto,
+	ventasCerrar,
 	ventasConsultar,
 	ventasBorrar,
 	ventasDevolucion,

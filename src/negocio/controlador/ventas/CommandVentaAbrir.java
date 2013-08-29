@@ -1,21 +1,21 @@
 package negocio.controlador.ventas;
 
 import negocio.Retorno;
+import negocio.clientes.TransferCliente;
 import negocio.controlador.Command;
 import negocio.ventas.SAVentas;
-import negocio.ventas.TransferVenta;
 import negocio.ventas.factoria.FactoriaSAVentas;
 
-public class CommandVentaCrear implements Command {
+public class CommandVentaAbrir implements Command {
 
-	private TransferVenta datos;
+	private TransferCliente datos;
 	private Retorno retorno;
 
-	public CommandVentaCrear() {
+	public CommandVentaAbrir() {
 		datos = null;
 	}
 
-	public CommandVentaCrear(TransferVenta datos) {
+	public CommandVentaAbrir(TransferCliente datos) {
 		this.datos = datos;
 	}
 
@@ -23,13 +23,13 @@ public class CommandVentaCrear implements Command {
 	public Retorno execute() {
 		SAVentas SA = FactoriaSAVentas.getInstancia().getInstanciaSAVentas();
 
-		retorno = SA.creaVenta(datos);
+		retorno = SA.abrirVenta(datos);
 		return retorno;
 	}
 
 	@Override
 	public void setContext(Object datos) {
-		this.datos = (TransferVenta) datos;
+		this.datos = (TransferCliente) datos;
 	}
 
 }

@@ -63,7 +63,7 @@ import negocio.controlador.proyectos.CommandProyectoCrear;
 import negocio.controlador.proyectos.CommandProyectoEditar;
 import negocio.controlador.ventas.CommandVentaBorrar;
 import negocio.controlador.ventas.CommandVentaConsultar;
-import negocio.controlador.ventas.CommandVentaCrear;
+import negocio.controlador.ventas.CommandVentaAbrir;
 import negocio.controlador.ventas.CommandVentaDevolucion;
 import negocio.controlador.ventas.CommandVentaListado;
 

@@ -15,6 +15,7 @@ public class TransferVenta {
 	private String fecha;
 	private int idCliente;
 	private float descuento;
+	private boolean cerrada;
 
 	public int getEstado() {
 		return estado;
@@ -81,5 +82,13 @@ public class TransferVenta {
 
 	public void setDescuento(float descuento) {
 		this.descuento = descuento;
+	}
+	
+	public boolean isCerrada(){
+		return this.cerrada;
+	}
+	
+	public void setCerrada(boolean cerrada){
+		this.cerrada = cerrada;
 	}
 }

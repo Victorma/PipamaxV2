@@ -3,17 +3,61 @@ package presentacion;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import constantes.Acciones;
 import negocio.Retorno;
 
-public abstract class GUI extends JFrame {
+public abstract class GUI extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	protected GUI child = null, father = null;
 
 	public GUI(GUI father) {
+		super(father);
+		this.father = father;
+
+		this.addWindowListener(new WindowListener() {
+
+			@Override
+			public void windowOpened(WindowEvent e) {
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				dispose();
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e) {
+			}
+		});
+
+		if (father != null) {
+			father.child = this;
+			father.setEnabled(false);
+		}
+	}
+	
+	public GUI(GUI father, boolean bloqueada) {
+		super(father,bloqueada);
 		this.father = father;
 
 		this.addWindowListener(new WindowListener() {
