@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import negocio.pedidos.TransferListaPedidos;
 import negocio.pedidos.TransferPedido;
 import negocio.productos.TransferProducto;
+import negocio.proveedores.TransferProveedor;
 import integracion.BBDDConnection;
 import integracion.DAOException;
 import integracion.pedidos.DAOPedidos;
@@ -290,6 +291,38 @@ public class DAOPedidosImp implements DAOPedidos {
 	}
 	
 	@Override
+	public boolean PedidosPendientesProveedor(TransferProveedor proveedor) throws DAOException{
+			Statement stmt = null;
+			boolean tienePedidos = false;
+			
+			//Get the connection from the transaction
+			Connection connection = null;
+			try{
+				connection = (Connection)TransactionManager.getInstancia().getTransaction().getResource();
+			}catch(ClassCastException ex){};
+			
+			try {
+				//if there was no active transaction, we get the connection using the normal way.
+				if(connection == null)
+					connection = BBDDConnection.getConnection();
+				
+				stmt = connection.createStatement();
+				
+				stmt.execute("SELECT id FROM pedidos "
+						+ "WHERE id_proveedor = " + proveedor.getId()
+						+ " AND estado LIKE 'P'"
+						+ " AND activo = '1'" );
+				
+				if(stmt.getResultSet().next())
+					tienePedidos = true;
+				
+			}catch(SQLException sqlex){
+				throw new DAOException(sqlex);
+			}
+		return tienePedidos;
+	}
+	
+	@Override
 	public boolean anularPedido(TransferPedido pedido) throws DAOException {
 		boolean error = false;
 
@@ -479,3 +512,5 @@ public class DAOPedidosImp implements DAOPedidos {
 		return aparece;
 	}
 }
+
+

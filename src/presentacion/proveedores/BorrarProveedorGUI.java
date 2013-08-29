@@ -12,11 +12,11 @@ import javax.swing.JPanel;
 
 import presentacion.GUI;
 import negocio.controlador.ControladorAplicacion;
-
 import negocio.Retorno;
+import negocio.TError;
 import negocio.proveedores.TransferProveedor;
-
 import constantes.Acciones;
+import constantes.Errores;
 
 public class BorrarProveedorGUI extends GUI {
 
@@ -79,10 +79,17 @@ public class BorrarProveedorGUI extends GUI {
 	@Override
 	public void actualiza(Acciones evento, Retorno datos) {
 		if (evento == Acciones.proveedoresBorrar) {
-			if (datos.tieneErrores())
-				JOptionPane.showMessageDialog(this,
-						"Error borrando el proveedor.", "Error",
-						JOptionPane.ERROR_MESSAGE);
+			if (datos.tieneErrores()){
+				String message = "Error borrando el proveedor: \n";
+				for(TError er : datos.getErrores().getLista()){
+					switch(er.getErrorId()){
+					case Errores.proveedorNoBorrado: { message += "-El Proveedor no se ha podido borrar.\n";}
+					case Errores.proveedorConPedidosPendientes: { message += "-El Proveedor tiene aún pedidos pendientes de completar.\n";}
+					}
+					
+				}
+				JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+			}
 			else
 				JOptionPane.showMessageDialog(this,
 						"Proveedor borrado correctamente.", "Correcto",

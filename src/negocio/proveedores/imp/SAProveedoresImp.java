@@ -5,6 +5,8 @@ import java.util.List;
 
 import constantes.Errores;
 import integracion.DAOException;
+import integracion.pedidos.DAOPedidos;
+import integracion.pedidos.factoria.FactoriaDAOPedidos;
 import integracion.proveedores.DAOProveedores;
 import integracion.proveedores.factoria.FactoriaDAOProveedores;
 import integracion.transaction.LockModes;
@@ -161,7 +163,6 @@ public class SAProveedoresImp implements SAProveedores{
 		return retorno;
 	}
 
-
 	public Retorno consultarProveedor(TransferProveedor proveedor)
 	{
 		Retorno retorno = new Retorno();
@@ -210,7 +211,8 @@ public class SAProveedoresImp implements SAProveedores{
 	{
 		Retorno retorno = new Retorno();
 		DAOProveedores DAO = FactoriaDAOProveedores.getInstancia().getInstanciaDAOProveedores();
-
+		DAOPedidos DAOPedidos = FactoriaDAOPedidos.getInstancia().getInstanciaDAOPedidos();
+		
 		//Boolean of everything was OK
 		boolean right = true;
 		TransactionManager transactionManager = TransactionManager.getInstancia();
@@ -224,12 +226,17 @@ public class SAProveedoresImp implements SAProveedores{
 			try {
 				//Bloqueamos la tabla proveedores
 				List<String> tablas = new ArrayList<String>();
-				tablas.add("proveedores");
+				tablas.add("proveedores"); tablas.add("pedidos");
 				transaction.lock(LockModes.ReadAndWrite, tablas);
 				
-				right&=DAO.borrarProveedor(proveedor);
-				if(!right)
+				if(DAOPedidos.PedidosPendientesProveedor(proveedor)){
+					retorno.addError(Errores.proveedorConPedidosPendientes, null);
 					retorno.addError(Errores.proveedorNoBorrado, null);
+				}else{
+					right&=DAO.borrarProveedor(proveedor);
+					if(!right)
+						retorno.addError(Errores.proveedorNoBorrado, null);
+				}
 			}catch(DAOException ex){
 				retorno.addError(Errores.errorDeAcceso, ex);
 				right = false;

@@ -4,6 +4,7 @@ import negocio.pedidos.TransferListaPedidos;
 import negocio.pedidos.TransferPedido;
 import integracion.DAOException;
 import negocio.productos.TransferProducto;
+import negocio.proveedores.TransferProveedor;
 
 public interface DAOPedidos {
 	/**
@@ -24,6 +25,16 @@ public interface DAOPedidos {
 	 * @throws DAOException
 	 */
 	public TransferPedido consultarPedido(TransferPedido pedido, int lockMode) throws DAOException;
+	
+	/**
+	 * Consultar pedido por proveedor, recibe un TransferProveedor cuya ID es la ID del proveedor
+	 * y devuelve un Transfer con todos los pedidos que tiene activos ese proveedor, devolviendo
+	 * errores si los hay.
+	 * @param proveedor
+	 * @return
+	 * @throws DAOException
+	 */
+	public boolean PedidosPendientesProveedor(TransferProveedor proveedor) throws DAOException;
 	
 	/**
 	 * Principal Pedido devuelve una lista con todos los pedidos y errores si los hay.

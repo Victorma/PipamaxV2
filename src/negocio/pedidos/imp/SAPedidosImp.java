@@ -286,7 +286,7 @@ public class SAPedidosImp implements SAPedidos{
 				//Bloqueamos la tabla marcas
 				List<String> tablas = new ArrayList<String>();
 				tablas.add("pedidos"); tablas.add("linea_pedido");
-				transaction.lock(LockModes.ReadAndWrite, null);
+				transaction.lock(LockModes.ReadAndWrite, tablas);
 				
 				int idPedido = pedido.getId();
 				pedido = DAO.consultarPedido(pedido,0);
@@ -406,7 +406,7 @@ public class SAPedidosImp implements SAPedidos{
 				//Bloqueamos la tabla marcas
 				List<String> tablas = new ArrayList<String>();
 				tablas.add("pedidos"); tablas.add("linea_pedido");
-				transaction.lock(LockModes.ReadAndWrite, null);
+				transaction.lock(LockModes.ReadAndWrite, tablas);
 				
 				int idPedido = pedido.getId();
 				pedido = DAO.consultarPedido(pedido,0);

@@ -27,6 +27,7 @@ public abstract class Errores {
 	public static final int proveedorNoBorrado = 205;
 	public static final int proveedorNoCreado = 206;
 	public static final int proveedorNoRecuperado = 207;
+	public static final int proveedorConPedidosPendientes = 208;
 
 	//Errores de Marcas
 	public static final int marcaNoEncontrada = 301;
