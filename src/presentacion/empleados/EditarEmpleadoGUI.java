@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import constantes.Acciones;
 import constantes.Errores;
+import constantes.Constantes.tTurno;
 import negocio.Retorno;
 import negocio.TError;
 import negocio.departamentos.Departamento;
@@ -39,6 +40,10 @@ public class EditarEmpleadoGUI extends GUI {
 	private CampoFormularioTexto direccion;
 	private CampoFormularioNumeroEntero cp;
 	private CampoFormularioSelector<String, String> tiempo;
+	//
+	private CampoFormularioSelector<String, String> esFijo;
+	private CampoFormularioSelector<String, tTurno> turno;
+	//
 	private CampoFormularioSelector<String, Departamento> departamento;
 	private CampoFormularioNumeroEntero telefono;
 	private Formulario formulario;
@@ -98,6 +103,23 @@ public class EditarEmpleadoGUI extends GUI {
 		tiempo = new CampoFormularioSelector<String, String>("Tiempo", campos);
 
 		tiempo.setModificable(false);
+		tiempo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				turno.setModificable(tiempo.getResultado().equalsIgnoreCase("parcial"));
+				esFijo.setModificable(tiempo.getResultado().equalsIgnoreCase("completo"));
+			}
+		});
+		
+		Map<String, tTurno> camposEmpParcial = new TreeMap<String, tTurno>();
+		camposEmpParcial.put("Mañana", tTurno.mañana);
+		camposEmpParcial.put("Tarde", tTurno.tarde);
+		turno = new CampoFormularioSelector<String, tTurno>("Turno", camposEmpParcial);
+		
+		Map<String, String> camposEmpCompleto = new TreeMap<String, String>();
+		camposEmpCompleto.put("Sí", "sí");
+		camposEmpCompleto.put("No", "no");
+		esFijo = new CampoFormularioSelector<String, String>("¿Es fijo?", camposEmpCompleto);
 		
 		camposDep = new TreeMap<String, Departamento>();
 		camposDep.put(ninguno, null);
@@ -115,6 +137,8 @@ public class EditarEmpleadoGUI extends GUI {
 		formulario.addCampo(direccion);
 		formulario.addCampo(cp);
 		formulario.addCampo(tiempo);
+		formulario.addCampo(turno);
+		formulario.addCampo(esFijo);
 		formulario.addCampo(departamento);
 		formulario.addCampo(telefono);
 
@@ -147,6 +171,13 @@ public class EditarEmpleadoGUI extends GUI {
 						empleado.setDepartamento(departamento.getResultado());
 						empleado.setCp(cp.getResultado());
 						empleado.setTelefono(telefono.getResultado());
+						
+						if(empleado.getClass() == EmpleadoParcial.class){
+							((EmpleadoParcial) empleado).setTurno(turno.getResultado());
+						}else{
+							((EmpleadoCompleto) empleado).setEsFijo(esFijo.getResultado().equalsIgnoreCase("sí"));
+						}
+						
 						ControladorAplicacion.getInstancia().accion(
 								Acciones.empleadosEditar, empleado);
 					}
@@ -211,6 +242,10 @@ public class EditarEmpleadoGUI extends GUI {
 				dni.setValue(empleado.getDni());
 				ciudad.setValue(empleado.getCiudad());
 				tiempo.setValue(empleado.getClass()==EmpleadoCompleto.class?"Completo":"Parcial");
+				if (empleado.getClass()==EmpleadoParcial.class)
+					turno.setValue(((EmpleadoParcial)empleado).getTurno().toString());
+				else
+					esFijo.setValue((((EmpleadoCompleto)empleado).getEsFijo())?"Sí":"No");
 				direccion.setValue(empleado.getDireccion());
 				if (empleado.getDepartamento() != null)
 					departamento

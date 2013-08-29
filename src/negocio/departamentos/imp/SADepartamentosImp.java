@@ -230,7 +230,12 @@ public class SADepartamentosImp implements SADepartamentos {
 				retorno.addError(Errores.departamentoNoEncontrado, dep.getId());
 			else{
 				em.getTransaction().commit();
-				retorno.setDatos(departamento.getNumEpleados()*departamento.getSueldo());
+				
+				double sueldoTotal = 0;
+				for(Empleado e: departamento.getEmpleado())
+					sueldoTotal+=e.calcularSueldo();
+				
+				retorno.setDatos(sueldoTotal);
 			}
 		} catch (OptimisticLockException ole){
 			retorno.addError(Errores.errorDeAccesoConcurrente, ole.getMessage());

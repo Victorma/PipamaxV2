@@ -25,6 +25,7 @@ import presentacion.formulario.CampoFormularioSelector;
 import presentacion.formulario.CampoFormularioTexto;
 import presentacion.formulario.Formulario;
 import constantes.Acciones;
+import constantes.Constantes.tTurno;
 
 public class ConsultaEmpleadoGUI extends GUI {
 
@@ -37,6 +38,8 @@ public class ConsultaEmpleadoGUI extends GUI {
 	private CampoFormularioTexto direccion;
 	private CampoFormularioNumeroEntero cp;
 	private CampoFormularioSelector<String, String> tiempo;
+	private CampoFormularioSelector<String, tTurno> turno;
+	private CampoFormularioSelector<String, String> esFijo;
 	private CampoFormularioSelector<String, Departamento> departamento;
 	private CampoFormularioNumeroEntero telefono;
 	private Formulario formulario;
@@ -95,6 +98,17 @@ public class ConsultaEmpleadoGUI extends GUI {
 		campos.put("Completo", "completo");
 		campos.put("Parcial", "parcial");
 		tiempo = new CampoFormularioSelector<String, String>("Tiempo", campos);
+		
+		Map<String, tTurno> camposEmpParcial = new TreeMap<String, tTurno>();
+		for(tTurno turno: tTurno.values())
+			camposEmpParcial.put(turno.toString(), turno);
+		
+		turno = new CampoFormularioSelector<String, tTurno>("Turno", camposEmpParcial);
+		
+		Map<String, String> camposEmpCompleto = new TreeMap<String, String>();
+		camposEmpCompleto.put("Sí", "sí");
+		camposEmpCompleto.put("No", "no");
+		esFijo = new CampoFormularioSelector<String, String>("¿Es fijo?", camposEmpCompleto);
 
 		camposDep = new TreeMap<String, Departamento>();
 		camposDep.put(ninguno, null);
@@ -112,9 +126,11 @@ public class ConsultaEmpleadoGUI extends GUI {
 		formulario.addCampo(direccion);
 		formulario.addCampo(cp);
 		formulario.addCampo(tiempo);
+		formulario.addCampo(turno);
+		formulario.addCampo(esFijo);
 		formulario.addCampo(departamento);
 		formulario.addCampo(telefono);
-		formulario.setModificable(false);
+		formulario.setModificable(false);		
 
 		this.add(formulario, BorderLayout.CENTER);
 
@@ -191,6 +207,11 @@ public class ConsultaEmpleadoGUI extends GUI {
 				apellido2.setValue(empCons.getApellido2());
 				dni.setValue(empCons.getDni());
 				tiempo.setValue(empCons.getClass()==EmpleadoCompleto.class?"Completo":"Parcial");
+				if (empCons.getClass()==EmpleadoParcial.class)
+					turno.setValue(((EmpleadoParcial)empCons).getTurno().toString());
+				else
+					esFijo.setValue((((EmpleadoCompleto)empCons).getEsFijo())?"Sí":"No");
+				
 				ciudad.setValue(empCons.getCiudad());
 				direccion.setValue(empCons.getDireccion());
 				cp.setValue(empCons.getCp());

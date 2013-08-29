@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 import constantes.Acciones;
 import constantes.Errores;
-
+import constantes.Constantes.tTurno;
 import negocio.Retorno;
 import negocio.TError;
 import negocio.departamentos.Departamento;
@@ -42,7 +42,7 @@ public class CrearEmpleadoGUI extends GUI {
 	private CampoFormularioSelector<String, String> tiempo;
 	//
 	private CampoFormularioSelector<String, String> esFijo;
-	private CampoFormularioSelector<String, String> turno;
+	private CampoFormularioSelector<String, tTurno> turno;
 	//
 	private CampoFormularioSelector<String, Departamento> departamento;
 	private CampoFormularioNumeroEntero telefono;
@@ -69,14 +69,15 @@ public class CrearEmpleadoGUI extends GUI {
 		cp = new CampoFormularioNumeroEntero("CP", 0, 10000, 99999);
 
 		Map<String, String> campos = new TreeMap<String, String>();
-		campos.put("Completo", "completo");
+		String completo = "Completo";
+		campos.put(completo, "completo");
 		campos.put("Parcial", "parcial");
 		tiempo = new CampoFormularioSelector<String, String>("Tiempo", campos);
 
-		Map<String, String> camposEmpParcial = new TreeMap<String, String>();
-		camposEmpParcial.put("Mañana", "mañana");
-		camposEmpParcial.put("Tarde", "tarde");
-		turno = new CampoFormularioSelector<String, String>("Turno", camposEmpParcial);
+		Map<String, tTurno> camposEmpParcial = new TreeMap<String, tTurno>();
+		camposEmpParcial.put("Mañana", tTurno.mañana);
+		camposEmpParcial.put("Tarde", tTurno.tarde);
+		turno = new CampoFormularioSelector<String, tTurno>("Turno", camposEmpParcial);
 		
 		Map<String, String> camposEmpCompleto = new TreeMap<String, String>();
 		camposEmpCompleto.put("Sí", "sí");
@@ -99,12 +100,21 @@ public class CrearEmpleadoGUI extends GUI {
 		formulario.addCampo(ciudad);
 		formulario.addCampo(direccion);
 		formulario.addCampo(cp);
-		//TODO
-		//formulario.addCampo(tiempo);
-		//formulario.addCampo(esFijo);
+		formulario.addCampo(tiempo);
 		formulario.addCampo(turno);
+		formulario.addCampo(esFijo);
 		formulario.addCampo(departamento);
 		formulario.addCampo(telefono);
+		
+		tiempo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				turno.setModificable(tiempo.getResultado().equalsIgnoreCase("parcial"));
+				esFijo.setModificable(tiempo.getResultado().equalsIgnoreCase("completo"));
+			}
+		});
+		
+		tiempo.setValue(completo);
 
 		this.add(formulario, BorderLayout.CENTER);
 
@@ -132,6 +142,13 @@ public class CrearEmpleadoGUI extends GUI {
 					emp.setCp(cp.getResultado());
 					emp.setDepartamento(departamento.getResultado());
 					emp.setTelefono(telefono.getResultado());
+					
+					if(tiempo.getResultado().equalsIgnoreCase("parcial")){
+						((EmpleadoParcial) emp).setTurno(turno.getResultado());
+					}else{
+						((EmpleadoCompleto) emp).setEsFijo(esFijo.getResultado().equalsIgnoreCase("sí"));
+					}
+					
 					ControladorAplicacion.getInstancia().accion(
 							Acciones.empleadosCrear, emp);
 				}

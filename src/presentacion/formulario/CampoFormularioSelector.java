@@ -51,7 +51,7 @@ public class CampoFormularioSelector<E, T> extends CampoFormulario {
 
 	@Override
 	public void setModificable(boolean estado) {
-		selector.setEnabled(false);
+		selector.setEnabled(estado);
 	}
 
 	@Override

@@ -54,7 +54,15 @@ public abstract class Constantes {
 
 	
 	//empleados parciales tienen turno
-	public static enum tTurno{mañana, tarde};
+	public static enum tTurno{mañana, tarde;
+		
+		public String toString(){
+			if(this == mañana)
+				return "Mañana";
+			else
+				return "Tarde";
+		}
+	};
 
 	
 }
