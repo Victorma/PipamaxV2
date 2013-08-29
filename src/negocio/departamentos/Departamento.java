@@ -37,7 +37,6 @@ public class Departamento implements Serializable {
 	 */
 	private static final long serialVersionUID = 0;
 
-	@SuppressWarnings("unused")
 	@Version
 	private Integer version;
 	/** 

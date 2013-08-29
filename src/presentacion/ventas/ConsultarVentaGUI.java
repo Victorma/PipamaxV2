@@ -18,13 +18,12 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import presentacion.GUI;
+import presentacion.util.Operaciones;
 import negocio.controlador.ControladorAplicacion;
-
 import negocio.Retorno;
 import negocio.TError;
 import negocio.ventas.TComVenta;
 import negocio.ventas.TransferVenta;
-
 import constantes.Acciones;
 import constantes.Errores;
 
@@ -232,11 +231,10 @@ public class ConsultarVentaGUI extends GUI {
 						total += venta.getVenta().getLineaVenta(i).getPrecio()
 								* venta.getVenta().getLineaVenta(i)
 										.getCantidad();
-					this.total.setText(total
-							* (1 - venta.getVenta().getDescuento())
+					this.total.setText(Operaciones.applyDiscount(total, venta.getVenta().getDescuento())
 							+ "€ (Descuento de "
-							+ (venta.getVenta().getDescuento()) * 100
-							+ " % sobre " + total + "€)");
+							+ Operaciones.round((venta.getVenta().getDescuento()) * 100,2)
+							+ " % sobre " + Operaciones.round(total,2) + "€)");
 
 					this.idCliente.setText("" + venta.getCliente().getId());
 					this.nombre.setText(venta.getCliente().getName());

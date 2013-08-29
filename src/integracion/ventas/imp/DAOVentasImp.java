@@ -176,7 +176,7 @@ public class DAOVentasImp implements DAOVentas {
 	public TransferVenta consultaVenta(TransferVenta venta)
 			throws DAOException {
 		
-		TransferVenta consulta = null;
+		TransferVenta consulta = new TransferVenta();
 		
 		Connection conn = null;
 		Transaction trans = TransactionManager.getInstancia().getTransaction();
@@ -196,8 +196,6 @@ public class DAOVentasImp implements DAOVentas {
 
 			if(rs.next()) {
 				
-				consulta = new TransferVenta();
-				
 				consulta.setId(rs.getInt("id"));
 				consulta.setFecha(formateador.format(rs.getDate("fecha")));
 				consulta.setIdCliente(rs.getInt("idCliente"));
@@ -210,7 +208,8 @@ public class DAOVentasImp implements DAOVentas {
 				rs = stmt.getResultSet();
 				while(rs.next()) 
 					consulta.addLineaVenta(rs.getInt("idProducto"), rs.getInt("cantidad"), rs.getDouble("precio"), rs.getInt("idVenta"));
-			}
+			}else
+				consulta.setId(-1);
 			
 		} catch (SQLException ex) {
 			throw new DAOException(ex);

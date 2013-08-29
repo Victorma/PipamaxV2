@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -26,7 +27,9 @@ import negocio.productos.TransferProducto;
 import negocio.ventas.TComVenta;
 import negocio.ventas.TransferVenta;
 import constantes.Acciones;
+import constantes.Errores;
 import presentacion.GUI;
+import presentacion.util.Operaciones;
 
 public class AdminVentaGUI extends GUI {
 
@@ -63,15 +66,11 @@ public class AdminVentaGUI extends GUI {
 			TransferCliente cliente = AuxVentasGUI.pideCliente(this);
 			if(cliente == null)
 				this.dispose();
-			else{
-				this.venta.setCliente(cliente);
+			else
 				ControladorAplicacion.getInstancia().accion(Acciones.ventasAbrir, cliente);
-			}
 		}else
 			ControladorAplicacion.getInstancia().accion(Acciones.ventasConsultar, venta);
 		
-
-
 		JPanel top = new JPanel(new FlowLayout());
 		top.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createDashedBorder(Color.black, 5, 4), "Cliente"));
@@ -116,13 +115,15 @@ public class AdminVentaGUI extends GUI {
 							tmpCantidad = cantidad;
 							ControladorAplicacion.getInstancia().accion(Acciones.ventasDevolucion, new Object[]{
 									AdminVentaGUI.this.venta.getVenta(),
-									AdminVentaGUI.this.venta.getProductos().get(tablaVenta.getSelectedRow()),
+									AdminVentaGUI.this.venta.getProductos().get(tablaVenta.getSelectedRow()).getProducto(),
 									cantidad
 							});
 						}
 					}					
 				}
 			});
+			
+			left.add(devolver);
 			
 		}else{
 		
@@ -186,13 +187,13 @@ public class AdminVentaGUI extends GUI {
 			left.add(agregar);
 			left.add(quitar);
 	
-			left.setPreferredSize(new Dimension(100, 0));
-			this.add(left, BorderLayout.WEST);
-	
 			bot = new JPanel(new GridLayout(1, 2));
 			bot.add(cerrar);
 			
 		}
+		
+		left.setPreferredSize(new Dimension(100, 0));
+		this.add(left, BorderLayout.WEST);
 		
 		bot.add(salir);
 		this.add(bot, BorderLayout.SOUTH);
@@ -271,9 +272,9 @@ public class AdminVentaGUI extends GUI {
 			switch (evento) {
 			case ventasAbrir:
 				if(!datos.tieneErrores()){
-					venta.setVenta(new TransferVenta());
-					venta.getVenta().setId((int) datos.getDatos());
-					venta.getVenta().setCerrada(false);
+					TransferVenta venta = new TransferVenta();
+					venta.setId((int) datos.getDatos());
+					ControladorAplicacion.getInstancia().accion(Acciones.ventasConsultar, venta);
 				}else
 					for(TError error: datos.getErrores().getLista()){
 						JOptionPane.showMessageDialog(this, error.getErrorId());
@@ -290,19 +291,60 @@ public class AdminVentaGUI extends GUI {
 					double total = 0;
 					for(int i = 0; i<venta.getVenta().getNumLineasVenta(); i++)
 						total += venta.getVenta().getLineaVenta(i).getPrecio() * venta.getVenta().getLineaVenta(i).getCantidad();
-					double totalConDescuento = total*venta.getVenta().getDescuento();
 					
-					JOptionPane.showMessageDialog(this, "Venta cerrada correctamente. \n Total a pagar: " + totalConDescuento +" € (Sin descuento: " + total + " €)");
+					JOptionPane.showMessageDialog(this, "Venta cerrada correctamente. \n Total a pagar: " + Operaciones.applyDiscount(total, venta.getVenta().getDescuento()) +" € (Sin descuento: " + Operaciones.round(total, 2) + " €)");
 					this.dispose();
+				} else {
+					Iterator<TError> it = datos.getErrores().getLista()
+							.iterator();
+					String errormsj = "Se produjeron los siguientes errores: \n";
+					while (it.hasNext()) {
+						TError thisError = it.next();
+						switch (thisError.getErrorId()) {
+						case Errores.clienteNoEncontrado:
+							errormsj += " - No existe el cliente con el ID "
+									+ (Integer) thisError.getDatos();
+							break;
+						case Errores.ventaSinProductos:
+							errormsj += " - No hay productos";
+							break;
+						case Errores.productoNoEncontrado:
+							errormsj += " - No existe el producto "
+									+ (Integer) thisError.getDatos();
+							break;
+						case Errores.ventaProductoStockInsuficiente:
+							errormsj += " - No hay Stock suficiente para "
+									+ ((TransferProducto) thisError.getDatos()).getNombre()
+									+ " (Stock "
+									+ ((TransferProducto) thisError.getDatos()).getStock() + ")";
+							break;
+						}
+						errormsj += "\n";
+					}
+					JOptionPane.showMessageDialog(this, errormsj,
+							"Error", JOptionPane.ERROR_MESSAGE);
+
 				}
 				break;
 			
 			case ventasAgregarProducto:
 				if(!datos.tieneErrores()){
-					venta.getVenta().addLineaVenta(tmpProducto.getId(), tmpCantidad, tmpProducto.getPrecio(), AdminVentaGUI.this.venta.getVenta().getId());
-					TComProducto tcomprod = new TComProducto();
-					tcomprod.setProducto(tmpProducto);
-					venta.getProductos().add(tcomprod);
+					
+					Integer pos = null;
+					for(int i = 0; i<venta.getVenta().getNumLineasVenta(); i++)
+						if (venta.getVenta().getLineaVenta(i).getIdProducto() == tmpProducto.getId()) {
+							pos  = i;
+							break;
+						}
+					
+					if(pos!=null){
+						venta.getVenta().getLineaVenta(pos).setCantidad(venta.getVenta().getLineaVenta(pos).getCantidad() + tmpCantidad);
+					}else{
+						venta.getVenta().addLineaVenta(tmpProducto.getId(), tmpCantidad, tmpProducto.getPrecio(), AdminVentaGUI.this.venta.getVenta().getId());
+						TComProducto tcomprod = new TComProducto();
+						tcomprod.setProducto(tmpProducto);
+						venta.getProductos().add(tcomprod);
+					}
 					this.modeloTablaVenta.update(venta);
 				}
 				break;
@@ -316,13 +358,18 @@ public class AdminVentaGUI extends GUI {
 			case ventasDevolucion:
 				if(!datos.tieneErrores()){
 					int maxCantidad = venta.getVenta().getLineaVenta(tablaVenta.getSelectedRow()).getCantidad();
+					double total = tmpCantidad * venta.getVenta().getLineaVenta(tablaVenta.getSelectedRow()).getPrecio();
+					JOptionPane.showMessageDialog(this, "Devolución realizada correctamente.\nTotal a devolver: " +
+											Operaciones.applyDiscount(total, venta.getVenta().getDescuento()) + " €");
+					
 					if(tmpCantidad == maxCantidad){
 						venta.getVenta().removeLineaVenta(tablaVenta.getSelectedRow());
 						venta.getProductos().remove(tablaVenta.getSelectedRow());
 					}else{
 						venta.getVenta().getLineaVenta(tablaVenta.getSelectedRow()).setCantidad(maxCantidad - tmpCantidad);
-					}						
+					}		
 					modeloTablaVenta.update(AdminVentaGUI.this.venta);
+
 				}
 				break;
 			default:

@@ -47,7 +47,6 @@ public abstract class Empleado implements Serializable {
 	 */
 	private static final long serialVersionUID = 0;
 
-	@SuppressWarnings("unused")
 	@Version
 	private int version;
 

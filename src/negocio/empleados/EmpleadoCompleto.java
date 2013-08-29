@@ -5,8 +5,6 @@ package negocio.empleados;
 
 import javax.persistence.Entity;
 
-import constantes.Constantes.tTurno;
-
 import java.io.Serializable;
 
 /** 

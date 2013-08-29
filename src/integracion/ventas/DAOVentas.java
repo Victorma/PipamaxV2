@@ -1,7 +1,6 @@
 package integracion.ventas;
 
 import integracion.DAOException;
-import negocio.clientes.TransferCliente;
 import negocio.productos.TransferProducto;
 import negocio.ventas.TransferListaVentas;
 import negocio.ventas.TransferVenta;

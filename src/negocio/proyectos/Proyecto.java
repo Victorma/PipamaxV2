@@ -56,7 +56,6 @@ public class Proyecto implements Serializable {
 	public Proyecto() {
 	}
 	
-	@SuppressWarnings("unused")
 	@Version
 	private Integer version;
 	

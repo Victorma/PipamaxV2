@@ -2,6 +2,7 @@ package presentacion.ventas;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -17,14 +18,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import presentacion.GUI;
 import negocio.controlador.ControladorAplicacion;
-
 import negocio.Retorno;
 import negocio.ventas.TransferListaVentas;
 import negocio.ventas.TransferVenta;
-
 import constantes.Acciones;
 
 public class VentasGUI extends GUI {
@@ -70,23 +70,7 @@ public class VentasGUI extends GUI {
 		abrir.setPreferredSize(new Dimension(130, 30));
 		leftTop.add(abrir);
 
-		consultar = new JButton("Consultar");
-		consultar.setPreferredSize(new Dimension(130, 30));
-		consultar.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				TransferVenta venta = getSelectedVenta();
-				if (venta == null)
-					venta = pideId();
-				if (venta != null)
-					new ConsultarVentaGUI(VentasGUI.this, venta);
-
-			}
-		});
-		leftTop.add(consultar);
-
-		devolucion = new JButton("Modificar venta / Devolución");
+		devolucion = new JButton("Modif. / Devolución");
 		devolucion.addActionListener(new ActionListener() {
 
 			@Override
@@ -102,6 +86,22 @@ public class VentasGUI extends GUI {
 		devolucion.setPreferredSize(new Dimension(130, 30));
 		leftTop.add(devolucion);
 
+		consultar = new JButton("Factura");
+		consultar.setPreferredSize(new Dimension(130, 30));
+		consultar.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				TransferVenta venta = getSelectedVenta();
+				if (venta == null)
+					venta = pideId();
+				if (venta != null)
+					new ConsultarVentaGUI(VentasGUI.this, venta);
+
+			}
+		});
+		leftTop.add(consultar);
+		
 		borrar = new JButton("Borrar");
 		borrar.addActionListener(new ActionListener() {
 
@@ -159,6 +159,7 @@ public class VentasGUI extends GUI {
 
 		tablaVentasModel = new TablaVentas();
 		tablaVentas = new JTable(tablaVentasModel);
+		tablaVentas.setDefaultRenderer(String.class, new MyRenderer());
 
 		right.add(new JScrollPane(tablaVentas));
 
@@ -177,6 +178,27 @@ public class VentasGUI extends GUI {
 				new TransferListaVentas());
 	}
 
+	    private static class MyRenderer extends DefaultTableCellRenderer {
+
+	        Color backgroundColor = getBackground();
+
+	        @Override
+	        public Component getTableCellRendererComponent(
+	        		JTable table, Object value, boolean isSelected,
+	        		boolean hasFocus, int row, int column) {
+	            Component c = super.getTableCellRendererComponent(
+	                table, value, isSelected, hasFocus, row, column);
+	            TablaVentas model = (TablaVentas) table.getModel();
+	            Color color = model.colorFondo(row,column);
+	            if (color != null) {
+	                c.setBackground(color);
+	            } else if (!isSelected) {
+	                c.setBackground(backgroundColor);
+	            }
+	            return c;
+	        }
+	    }
+
 	private class TablaVentas extends AbstractTableModel {
 
 		private static final long serialVersionUID = 1L;
@@ -188,6 +210,20 @@ public class VentasGUI extends GUI {
 		TablaVentas() {
 			ventas = new TransferListaVentas();
 			ventas.setListaVentas(new ArrayList<TransferVenta>());
+		}
+
+		public Color colorFondo(int row, int column) {
+			
+			Color c = null;
+			
+			if(column == 3){
+				if(ventas.getListaVentas().get(row).isCerrada())
+					c = Color.green;
+				else
+					c = Color.red;
+			}
+			
+			return c;
 		}
 
 		public void update(TransferListaVentas ventas) {
@@ -211,6 +247,11 @@ public class VentasGUI extends GUI {
 		public String getColumnName(int col) {
 			return colNames[col];
 		}
+		
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            return String.class;
+        }
 
 		public Object getValueAt(int row, int col) {
 

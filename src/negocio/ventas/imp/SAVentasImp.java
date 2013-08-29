@@ -47,7 +47,7 @@ public class SAVentasImp implements SAVentas {
 				trans.lock(LockModes.LockAll, null);
 				
 				TransferCliente comprador = daoClientes.consultarCliente(cliente, 0);
-				if(comprador != null){
+				if(comprador.getId() != -1){
 					TransferVenta venta = new TransferVenta();
 					venta.setIdCliente(comprador.getId());
 					venta.setDescuento(comprador.getDescuento());
@@ -93,9 +93,9 @@ public class SAVentasImp implements SAVentas {
 				trans.lock(LockModes.LockAll, null);
 				
 				TransferVenta venta = daoVentas.consultaVenta(transferVenta);
-				if (venta != null) {
+				if (venta.getId() != -1) {
 					TransferProducto productoAgregar = daoProductos.consultaProducto(producto, 0);
-					if(productoAgregar != null){
+					if(productoAgregar.getId()!=-1){
 						Integer pos = null;
 						for(int i = 0; i< venta.getNumLineasVenta(); i++)
 							if (venta.getLineaVenta(i).getIdProducto() == producto.getId()){
@@ -151,7 +151,7 @@ public class SAVentasImp implements SAVentas {
 				trans.lock(LockModes.LockAll, null);
 				
 				TransferVenta venta = daoVentas.consultaVenta(transferVenta);
-				if (venta != null) {
+				if (venta.getId() != -1) {
 					TransferProducto productoQuitar = daoProductos.consultaProducto(producto, 0);
 					if(productoQuitar != null){
 						Integer pos = null;
@@ -203,11 +203,11 @@ public class SAVentasImp implements SAVentas {
 				trans.lock(LockModes.LockAll, null);
 				
 				TransferVenta venta = daoVentas.consultaVenta(transferVenta);
-				if (venta != null) {
+				if (venta.getId() != -1) {
 					if(venta.isCerrada()) {
 						TransferProducto productoQuitar = daoProductos.consultaProducto(producto, 0);
 						boolean aumentarStock = true;
-						if(productoQuitar == null)
+						if(productoQuitar.getId() == -1)
 							aumentarStock = false;
 						
 						Integer pos = null;
@@ -221,14 +221,14 @@ public class SAVentasImp implements SAVentas {
 							if(cantidad > 0 && cantidad <= venta.getLineaVenta(pos).getCantidad()){
 								boolean quitado = false;
 								if(cantidad < venta.getLineaVenta(pos).getCantidad())
-									quitado = daoVentas.modificarProducto(transferVenta, producto, cantidad);
+									quitado = daoVentas.modificarProducto(transferVenta, producto, venta.getLineaVenta(pos).getCantidad() - cantidad);
 								else
 									quitado = daoVentas.quitarProducto(transferVenta, producto);
 								
 								if (quitado){
 									if (aumentarStock) {
-										productoQuitar.setStock(producto.getStock() + cantidad);
-										if (daoProductos.modificarProducto(producto))
+										productoQuitar.setStock(productoQuitar.getStock() + cantidad);
+										if (daoProductos.modificarProducto(productoQuitar))
 											trans.commit();
 										else
 											retorno.addError(Errores.productoNoModificado, producto.getId());
@@ -409,20 +409,25 @@ public class SAVentasImp implements SAVentas {
 			try{
 				trans.lock(LockModes.LockAll, null);
 				TransferVenta aCerrar = daoVentas.consultaVenta(venta);
-				if (aCerrar != null) {
-					for(int i = 0; i< aCerrar.getNumLineasVenta(); i++){
-						TransferProducto producto = new TransferProducto();
-						producto.setId(aCerrar.getLineaVenta(i).getIdProducto());
-						producto = daoProductos.consultaProducto(producto, 0);
-						if (producto.getStock() >= aCerrar.getLineaVenta(i).getCantidad()) {
-							producto.setStock(producto.getStock() - aCerrar.getLineaVenta(i).getCantidad());
-							daoProductos.modificarProducto(producto);
-						}else
-							retorno.addError(Errores.ventaProductoStockInsuficiente, producto);
-					}
-					if (!daoVentas.cerrarVenta(aCerrar))
-						retorno.addError(Errores.ventaNoCerrada, null);
-					
+				if (aCerrar.getId() != -1) {
+					if(aCerrar.getNumLineasVenta() > 0){
+						for(int i = 0; i< aCerrar.getNumLineasVenta(); i++){
+							TransferProducto producto = new TransferProducto();
+							producto.setId(aCerrar.getLineaVenta(i).getIdProducto());
+							producto = daoProductos.consultaProducto(producto, 0);
+							if (producto.getId()!=-1) {
+								if (producto.getStock() >= aCerrar.getLineaVenta(i).getCantidad()) {
+									producto.setStock(producto.getStock() - aCerrar.getLineaVenta(i).getCantidad());
+									daoProductos.modificarProducto(producto);
+								}else
+									retorno.addError(Errores.ventaProductoStockInsuficiente, producto);
+							}else
+								retorno.addError(Errores.productoNoEncontrado, aCerrar.getLineaVenta(i).getIdProducto());
+						}
+						if (!daoVentas.cerrarVenta(aCerrar))
+							retorno.addError(Errores.ventaNoCerrada, null);
+					}else
+						retorno.addError(Errores.ventaSinProductos, null);
 				}else
 					retorno.addError(Errores.ventaNoEncontrada, venta.getId());
 			}catch(DAOException daoe){
