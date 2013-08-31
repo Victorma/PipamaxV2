@@ -132,6 +132,7 @@ public class CrearProyectoGUI extends GUI {
 					pro.setNombre(nombre.getResultado());
 					pro.setDescripcion(descripcion.getResultado());
 					pro.setEmpleado(empleadosProyecto);
+					pro.setActivo(1);
 					ControladorAplicacion.getInstancia().accion(Acciones.proyectosCrear, pro);
 				}
 			}

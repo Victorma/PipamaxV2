@@ -27,18 +27,19 @@ import javax.persistence.ManyToMany;
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "negocio.empleados.Empleado.findByversion", query = "select obj from Empleado obj where obj.version = :version"),
-		@NamedQuery(name = "negocio.empleados.Empleado.findByid", query = "select obj from Empleado obj where obj.id = :id"),
-		@NamedQuery(name = "negocio.empleados.Empleado.findBynombre", query = "select obj from Empleado obj where obj.nombre = :nombre"),
-		@NamedQuery(name = "negocio.empleados.Empleado.findByapellido1", query = "select obj from Empleado obj where obj.apellido1 = :apellido1"),
-		@NamedQuery(name = "negocio.empleados.Empleado.findByapellido2", query = "select obj from Empleado obj where obj.apellido2 = :apellido2"),
-		@NamedQuery(name = "negocio.empleados.Empleado.findBydni", query = "select obj from Empleado obj where obj.dni = :dni"),
-		@NamedQuery(name = "negocio.empleados.Empleado.findBytelefono", query = "select obj from Empleado obj where obj.telefono = :telefono"),
-		@NamedQuery(name = "negocio.empleados.Empleado.findBydireccion", query = "select obj from Empleado obj where obj.direccion = :direccion"),
-		@NamedQuery(name = "negocio.empleados.Empleado.findByciudad", query = "select obj from Empleado obj where obj.ciudad = :ciudad"),
-		@NamedQuery(name = "negocio.empleados.Empleado.findBycp", query = "select obj from Empleado obj where obj.cp = :cp"),
-		@NamedQuery(name = "negocio.empleados.Empleado.findBydepartamento", query = "select obj from Empleado obj where obj.departamento = :departamento"),
-		@NamedQuery(name = "negocio.empleados.Empleado.findByproyecto", query = "select obj from Empleado obj where obj.proyecto = :proyecto") })
+		@NamedQuery(name = "negocio.empleados.Empleado.findByversion", query = "select obj from Empleado obj where obj.version = :version and obj.activo = 1"),
+		@NamedQuery(name = "negocio.empleados.Empleado.findByid", query = "select obj from Empleado obj where obj.id = :id and obj.activo = 1"),
+		@NamedQuery(name = "negocio.empleados.Empleado.findBynombre", query = "select obj from Empleado obj where obj.nombre = :nombre and obj.activo = 1"),
+		@NamedQuery(name = "negocio.empleados.Empleado.findByapellido1", query = "select obj from Empleado obj where obj.apellido1 = :apellido1 and obj.activo = 1"),
+		@NamedQuery(name = "negocio.empleados.Empleado.findByapellido2", query = "select obj from Empleado obj where obj.apellido2 = :apellido2 and obj.activo = 1"),
+		@NamedQuery(name = "negocio.empleados.Empleado.findBydni", query = "select obj from Empleado obj where obj.dni = :dni and obj.activo = 1"),
+		@NamedQuery(name = "negocio.empleados.Empleado.findBytelefono", query = "select obj from Empleado obj where obj.telefono = :telefono and obj.activo = 1"),
+		@NamedQuery(name = "negocio.empleados.Empleado.findBydireccion", query = "select obj from Empleado obj where obj.direccion = :direccion and obj.activo = 1"),
+		@NamedQuery(name = "negocio.empleados.Empleado.findByciudad", query = "select obj from Empleado obj where obj.ciudad = :ciudad and obj.activo = 1"),
+		@NamedQuery(name = "negocio.empleados.Empleado.findBycp", query = "select obj from Empleado obj where obj.cp = :cp and obj.activo = 1"),
+		@NamedQuery(name = "negocio.empleados.Empleado.findBydepartamento", query = "select obj from Empleado obj where obj.departamento = :departamento and obj.activo = 1"),
+		@NamedQuery(name = "negocio.empleados.Empleado.findByproyecto", query = "select obj from Empleado obj where obj.proyecto = :proyecto and obj.activo = 1"),
+		@NamedQuery(name = "negocio.empleados.Empleado.removeEmpleado", query = "update Empleado set activo = 0 where id = :id") })
 public abstract class Empleado implements Serializable {
 	/** 
 	 * <!-- begin-UML-doc -->
@@ -75,6 +76,7 @@ public abstract class Empleado implements Serializable {
 	 * @generated "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
 	 */
 	private String nombre;
+	private Integer activo;
 	/** 
 	 * <!-- begin-UML-doc -->
 	 * <!-- end-UML-doc -->
@@ -122,6 +124,7 @@ public abstract class Empleado implements Serializable {
 	 * <!-- end-UML-doc -->
 	 * @generated "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
 	 */
+
 	@ManyToOne
 	private Departamento departamento;
 
@@ -234,6 +237,14 @@ public abstract class Empleado implements Serializable {
 	 * @generated "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
 	 */
 	public abstract Double calcularSueldo();
+
+	public Integer getActivo() {
+		return activo;
+	}
+
+	public void setActivo(Integer activo) {
+		this.activo = activo;
+	}
 
 	/** 
 	 * <!-- begin-UML-doc -->

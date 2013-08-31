@@ -25,9 +25,10 @@ import javax.persistence.NamedQueries;
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "negocio.proyectos.Proyecto.findBynombre", query = "select obj from Proyecto obj where obj.nombre = :nombre"),
-		@NamedQuery(name = "negocio.proyectos.Proyecto.findByid", query = "select obj from Proyecto obj where obj.id = :id"),
-		@NamedQuery(name = "negocio.proyectos.Proyecto.findByempleado", query = "select obj from Proyecto obj where obj.empleado = :empleado") })
+		@NamedQuery(name = "negocio.proyectos.Proyecto.findBynombre", query = "select obj from Proyecto obj where obj.nombre = :nombre and obj.activo = 1"),
+		@NamedQuery(name = "negocio.proyectos.Proyecto.findByid", query = "select obj from Proyecto obj where obj.id = :id and obj.activo = 1"),
+		@NamedQuery(name = "negocio.proyectos.Proyecto.findByempleado", query = "select obj from Proyecto obj where obj.empleado = :empleado and obj.activo = 1"),
+		@NamedQuery(name = "negocio.proyectos.Proyecto.removeProyecto", query = "update Proyecto set activo = 1 where id = :id") })
 public class Proyecto implements Serializable {
 	/** 
 	 * <!-- begin-UML-doc -->
@@ -61,6 +62,8 @@ public class Proyecto implements Serializable {
 	
 	private String nombre;
 	
+	private Integer activo;
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -78,6 +81,13 @@ public class Proyecto implements Serializable {
 	public String toString(){
 		return "(" + id + ") "+  nombre;
 	}
+	public Integer getActivo() {
+		return activo;
+	}
+	public void setActivo(Integer activo) {
+		this.activo = activo;
+	}
+
 	private String descripcion;
 	/** 
 	 * <!-- begin-UML-doc -->

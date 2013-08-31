@@ -66,6 +66,7 @@ public class CrearDepartamentoGUI extends GUI {
 						dep.setNombre(nombre.getResultado());
 						dep.setCodigo(codigo.getResultado());
 						dep.setSueldo(s);
+						dep.setActivo(1);
 						ControladorAplicacion.getInstancia().accion(
 								Acciones.departamentosCrear, dep);
 					}

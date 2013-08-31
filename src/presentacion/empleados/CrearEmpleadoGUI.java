@@ -142,6 +142,7 @@ public class CrearEmpleadoGUI extends GUI {
 					emp.setCp(cp.getResultado());
 					emp.setDepartamento(departamento.getResultado());
 					emp.setTelefono(telefono.getResultado());
+					emp.setActivo(1);
 					
 					if(tiempo.getResultado().equalsIgnoreCase("parcial")){
 						((EmpleadoParcial) emp).setTurno(turno.getResultado());

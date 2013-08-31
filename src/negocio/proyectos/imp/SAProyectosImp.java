@@ -17,7 +17,6 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import constantes.Errores;
-
 import negocio.Retorno;
 import negocio.empleados.Empleado;
 import negocio.proyectos.Proyecto;
@@ -53,8 +52,19 @@ public class SAProyectosImp implements SAProyectos {
 			em.flush();
 			
 			Empleado aux;
-			for(Empleado e: set){
-				aux = em.find(Empleado.class, e.getId(),LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+			for(Empleado e: set)
+			{
+				TypedQuery<Empleado> qEmp = em.createNamedQuery(
+						"negocio.empleados.Empleado.findByid", Empleado.class);
+				
+				qEmp.setParameter("id", e.getId());
+				qEmp.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+				
+				if(qEmp.getResultList().size() != 1)
+					aux = null;
+				else
+					aux = qEmp.getResultList().get(0);
+				
 				if(aux==null){
 					retorno.addError(Errores.empleadoNoEncontrado, e.getDni());
 					rollback = true;
@@ -100,7 +110,15 @@ public class SAProyectosImp implements SAProyectos {
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
 			
-			Proyecto aux = em.find(Proyecto.class, pry.getId(), LockModeType.OPTIMISTIC);
+			TypedQuery<Proyecto> q = em.createNamedQuery(
+					"negocio.proyectos.Proyecto.findByid", Proyecto.class);
+			q.setParameter("id", pry.getId());
+			q.setLockMode(LockModeType.OPTIMISTIC);
+			
+			Proyecto aux = null;
+			if(q.getResultList().size() == 1)
+				aux = q.getResultList().get(0);
+			
 			if(aux == null){
 				retorno.addError(Errores.proyectoNoEncontrado, pry.getId());
 			}else{
@@ -108,7 +126,17 @@ public class SAProyectosImp implements SAProyectos {
 					em.lock(e, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 					e.getProyecto().remove(aux);	
 				}
-				em.remove(aux);
+				TypedQuery<Proyecto> qRP = em.createNamedQuery(
+						"negocio.proyectos.Proyecto.removeProyecto", Proyecto.class);
+				
+				qRP.setParameter("id", aux.getId());
+				//qRP.setLockMode(LockModeType.OPTIMISTIC);
+				if (qRP.executeUpdate() == 1) 
+					em.getTransaction().commit();
+				else{
+					retorno.addError(Errores.empleadoNoBorrado, pry.getId());
+					em.getTransaction().rollback();
+				}
 			}
 			em.getTransaction().commit();
 		
@@ -140,7 +168,14 @@ public class SAProyectosImp implements SAProyectos {
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
 			
-			Proyecto aux = em.find(Proyecto.class, pry.getId(),LockModeType.OPTIMISTIC);
+			TypedQuery<Proyecto> q = em.createNamedQuery(
+					"negocio.proyectos.Proyecto.findByid", Proyecto.class);
+			q.setParameter("id", pry.getId());
+			q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+			
+			Proyecto aux = null;
+			if(q.getResultList().size() == 1)
+				aux = q.getResultList().get(0);
 			
 			if(aux == null){
 				retorno.addError(Errores.proyectoNoEncontrado, pry.getId());
@@ -181,8 +216,15 @@ public class SAProyectosImp implements SAProyectos {
 			Set<Empleado> set = pry.getEmpleado();
 			pry.setEmpleado(null);
 			
-			Proyecto aux = em.find(Proyecto.class, pry.getId());
-
+			TypedQuery<Proyecto> q = em.createNamedQuery(
+					"negocio.proyectos.Proyecto.findByid", Proyecto.class);
+			q.setParameter("id", pry.getId());
+			q.setLockMode(LockModeType.OPTIMISTIC);
+			
+			Proyecto aux = null;
+			if(q.getResultList().size() == 1)
+				aux = q.getResultList().get(0);
+			
 			if(aux == null){
 				retorno.addError(Errores.proyectoNoEncontrado, pry.getId());
 			}else{		
@@ -193,8 +235,19 @@ public class SAProyectosImp implements SAProyectos {
 				Proyecto proyecto = em.merge(pry);
 				
 				Empleado eaux;
-				for(Empleado e: set){
-					eaux = em.find(Empleado.class, e.getId(),LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+				for(Empleado e: set)
+				{
+					
+					TypedQuery<Empleado> qE = em.createNamedQuery(
+							"negocio.empleados.Empleado.findByid", Empleado.class);
+					qE.setParameter("id", e.getId());
+					qE.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+					
+					eaux = null;
+					if(qE.getResultList().size() == 1)
+						eaux = qE.getResultList().get(0);
+					
+					
 					if(aux==null){
 						retorno.addError(Errores.empleadoNoEncontrado, e.getDni());
 						rollback = true;
@@ -241,8 +294,8 @@ public class SAProyectosImp implements SAProyectos {
 			emf = Persistence.createEntityManagerFactory("Implementacion Pipamax JPA");
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
-			TypedQuery<Proyecto> q = em.createQuery("select obj from Proyecto obj",Proyecto.class);
-			
+			TypedQuery<Proyecto> q = em.createQuery("select obj from Proyecto obj where obj.activo = 1",Proyecto.class);
+			q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 			List<Proyecto> proys = q.getResultList();
 			for(Proyecto p: proys){
 				em.lock(p, LockModeType.OPTIMISTIC);

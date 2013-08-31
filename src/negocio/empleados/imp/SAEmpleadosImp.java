@@ -8,7 +8,6 @@ import java.util.List;
 import javax.persistence.*;
 
 import constantes.Errores;
-
 import negocio.Retorno;
 import negocio.departamentos.Departamento;
 import negocio.empleados.Empleado;
@@ -36,27 +35,48 @@ public class SAEmpleadosImp implements SAEmpleados {
 					"negocio.empleados.Empleado.findBydni", Empleado.class);
 			
 			q.setParameter("dni", emp.getDni());
+			q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 			
 			if(q.getResultList().size()!=0){
 				retorno.addError(Errores.empleadoDNIrepetido, emp.getDni());
 			} else {
 				boolean depCorrecto = true;
-				if(emp.getDepartamento()!=null){
-					Departamento dep = em.find(Departamento.class, emp.getDepartamento().getId(), LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-					if(dep == null){
+				if(emp.getDepartamento()!=null)
+				{
+					TypedQuery<Departamento> qDep = em.createNamedQuery(
+							"negocio.departamentos.Departamento.findByid", Departamento.class);
+					
+					qDep.setParameter("id", emp.getDepartamento().getId());
+					qDep.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+					
+					if(qDep.getResultList().size()==0)
+					{
 						depCorrecto = false;
 						retorno.addError(Errores.empleadoDepartamentoNoEncontrado, emp.getDepartamento().getId());
-					}else
-						emp.setDepartamento(dep);
+					}
+					else 
+						emp.setDepartamento(qDep.getResultList().get(0));
+					
 				}
 				boolean proyCorrecto = true;
-				if(emp.getProyecto()!=null&&emp.getProyecto().size()>0){
-					for(Proyecto p:emp.getProyecto()){
-						Proyecto proy = em.find(Proyecto.class, p.getId(), LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-						if(proy == null){
+				if(emp.getProyecto()!=null&&emp.getProyecto().size()>0)
+				{
+					for(Proyecto p:emp.getProyecto())
+					{
+						TypedQuery<Proyecto> qD = em.createNamedQuery(
+								"negocio.proyectos.Proyecto.findByid", Proyecto.class);
+						qD.setParameter("id", p.getId());
+						qD.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+						
+						if(qD.getResultList().size() == 0)
+						{
 							proyCorrecto = false;
 							retorno.addError(Errores.proyectoNoEncontrado, emp.getDepartamento().getId());
-						}else{
+						}
+						else
+						{
+							Proyecto proy = qD.getResultList().get(0);
+							
 							if(!emp.getProyecto().contains(proy))emp.getProyecto().add(proy);
 							//TODO es absurdo, estamos recorriendo los proyectos del empleado
 							if(!proy.getEmpleado().contains(emp))proy.getEmpleado().add(emp);
@@ -95,27 +115,53 @@ public class SAEmpleadosImp implements SAEmpleados {
 	 * @generated 
 	 *            "UML a JPA (com.ibm.xtools.transform.uml2.ejb3.java.jpa.internal.UML2JPATransform)"
 	 */
-	public Retorno bajaEmpleado(Empleado emp) {
+	public Retorno bajaEmpleado(Empleado emp) 
+	{
 		Retorno retorno = new Retorno();
 		emf = Persistence.createEntityManagerFactory("Implementacion Pipamax JPA");
 		em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			Empleado e = em.find(Empleado.class, emp.getId(), LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+			TypedQuery<Empleado> q = em.createNamedQuery(
+					"negocio.empleados.Empleado.findBydni", Empleado.class);
 			
-			if(e == null)
+			q.setParameter("dni", emp.getDni());
+			
+			if(q.getResultList().size() == 0)
 				retorno.addError(Errores.empleadoNoEncontrado, emp.getId());
 			else{
-				//Se bloquea también el departamento 
-				Departamento dep = em.find(Departamento.class, e.getDepartamento().getId(), LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+				
+				Empleado e = q.getResultList().get(0);
+				//Se bloquea también el departamento  
+				//TODO Ahora que son typed query tambien se bloquea??
+				TypedQuery<Departamento> qDep = em.createNamedQuery(
+						"negocio.departamentos.Departamento.findByid", Departamento.class);
+				
+				qDep.setParameter("id", e.getDepartamento().getId());
+				qDep.setLockMode(LockModeType.OPTIMISTIC);
+				
+				if(qDep.getResultList().size()==0)
+					retorno.addError(Errores.empleadoDepartamentoNoEncontrado, e.getDepartamento().getId());
+
 				
 				if(e.getProyecto().size()>0){
 					retorno.addError(Errores.empleadoTieneProyectos, e.getProyecto());
 					em.getTransaction().rollback();
 				}else{
 					//Calling remove on an object will also cascade the remove operation across any relationship that is marked as cascade remove(Departamento-empleado).
-					em.remove(e);
-					em.getTransaction().commit();
+					TypedQuery<Empleado> qRE = em.createNamedQuery(
+							"negocio.empleados.Empleado.removeEmpleado", Empleado.class);
+					
+					qRE.setParameter("id", e.getId());
+					qRE.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+					
+					//ejecutamos la query
+					if (qRE.executeUpdate() == 1) 
+						em.getTransaction().commit();
+					else{
+						retorno.addError(Errores.empleadoNoBorrado, emp.getId());
+						em.getTransaction().rollback();
+					}
 				}
 				
 			}		
@@ -147,10 +193,17 @@ public class SAEmpleadosImp implements SAEmpleados {
 			emf = Persistence.createEntityManagerFactory("Implementacion Pipamax JPA");
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
-			Empleado empleado = em.find(Empleado.class, emp.getId(), LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-			if(empleado == null)
+			TypedQuery<Empleado> q = em.createNamedQuery(
+					"negocio.empleados.Empleado.findBydni", Empleado.class);
+			
+			q.setParameter("dni", emp.getDni());
+			q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+			
+			if(q.getResultList().size() == 0)
 				retorno.addError(Errores.empleadoNoEncontrado, emp.getId());
-			else{
+			else
+			{
+				Empleado empleado = q.getResultList().get(0);
 				em.detach(empleado);
 				em.getTransaction().commit();
 				retorno.setDatos(empleado);
@@ -183,22 +236,47 @@ public class SAEmpleadosImp implements SAEmpleados {
 			emf = Persistence.createEntityManagerFactory("Implementacion Pipamax JPA");
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
+			//TODO Primero sacamos el empleado por DNI y luego por ID?? porque no directamente por id?
 			TypedQuery<Empleado> q = em.createNamedQuery(
 					"negocio.empleados.Empleado.findBydni", Empleado.class);
 			q.setParameter("dni", emp.getDni());
+			q.setLockMode(LockModeType.OPTIMISTIC);
 			List<Empleado> emps = q.getResultList();
-			if (emps.size()==0 || emps.get(0).getId() == emp.getId()) {
-				Empleado empleado = em.find(Empleado.class, emp.getId());
+			if (emps.size()==0 || emps.get(0).getId() == emp.getId())
+			{
+				TypedQuery<Empleado> q2 = em.createNamedQuery(
+						"negocio.empleados.Empleado.findByid", Empleado.class);
+				
+				q2.setParameter("id", emp.getId());
+				q2.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+				
+				Empleado empleado = null;
+				if(q2.getResultList().size() == 0)
+					retorno.addError(Errores.empleadoNoEncontrado, emp.getId());
+				else
+					empleado = q2.getResultList().get(0);
+				
 				if(empleado.getClass()!=emp.getClass())
 					throw new RuntimeException("Se ha intentado modificar el tipo de un empleado");
 				
 				boolean depCorrecto = true;
-				if(emp.getDepartamento()!=null){
-					Departamento dep = em.find(Departamento.class, emp.getDepartamento().getId(), LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-					if(dep == null){
+				if(emp.getDepartamento()!=null)
+				{
+					TypedQuery<Departamento> qDep = em.createNamedQuery(
+							"negocio.departamentos.Departamento.findByid", Departamento.class);
+					
+					qDep.setParameter("id", emp.getDepartamento().getId());
+					qDep.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+					
+					Departamento dep = null;
+					if(qDep.getResultList().size()==0)
+					{
 						depCorrecto = false;
 						retorno.addError(Errores.empleadoDepartamentoNoEncontrado, emp.getDepartamento().getId());
-					}else{
+					}
+					else
+					{
+						dep = qDep.getResultList().get(0);
 						emp.setDepartamento(dep);
 						if(!dep.getEmpleado().contains(emp))
 							dep.getEmpleado().add(emp);
@@ -206,12 +284,21 @@ public class SAEmpleadosImp implements SAEmpleados {
 				}
 				boolean proyCorrecto = true;
 				if(emp.getProyecto() != null && emp.getProyecto().size()>0){
-					for(Proyecto p:emp.getProyecto()){
-						Proyecto proy = em.find(Proyecto.class, p.getId(), LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-						if(proy == null){
+					for(Proyecto p:emp.getProyecto())
+					{
+						TypedQuery<Proyecto> qD = em.createNamedQuery(
+								"negocio.proyectos.Proyecto.findByid", Proyecto.class);
+						qD.setParameter("id", p.getId());
+						qD.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+						
+						if(qD.getResultList().size() == 0)
+						{
 							proyCorrecto = false;
 							retorno.addError(Errores.proyectoNoEncontrado, emp.getDepartamento().getId());
-						}else{
+						}
+						else
+						{
+							Proyecto proy = qD.getResultList().get(0);
 							if(!emp.getProyecto().contains(proy))emp.getProyecto().add(proy);
 							if(!proy.getEmpleado().contains(emp))proy.getEmpleado().add(emp);
 						}
@@ -248,8 +335,8 @@ public class SAEmpleadosImp implements SAEmpleados {
 			emf = Persistence.createEntityManagerFactory("Implementacion Pipamax JPA");
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
-			TypedQuery<Empleado> q = em.createQuery("select obj from Empleado obj",Empleado.class);
-			
+			TypedQuery<Empleado> q = em.createQuery("select obj from Empleado obj where obj.activo = 1",Empleado.class);
+			q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 			List<Empleado> emps = q.getResultList();
 			for(Empleado e: emps){
 				em.lock(e, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
@@ -281,10 +368,17 @@ public class SAEmpleadosImp implements SAEmpleados {
 			emf = Persistence.createEntityManagerFactory("Implementacion Pipamax JPA");
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
-			Empleado empleado = em.find(Empleado.class, emp.getId(), LockModeType.OPTIMISTIC);
-			if(empleado == null)
+
+			TypedQuery<Empleado> q = em.createNamedQuery(
+					"negocio.empleados.Empleado.findByid", Empleado.class);
+			
+			q.setParameter("id", emp.getId());
+			q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+			
+			if(q.getResultList().size() == 0)
 				retorno.addError(Errores.empleadoNoEncontrado, emp.getId());
 			else{
+				Empleado empleado = q.getResultList().get(0);
 				if(empleado.getDepartamento()!=null)
 					em.lock(empleado.getDepartamento(), LockModeType.OPTIMISTIC);
 				Double d = empleado.calcularSueldo();

@@ -38,7 +38,9 @@ public class SADepartamentosImp implements SADepartamentos {
 			TypedQuery<Departamento> q1 = em.createNamedQuery("negocio.departamentos.Departamento.findBynombre", Departamento.class);
 			TypedQuery<Departamento> q2 = em.createNamedQuery("negocio.departamentos.Departamento.findBycodigo", Departamento.class);
 			q1.setParameter("nombre", dep.getNombre());
+			q1.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 			q2.setParameter("codigo", dep.getCodigo());
+			q2.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 			if(q1.getResultList().size()!=0 || q2.getResultList().size() != 0){
 				if (q1.getResultList().size()!=0) retorno.addError(Errores.departamentoNombreRepetido, dep.getNombre());
 				if (q2.getResultList().size()!=0) retorno.addError(Errores.departamentoCodigoRepetido, dep.getCodigo());
@@ -70,7 +72,17 @@ public class SADepartamentosImp implements SADepartamentos {
 		em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			Departamento depart = em.find(Departamento.class, dep.getId(), LockModeType.OPTIMISTIC);
+			
+			TypedQuery<Departamento> q = em.createNamedQuery(
+					"negocio.departamentos.Departamento.findByid", Departamento.class);
+			
+			q.setParameter("id", dep.getId());
+			q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+			
+			Departamento depart = null;
+			
+			if(q.getResultList().size() == 1)
+				depart = q.getResultList().get(0);
 			
 			if(depart==null)
 				retorno.addError(Errores.departamentoNoEncontrado, dep.getId());
@@ -82,8 +94,17 @@ public class SADepartamentosImp implements SADepartamentos {
 					}
 					retorno.addError(Errores.departamentoConEmpleados, empleados);
 				} else {
-					em.remove(depart);
-					em.getTransaction().commit();
+					
+					TypedQuery<Departamento> qRE = em.createNamedQuery(
+							"negocio.departamentos.Departamento.removeDepartamento", Departamento.class);
+					qRE.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+					qRE.setParameter("id", depart.getId());
+					if (qRE.executeUpdate() == 1) 
+						em.getTransaction().commit();
+					else{
+						retorno.addError(Errores.departamentoNoBorrado, dep.getId());
+						em.getTransaction().rollback();
+					}
 				}
 			}
 		} catch (OptimisticLockException ole){
@@ -109,7 +130,17 @@ public class SADepartamentosImp implements SADepartamentos {
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
 			
-			Departamento departamento = em.find(Departamento.class, dep.getId(), LockModeType.OPTIMISTIC);
+			TypedQuery<Departamento> q = em.createNamedQuery(
+					"negocio.departamentos.Departamento.findByid", Departamento.class);
+			
+			q.setParameter("id", dep.getId());
+			q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+			
+			Departamento departamento = null;
+			
+			if(q.getResultList().size() == 1)
+				departamento = q.getResultList().get(0);
+			
 			if(departamento == null)
 				retorno.addError(Errores.departamentoNoEncontrado, dep.getId());
 			else{
@@ -147,13 +178,26 @@ public class SADepartamentosImp implements SADepartamentos {
 			TypedQuery<Departamento> q1 = em.createNamedQuery("negocio.departamentos.Departamento.findBynombre", Departamento.class);
 			TypedQuery<Departamento> q2 = em.createNamedQuery("negocio.departamentos.Departamento.findBycodigo", Departamento.class);
 			q1.setParameter("nombre", dep.getNombre());
+			q1.setLockMode(LockModeType.OPTIMISTIC);
 			q2.setParameter("codigo", dep.getCodigo());
+			q2.setLockMode(LockModeType.OPTIMISTIC);
 			if(q1.getResultList().size()!=0 && q1.getResultList().get(0).getId()!=dep.getId() || q2.getResultList().size() != 0 && q2.getResultList().get(0).getId()!=dep.getId() ){
 				if (q1.getResultList().size()!=0) retorno.addError(Errores.departamentoNombreRepetido, dep.getNombre());
 				if (q2.getResultList().size()!=0) retorno.addError(Errores.departamentoCodigoRepetido, dep.getCodigo());
 			} else {
-				for(Empleado e:dep.getEmpleado()){
-					Empleado empBuscado = em.find(Empleado.class, e.getId(),LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+				for(Empleado e:dep.getEmpleado())
+				{
+					TypedQuery<Empleado> qEmp = em.createNamedQuery(
+							"negocio.empleados.Empleado.findByid", Empleado.class);
+					
+					qEmp.setParameter("id", e.getId());
+					qEmp.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+					
+					Empleado empBuscado = null;
+					
+					if(qEmp.getResultList().size() == 1)
+						empBuscado = qEmp.getResultList().get(0);
+					
 					if(empBuscado == null){
 						retorno.addError(Errores.empleadoNoEncontrado, e.getId());
 						break;
@@ -194,7 +238,8 @@ public class SADepartamentosImp implements SADepartamentos {
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
 			
-				TypedQuery<Departamento> q = em.createQuery("select obj from Departamento obj", Departamento.class);
+				TypedQuery<Departamento> q = em.createQuery("select obj from Departamento obj where obj.activo = 1", Departamento.class);
+				q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 				List<Departamento> deps = q.getResultList();
 				for(Departamento d: deps){
 					em.lock(d, LockModeType.OPTIMISTIC);
@@ -225,17 +270,22 @@ public class SADepartamentosImp implements SADepartamentos {
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
 			
-			Departamento departamento = em.find(Departamento.class, dep.getId(), LockModeType.OPTIMISTIC);
+			TypedQuery<Departamento> q = em.createNamedQuery(
+					"negocio.departamentos.Departamento.findByid", Departamento.class);
+			
+			q.setParameter("id", dep.getId());
+			q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+			
+			Departamento departamento = null;
+			
+			if(q.getResultList().size() == 1)
+				departamento = q.getResultList().get(0);
+			
 			if(departamento == null)
 				retorno.addError(Errores.departamentoNoEncontrado, dep.getId());
 			else{
 				em.getTransaction().commit();
-				
-				double sueldoTotal = 0;
-				for(Empleado e: departamento.getEmpleado())
-					sueldoTotal+=e.calcularSueldo();
-				
-				retorno.setDatos(sueldoTotal);
+				retorno.setDatos(departamento.getNumEpleados()*departamento.getSueldo());
 			}
 		} catch (OptimisticLockException ole){
 			retorno.addError(Errores.errorDeAccesoConcurrente, ole.getMessage());

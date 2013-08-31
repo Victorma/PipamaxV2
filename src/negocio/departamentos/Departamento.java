@@ -25,10 +25,11 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "negocio.departamentos.Departamento.findByid", query = "select obj from Departamento obj where obj.id = :id"),
-		@NamedQuery(name = "negocio.departamentos.Departamento.findBynombre", query = "select obj from Departamento obj where obj.nombre = :nombre"),
-		@NamedQuery(name = "negocio.departamentos.Departamento.findBycodigo", query = "select obj from Departamento obj where obj.codigo = :codigo"),
-		@NamedQuery(name = "negocio.departamentos.Departamento.findByempleado", query = "select obj from Departamento obj where obj.empleado = :empleado") })
+		@NamedQuery(name = "negocio.departamentos.Departamento.findByid", query = "select obj from Departamento obj where obj.id = :id and obj.activo = 1"),
+		@NamedQuery(name = "negocio.departamentos.Departamento.findBynombre", query = "select obj from Departamento obj where obj.nombre = :nombre and obj.activo = 1"),
+		@NamedQuery(name = "negocio.departamentos.Departamento.findBycodigo", query = "select obj from Departamento obj where obj.codigo = :codigo and obj.activo = 1"),
+		@NamedQuery(name = "negocio.departamentos.Departamento.findByempleado", query = "select obj from Departamento obj where obj.empleado = :empleado and obj.activo = 1"),
+		@NamedQuery(name = "negocio.departamentos.Departamento.removeDepartamento", query = "update Departamento set activo = 1 where id = :id"), })
 public class Departamento implements Serializable {
 	/** 
 	 * <!-- begin-UML-doc -->
@@ -66,6 +67,8 @@ public class Departamento implements Serializable {
 	@OneToMany(mappedBy = "departamento")
 	private Set<Empleado> empleado;
 	private Double sueldo;
+	
+	private Integer activo;
 	
 	/** 
 	 * <!-- begin-UML-doc -->
@@ -116,6 +119,18 @@ public class Departamento implements Serializable {
 	}
 	public void setSueldo(Double sueldo) {
 		this.sueldo = sueldo;
+	}
+
+
+
+	public Integer getActivo() {
+		return activo;
+	}
+
+
+
+	public void setActivo(Integer activo) {
+		this.activo = activo;
 	}
 
 
