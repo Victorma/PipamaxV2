@@ -27,8 +27,8 @@ import javax.swing.*;
 
 import negocio.Retorno;
 import negocio.TError;
-import negocio.controlador.CommandRegenerar;
 import negocio.controlador.ControladorAplicacion;
+import negocio.controlador.command.CommandRegenerar;
 import presentacion.clientes.ClientesGUI;
 import presentacion.departamentos.DepartamentosGUI;
 import presentacion.empleados.EmpleadosGUI;

@@ -2,6 +2,7 @@ package negocio.controlador;
 
 import constantes.Acciones;
 import negocio.Retorno;
+import negocio.controlador.command.Command;
 import negocio.controlador.imp.ControladorAplicacionImp;
 
 public abstract class ControladorAplicacion {
