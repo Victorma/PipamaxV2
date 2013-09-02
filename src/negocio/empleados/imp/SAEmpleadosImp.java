@@ -127,10 +127,11 @@ public class SAEmpleadosImp implements SAEmpleados {
 			
 			q.setParameter("dni", emp.getDni());
 			
+			q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+			
 			if(q.getResultList().size() == 0)
 				retorno.addError(Errores.empleadoNoEncontrado, emp.getId());
 			else{
-				
 				Empleado e = q.getResultList().get(0);
 				//Se bloquea también el departamento  
 				//TODO Ahora que son typed query tambien se bloquea??
@@ -148,17 +149,25 @@ public class SAEmpleadosImp implements SAEmpleados {
 					retorno.addError(Errores.empleadoTieneProyectos, e.getProyecto());
 					em.getTransaction().rollback();
 				}else{
+					System.out.println(1);
 					//Calling remove on an object will also cascade the remove operation across any relationship that is marked as cascade remove(Departamento-empleado).
-					TypedQuery<Empleado> qRE = em.createNamedQuery(
-							"negocio.empleados.Empleado.removeEmpleado", Empleado.class);
-					
+					TypedQuery<Empleado> qRE = em.createNamedQuery(	"negocio.empleados.Empleado.removeEmpleado", Empleado.class);
+					System.out.println(11);
 					qRE.setParameter("id", e.getId());
+					System.out.println(111);
 					qRE.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-					
+					System.out.println(1111);
+					int seborra = qRE.executeUpdate();
+					System.out.println(11111);
 					//ejecutamos la query
-					if (qRE.executeUpdate() == 1) 
+					System.out.println("se borra: " + seborra);
+					if (seborra == 1)
+					{
+						System.out.println(5);
 						em.getTransaction().commit();
+					}
 					else{
+						System.out.println(4);
 						retorno.addError(Errores.empleadoNoBorrado, emp.getId());
 						em.getTransaction().rollback();
 					}
