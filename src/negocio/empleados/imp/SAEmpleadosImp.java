@@ -127,40 +127,36 @@ public class SAEmpleadosImp implements SAEmpleados {
 			
 			q.setParameter("dni", emp.getDni());
 			
-			q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+			//q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 			
 			if(q.getResultList().size() == 0)
 				retorno.addError(Errores.empleadoNoEncontrado, emp.getId());
 			else{
 				Empleado e = q.getResultList().get(0);
-				//Se bloquea también el departamento  
-				//TODO Ahora que son typed query tambien se bloquea??
-				TypedQuery<Departamento> qDep = em.createNamedQuery(
-						"negocio.departamentos.Departamento.findByid", Departamento.class);
-				
-				qDep.setParameter("id", e.getDepartamento().getId());
-				qDep.setLockMode(LockModeType.OPTIMISTIC);
-				
-				if(qDep.getResultList().size()==0)
-					retorno.addError(Errores.empleadoDepartamentoNoEncontrado, e.getDepartamento().getId());
-
-				
+				if(e.getDepartamento() != null)
+				{
+					//Se bloquea también el departamento  
+					//TODO Ahora que son typed query tambien se bloquea??
+					TypedQuery<Departamento> qDep = em.createNamedQuery(
+							"negocio.departamentos.Departamento.findByid", Departamento.class);
+					
+					qDep.setParameter("id", e.getDepartamento().getId());
+					qDep.setLockMode(LockModeType.OPTIMISTIC);
+					
+					if(qDep.getResultList().size()==0)
+						retorno.addError(Errores.empleadoDepartamentoNoEncontrado, e.getDepartamento().getId());
+					//else
+						// TODO AQUI HABRIA QUE QUITAR EL DEPARTAMENTO PARA EL EMPLEADO A BORRAR
+				}
 				if(e.getProyecto().size()>0){
 					retorno.addError(Errores.empleadoTieneProyectos, e.getProyecto());
 					em.getTransaction().rollback();
 				}else{
-					System.out.println(1);
 					//Calling remove on an object will also cascade the remove operation across any relationship that is marked as cascade remove(Departamento-empleado).
 					TypedQuery<Empleado> qRE = em.createNamedQuery(	"negocio.empleados.Empleado.removeEmpleado", Empleado.class);
-					System.out.println(11);
 					qRE.setParameter("id", e.getId());
-					System.out.println(111);
-					qRE.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-					System.out.println(1111);
-					int seborra = qRE.executeUpdate();
-					System.out.println(11111);
 					//ejecutamos la query
-					System.out.println("se borra: " + seborra);
+					int seborra = qRE.executeUpdate();
 					if (seborra == 1)
 					{
 						System.out.println(5);
@@ -187,6 +183,7 @@ public class SAEmpleadosImp implements SAEmpleados {
 		}
 		
 		return retorno;
+		
 	}
 
 	/**
@@ -257,7 +254,7 @@ public class SAEmpleadosImp implements SAEmpleados {
 						"negocio.empleados.Empleado.findByid", Empleado.class);
 				
 				q2.setParameter("id", emp.getId());
-				q2.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+				q2.setLockMode(LockModeType.OPTIMISTIC);
 				
 				Empleado empleado = null;
 				if(q2.getResultList().size() == 0)
@@ -275,7 +272,7 @@ public class SAEmpleadosImp implements SAEmpleados {
 							"negocio.departamentos.Departamento.findByid", Departamento.class);
 					
 					qDep.setParameter("id", emp.getDepartamento().getId());
-					qDep.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+					qDep.setLockMode(LockModeType.OPTIMISTIC);
 					
 					Departamento dep = null;
 					if(qDep.getResultList().size()==0)
@@ -298,7 +295,7 @@ public class SAEmpleadosImp implements SAEmpleados {
 						TypedQuery<Proyecto> qD = em.createNamedQuery(
 								"negocio.proyectos.Proyecto.findByid", Proyecto.class);
 						qD.setParameter("id", p.getId());
-						qD.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+						qD.setLockMode(LockModeType.OPTIMISTIC);
 						
 						if(qD.getResultList().size() == 0)
 						{

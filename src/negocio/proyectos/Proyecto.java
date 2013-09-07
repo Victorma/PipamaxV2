@@ -28,7 +28,7 @@ import javax.persistence.NamedQueries;
 		@NamedQuery(name = "negocio.proyectos.Proyecto.findBynombre", query = "select obj from Proyecto obj where obj.nombre = :nombre and obj.activo = 1"),
 		@NamedQuery(name = "negocio.proyectos.Proyecto.findByid", query = "select obj from Proyecto obj where obj.id = :id and obj.activo = 1"),
 		@NamedQuery(name = "negocio.proyectos.Proyecto.findByempleado", query = "select obj from Proyecto obj where obj.empleado = :empleado and obj.activo = 1"),
-		@NamedQuery(name = "negocio.proyectos.Proyecto.removeProyecto", query = "update Proyecto set activo = 1 where id = :id") })
+		@NamedQuery(name = "negocio.proyectos.Proyecto.removeProyecto", query = "update Proyecto p set p.activo = 0 where p.id = :id") })
 public class Proyecto implements Serializable {
 	/** 
 	 * <!-- begin-UML-doc -->

@@ -77,7 +77,6 @@ public class SADepartamentosImp implements SADepartamentos {
 					"negocio.departamentos.Departamento.findByid", Departamento.class);
 			
 			q.setParameter("id", dep.getId());
-			q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 			
 			Departamento depart = null;
 			
@@ -94,13 +93,13 @@ public class SADepartamentosImp implements SADepartamentos {
 					}
 					retorno.addError(Errores.departamentoConEmpleados, empleados);
 				} else {
-					
 					TypedQuery<Departamento> qRE = em.createNamedQuery(
 							"negocio.departamentos.Departamento.removeDepartamento", Departamento.class);
-					qRE.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 					qRE.setParameter("id", depart.getId());
-					if (qRE.executeUpdate() == 1) 
+					if (qRE.executeUpdate() == 1)
+					{
 						em.getTransaction().commit();
+					}
 					else{
 						retorno.addError(Errores.departamentoNoBorrado, dep.getId());
 						em.getTransaction().rollback();

@@ -39,7 +39,7 @@ import javax.persistence.ManyToMany;
 		@NamedQuery(name = "negocio.empleados.Empleado.findBycp", query = "select obj from Empleado obj where obj.cp = :cp and obj.activo = 1"),
 		@NamedQuery(name = "negocio.empleados.Empleado.findBydepartamento", query = "select obj from Empleado obj where obj.departamento = :departamento and obj.activo = 1"),
 		@NamedQuery(name = "negocio.empleados.Empleado.findByproyecto", query = "select obj from Empleado obj where obj.proyecto = :proyecto and obj.activo = 1"),
-		@NamedQuery(name = "negocio.empleados.Empleado.removeEmpleado", query = "update Empleado set activo = 0 where id = :id") })
+		@NamedQuery(name = "negocio.empleados.Empleado.removeEmpleado", query = "update Empleado e set e.activo = 0 where e.id = :id") })
 public abstract class Empleado implements Serializable {
 	/** 
 	 * <!-- begin-UML-doc -->

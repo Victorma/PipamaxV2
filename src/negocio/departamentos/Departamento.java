@@ -29,7 +29,7 @@ import javax.persistence.OneToMany;
 		@NamedQuery(name = "negocio.departamentos.Departamento.findBynombre", query = "select obj from Departamento obj where obj.nombre = :nombre and obj.activo = 1"),
 		@NamedQuery(name = "negocio.departamentos.Departamento.findBycodigo", query = "select obj from Departamento obj where obj.codigo = :codigo and obj.activo = 1"),
 		@NamedQuery(name = "negocio.departamentos.Departamento.findByempleado", query = "select obj from Departamento obj where obj.empleado = :empleado and obj.activo = 1"),
-		@NamedQuery(name = "negocio.departamentos.Departamento.removeDepartamento", query = "update Departamento set activo = 1 where id = :id"), })
+		@NamedQuery(name = "negocio.departamentos.Departamento.removeDepartamento", query = "update Departamento d set d.activo = 0 where d.id = :id"), })
 public class Departamento implements Serializable {
 	/** 
 	 * <!-- begin-UML-doc -->

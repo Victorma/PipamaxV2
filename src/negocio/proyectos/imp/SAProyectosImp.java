@@ -113,7 +113,6 @@ public class SAProyectosImp implements SAProyectos {
 			TypedQuery<Proyecto> q = em.createNamedQuery(
 					"negocio.proyectos.Proyecto.findByid", Proyecto.class);
 			q.setParameter("id", pry.getId());
-			q.setLockMode(LockModeType.OPTIMISTIC);
 			
 			Proyecto aux = null;
 			if(q.getResultList().size() == 1)
@@ -132,13 +131,14 @@ public class SAProyectosImp implements SAProyectos {
 				qRP.setParameter("id", aux.getId());
 				//qRP.setLockMode(LockModeType.OPTIMISTIC);
 				if (qRP.executeUpdate() == 1) 
+				{
 					em.getTransaction().commit();
+				}
 				else{
-					retorno.addError(Errores.empleadoNoBorrado, pry.getId());
+					retorno.addError(Errores.proyectoNoBorrado, pry.getId());
 					em.getTransaction().rollback();
 				}
 			}
-			em.getTransaction().commit();
 		
 		}catch (OptimisticLockException ole){
 			retorno.addError(Errores.errorDeAccesoConcurrente, ole.getMessage());
