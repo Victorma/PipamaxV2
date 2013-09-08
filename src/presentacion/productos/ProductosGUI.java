@@ -241,6 +241,7 @@ public class ProductosGUI extends GUI {
 					}
 				} else {
 					List<Object[]> lista = (List<Object[]>) datos.getDatos();
+					top.removeAll();
 					if (lista.isEmpty()) {
 						top.setLayout(new GridLayout());
 						JLabel textoTop = new JLabel(" -- No hay productos vendidos --");
@@ -254,6 +255,7 @@ public class ProductosGUI extends GUI {
 							top.add(labelmes);
 						}
 					}
+					this.setVisible(true);
 				}
 
 				break;
@@ -266,6 +268,6 @@ public class ProductosGUI extends GUI {
 		ControladorAplicacion.getInstancia().accion(Acciones.productosListado,
 				new TransferListaProductos());
 		ControladorAplicacion.getInstancia().accion(Acciones.productosMasVendidos,
-				new TransferListaProductos());
+				null);
 	}
 }

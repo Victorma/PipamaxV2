@@ -313,6 +313,7 @@ public class VentasGUI extends GUI {
 							"Hubo un error al obtener el listado de meses con mas beneficio",
 							"Error", JOptionPane.ERROR_MESSAGE);
 				else{
+					topbot.removeAll();
 					List<Object[]> lista = (List<Object[]>) retorno.getDatos();
 					
 					if (lista.isEmpty()) {
@@ -328,7 +329,7 @@ public class VentasGUI extends GUI {
 							topbot.add(labelmes);
 						}
 					}
-					
+					this.setVisible(true);
 				}
 			}
 

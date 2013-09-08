@@ -40,9 +40,9 @@ public class CommandQueryProductosMasVendidos implements Command{
 								"WHERE t.idVenta = v.id AND v.cerrada = '1' AND v.activo = '1' " +
 								"GROUP BY idProducto " +
 								"ORDER BY cantidad DESC " +
-								"LIMIT 5) AS m " +
-							"WHERE p.id = m.idProducto " +
-							"ORDER BY m.cantidad DESC");
+								") AS m " +
+							"WHERE p.id = m.idProducto AND p.borrado = '0' " +
+							"ORDER BY m.cantidad DESC LIMIT 5");
 			
 			ResultSet rs = stmt.getResultSet();
 			
