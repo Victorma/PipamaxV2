@@ -9,21 +9,29 @@ import constantes.Errores;
  * ----------
  */
 
+
+
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.*;
 
 import presentacion.GUI;
+import presentacion.util.Operaciones;
 import negocio.controlador.ControladorAplicacion;
-
 import negocio.Retorno;
 import negocio.TError;
 import negocio.productos.TransferListaProductos;
@@ -32,7 +40,7 @@ public class ProductosGUI extends GUI {
 	private static final long serialVersionUID = 1732982881027998497L;
 
 	//frames and panels
-	private JPanel left, right;
+	private JPanel left, right , top;
 
 	//buttons
 	private JButton botonCrear, botonBorrar, botonEditar, botonConsultar,
@@ -89,6 +97,14 @@ public class ProductosGUI extends GUI {
 		//add the scrollPanel to the right 
 		tabla = new TablaProductos();
 		right.add(tabla.getPane());
+		
+		//top
+		top = new JPanel(new GridLayout());
+		top.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createDashedBorder(Color.BLUE, 5, 4),
+				"Productos más vendidos"));
+		
+		this.add(top, BorderLayout.NORTH);
 
 		//set the window title
 		this.add(left, BorderLayout.WEST);
@@ -99,8 +115,7 @@ public class ProductosGUI extends GUI {
 		this.setSize(800, 600);
 		this.setLocationRelativeTo(null);
 		//TODO Comprobar que sea necesario el new aqui
-		ControladorAplicacion.getInstancia().accion(Acciones.productosListado,
-				new TransferListaProductos());
+		this.alVolver(null);
 		this.setVisible(true);
 
 	}
@@ -207,6 +222,41 @@ public class ProductosGUI extends GUI {
 				}
 
 				break;
+				
+			case productosMasVendidos:
+				if (datos.tieneErrores()) {
+
+					Iterator<TError> it = datos.getErrores().getLista().iterator();
+					TError current = null;
+
+					while (it.hasNext()) {
+						current = it.next();
+						switch (current.getErrorId()) {
+						case Errores.errorDeAcceso:
+							JOptionPane.showMessageDialog(this,
+									"Error al accedes a los productos mas vendidos.");
+							break;
+						default: {}
+						}
+					}
+				} else {
+					List<Object[]> lista = (List<Object[]>) datos.getDatos();
+					if (lista.isEmpty()) {
+						top.setLayout(new GridLayout());
+						JLabel textoTop = new JLabel(" -- No hay productos vendidos --");
+						textoTop.setSize(0, 50);
+						top.add(textoTop);
+					}else{
+						top.setLayout(new GridLayout(lista.size(),1));
+						for(Object[] mes: lista){
+							JLabel labelmes = new JLabel("Producto: " + mes[0] + " Cantidad: "+ mes[1] +" Beneficio: "+ Operaciones.round((double)mes[2], 2)+" €");
+							labelmes.setSize(0, 50);
+							top.add(labelmes);
+						}
+					}
+				}
+
+				break;
 			}
 
 	}
@@ -214,6 +264,8 @@ public class ProductosGUI extends GUI {
 	@Override
 	public void alVolver(GUI who) {
 		ControladorAplicacion.getInstancia().accion(Acciones.productosListado,
+				new TransferListaProductos());
+		ControladorAplicacion.getInstancia().accion(Acciones.productosMasVendidos,
 				new TransferListaProductos());
 	}
 }

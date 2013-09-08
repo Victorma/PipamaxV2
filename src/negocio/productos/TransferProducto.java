@@ -64,5 +64,9 @@ public class TransferProducto {
 	public boolean getBorrado() {
 		return borrado;
 	}
+	
+	public String toString(){
+		return "("+id+") " + nombre;
+	}
 
 }

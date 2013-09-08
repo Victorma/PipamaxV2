@@ -36,6 +36,7 @@ public enum Acciones {
 	productosListaSuministros,
 	productosCrearSuministro,
 	productosBorrarSuministro,
+	productosMasVendidos,
 
 	//Acciones de pedidos
 	pedidosLista,
@@ -56,6 +57,7 @@ public enum Acciones {
 	ventasConsultar,
 	ventasBorrar,
 	ventasDevolucion,
+	ventasMesesMasBeneficio,
 
 	//Acciones de empleados
 	empleadosListado,

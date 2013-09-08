@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -21,6 +22,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import presentacion.GUI;
+import presentacion.util.Operaciones;
 import negocio.controlador.ControladorAplicacion;
 import negocio.Retorno;
 import negocio.ventas.TransferListaVentas;
@@ -32,6 +34,7 @@ public class VentasGUI extends GUI {
 	private static final long serialVersionUID = 1L;
 	private JTable tablaVentas;
 	private TablaVentas tablaVentasModel;
+	JPanel topbot;
 
 	public VentasGUI(GUI father) {
 		super(father);
@@ -42,9 +45,15 @@ public class VentasGUI extends GUI {
 		top.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createDashedBorder(Color.RED, 5, 4),
 				"Estadisticas"));
-		JLabel textoTop = new JLabel("Ventas");
+		
+		JLabel textoTop = new JLabel("Meses con más beneficio");
 		textoTop.setSize(0, 50);
 		top.add(textoTop);
+		
+		topbot = new JPanel(new GridLayout());
+		
+		top.add(topbot);
+		
 		this.add(top, BorderLayout.NORTH);
 
 		//tablaVentas.getRowCount();
@@ -174,8 +183,7 @@ public class VentasGUI extends GUI {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
-		ControladorAplicacion.getInstancia().accion(Acciones.ventasListado,
-				new TransferListaVentas());
+		this.alVolver(null);
 	}
 
 	    private static class MyRenderer extends DefaultTableCellRenderer {
@@ -293,12 +301,36 @@ public class VentasGUI extends GUI {
 				else
 					tablaVentasModel.update((TransferListaVentas) retorno
 							.getDatos());
-			else if (evento == Acciones.ventasBorrar)
+			else if (evento == Acciones.ventasBorrar){
 				if (evento == Acciones.ventasListado)
 					if (retorno.tieneErrores())
 						JOptionPane.showMessageDialog(this,
 								"Hubo un error al borrar la venta", "Error",
 								JOptionPane.ERROR_MESSAGE);
+			} else if (evento == Acciones.ventasMesesMasBeneficio){
+				if (retorno.tieneErrores())
+					JOptionPane.showMessageDialog(this,
+							"Hubo un error al obtener el listado de meses con mas beneficio",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				else{
+					List<Object[]> lista = (List<Object[]>) retorno.getDatos();
+					
+					if (lista.isEmpty()) {
+						topbot.setLayout(new GridLayout());
+						JLabel textoTopBot = new JLabel("-- No hay ventas --");
+						textoTopBot.setSize(0, 50);
+						topbot.add(textoTopBot);	
+					}else{
+						topbot.setLayout(new GridLayout(lista.size(),1));
+						for(Object[] mes: lista){
+							JLabel labelmes = new JLabel("Mes: " + mes[1]+"/"+mes[2] + " Beneficio: "+ Operaciones.round((double)mes[0], 2)+" €");
+							labelmes.setSize(0, 50);
+							topbot.add(labelmes);
+						}
+					}
+					
+				}
+			}
 
 		}
 	}
@@ -308,6 +340,7 @@ public class VentasGUI extends GUI {
 
 		ControladorAplicacion.getInstancia().accion(Acciones.ventasListado,
 				new TransferListaVentas());
+		ControladorAplicacion.getInstancia().accion(Acciones.ventasMesesMasBeneficio, null);
 
 	}
 
