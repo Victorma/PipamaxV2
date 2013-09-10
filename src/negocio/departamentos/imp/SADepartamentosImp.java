@@ -76,6 +76,7 @@ public class SADepartamentosImp implements SADepartamentos {
 			TypedQuery<Departamento> q = em.createNamedQuery(
 					"negocio.departamentos.Departamento.findByid", Departamento.class);
 			
+			q.setLockMode(LockModeType.OPTIMISTIC);
 			q.setParameter("id", dep.getId());
 			
 			Departamento depart = null;
@@ -93,17 +94,16 @@ public class SADepartamentosImp implements SADepartamentos {
 					}
 					retorno.addError(Errores.departamentoConEmpleados, empleados);
 				} else {
-					TypedQuery<Departamento> qRE = em.createNamedQuery(
-							"negocio.departamentos.Departamento.removeDepartamento", Departamento.class);
-					qRE.setParameter("id", depart.getId());
-					if (qRE.executeUpdate() == 1)
-					{
-						em.getTransaction().commit();
-					}
-					else{
-						retorno.addError(Errores.departamentoNoBorrado, dep.getId());
-						em.getTransaction().rollback();
-					}
+					//TypedQuery<Departamento> qRE = em.createNamedQuery("negocio.departamentos.Departamento.removeDepartamento", Departamento.class);
+					//qRE.setParameter("id", depart.getId());
+					//if (qRE.executeUpdate() == 1)
+					depart.setActivo(0);
+					em.getTransaction().commit();
+					
+					//else{
+					//	retorno.addError(Errores.departamentoNoBorrado, dep.getId());
+					//	em.getTransaction().rollback();
+					//}
 				}
 			}
 		} catch (OptimisticLockException ole){

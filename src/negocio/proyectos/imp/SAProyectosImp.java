@@ -113,6 +113,7 @@ public class SAProyectosImp implements SAProyectos {
 			TypedQuery<Proyecto> q = em.createNamedQuery(
 					"negocio.proyectos.Proyecto.findByid", Proyecto.class);
 			q.setParameter("id", pry.getId());
+			q.setLockMode(LockModeType.OPTIMISTIC);
 			
 			Proyecto aux = null;
 			if(q.getResultList().size() == 1)
@@ -125,19 +126,19 @@ public class SAProyectosImp implements SAProyectos {
 					em.lock(e, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 					e.getProyecto().remove(aux);	
 				}
-				TypedQuery<Proyecto> qRP = em.createNamedQuery(
-						"negocio.proyectos.Proyecto.removeProyecto", Proyecto.class);
+				//TypedQuery<Proyecto> qRP = em.createNamedQuery("negocio.proyectos.Proyecto.removeProyecto", Proyecto.class);
 				
-				qRP.setParameter("id", aux.getId());
+				//qRP.setParameter("id", aux.getId());
 				//qRP.setLockMode(LockModeType.OPTIMISTIC);
-				if (qRP.executeUpdate() == 1) 
-				{
-					em.getTransaction().commit();
-				}
-				else{
-					retorno.addError(Errores.proyectoNoBorrado, pry.getId());
-					em.getTransaction().rollback();
-				}
+				//if (qRP.executeUpdate() == 1) 
+						
+				aux.setActivo(0);
+				aux.getEmpleado().clear();
+				em.getTransaction().commit();
+				//else{
+				//	retorno.addError(Errores.proyectoNoBorrado, pry.getId());
+				//	em.getTransaction().rollback();
+				//}
 			}
 		
 		}catch (OptimisticLockException ole){

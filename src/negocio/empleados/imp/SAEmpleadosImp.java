@@ -124,7 +124,7 @@ public class SAEmpleadosImp implements SAEmpleados {
 			em.getTransaction().begin();
 			TypedQuery<Empleado> q = em.createNamedQuery(
 					"negocio.empleados.Empleado.findBydni", Empleado.class);
-			
+			q.setLockMode(LockModeType.OPTIMISTIC);
 			q.setParameter("dni", emp.getDni());
 			
 			//q.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
@@ -153,20 +153,15 @@ public class SAEmpleadosImp implements SAEmpleados {
 					em.getTransaction().rollback();
 				}else{
 					//Calling remove on an object will also cascade the remove operation across any relationship that is marked as cascade remove(Departamento-empleado).
-					TypedQuery<Empleado> qRE = em.createNamedQuery(	"negocio.empleados.Empleado.removeEmpleado", Empleado.class);
-					qRE.setParameter("id", e.getId());
+					//TypedQuery<Empleado> qRE = em.createNamedQuery(	"negocio.empleados.Empleado.removeEmpleado", Empleado.class);
+					//qRE.setParameter("id", e.getId());
 					//ejecutamos la query
-					int seborra = qRE.executeUpdate();
-					if (seborra == 1)
-					{
-						System.out.println(5);
-						em.getTransaction().commit();
-					}
-					else{
-						System.out.println(4);
-						retorno.addError(Errores.empleadoNoBorrado, emp.getId());
-						em.getTransaction().rollback();
-					}
+					//int seborra = qRE.executeUpdate();
+					
+					e.setActivo(0);
+					e.setDepartamento(null);
+					
+					em.getTransaction().commit();
 				}
 				
 			}		
