@@ -129,7 +129,7 @@ public class PrincipalGUI extends GUI {
 		JPanel nombres = new JPanel(new FlowLayout());
 		nombres.setPreferredSize(new Dimension(0, 60));
 		JPanel nombresTop = new JPanel(new GridLayout(2, 4));
-		nombresTop.add(new JLabel("Ismael Fernandez Fuentes   "));
+		nombresTop.add(new JLabel("Ismael Fuentes Fernández    "));
 		nombresTop.add(new JLabel("Roberto de Miguel López "));
 		nombresTop.add(new JLabel("Rubén Moreira López "));
 		nombresTop.add(new JLabel("Daniel Novillo Villarejo "));

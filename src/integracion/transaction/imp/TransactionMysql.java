@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -158,8 +159,26 @@ public class TransactionMysql implements Transaction {
 				 stmt.execute("LOCK TABLES ventas WRITE, ventas AS ven READ, lineasventa WRITE, lineasventa AS lv READ, productos WRITE, productos AS prod READ, clientes WRITE, clientes AS cli READ, clientesvip WRITE, clientesvip AS clivip READ");
 			   ########################################################################################################*/
 			
-			else if (mode == LockModes.LockAll)
-				 stmt.execute("FLUSH TABLES WITH READ LOCK");
+			else if (mode == LockModes.LockAll){
+				List<String> alltables = new ArrayList<String>();
+				alltables.add("clientes");
+				alltables.add("clientesvip");
+				alltables.add("departamento");
+				alltables.add("empleado");
+				alltables.add("empleado_proyecto");
+				alltables.add("linea_pedido");
+				alltables.add("lineasventa");
+				alltables.add("marcas");
+				alltables.add("pedidos");
+				alltables.add("productos");
+				alltables.add("proveedores");
+				alltables.add("proyecto");
+				alltables.add("suministros");
+				alltables.add("ventas");
+				this.lock(LockModes.ReadAndWrite, alltables);
+				// stmt.execute("FLUSH TABLES WITH READ LOCK");
+			}
+
 		}
 		catch(SQLException ex){error = true;}
 
